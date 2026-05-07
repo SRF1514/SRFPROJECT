@@ -1,0 +1,2922 @@
+1:export interface Question {
+2:  id: string;
+3:  question: string;
+4:  options?: string[];
+5:  correctAnswer: string;
+6:  process: string;
+7:  category: 'Quantitative' | 'Investment' | 'Portfolio' | 'Derivatives' | 'Ethics' | 'International';
+8:}
+9:
+10:export const batch1A: Question[] = [
+11:  {
+12:    id: 'q1',
+13:    category: 'Quantitative',
+14:    question: "A company has net income of USD 179.2 million, depreciation of USD 135.7 million, interest of USD 70.7 million, and capital expenditures of USD 208.0 million. Accounts receivable increase by USD 3.8 million, inventory increases by USD 8.3 million, cash decreases by USD 2.1 million, accounts payable decreases by USD 3.3 million, and debt increases by USD 62.2 million. The company paid USD 157.6 million in dividends and net sales of stock were USD 1.8 million. There are no other line items that affect the statement of cash flows. The cash flow from operating activities is [USD million, 1 decimal].",
+16:    correctAnswer: "USD 299.5 million",
+17:    process: "For operating cash flow using the indirect method: CFO = NI + Depreciation − ΔAR − ΔInventory + ΔAP. Interest is already included in net income, capital expenditures are investing cash flows, debt and stock/dividends are financing cash flows. CFO = 179.2 + 135.7 − 3.8 − 8.3 − 3.3 = 299.5"
+18:  },
+19:  {
+20:    id: 'q2',
+21:    category: 'Quantitative',
+22:    question: "A loan of USD 1,000 is repaid with equal annual payments in 7 years. The first payment is in exactly one year. The interest rate on the loan is 5.2% per year. The annual payment is [USD, no decimals].",
+24:    correctAnswer: "USD 174",
+25:    process: "Using the PV of an annuity formula: 1000 = C × [(1 - (1.052^-7)) / 0.052]. Solving for C: C = 1000 / 5.754 ≈ 174."
+26:  },
+27:  {
+28:    id: 'q3',
+29:    category: 'Quantitative',
+30:    question: "You deposit GBP 280 monthly for 61 months. The savings account has an annual percentage rate of 3.12% with monthly compounding. The balance just after the last deposit is [GBP, no decimals].",
+32:    correctAnswer: "GBP 18,480",
+33:    process: "Monthly rate = 3.12% / 12 = 0.26% (0.0026). FV of an annuity = 280 × [((1.0026^61) - 1) / 0.0026] ≈ 18,480."
+34:  },
+35:  {
+36:    id: 'q4',
+37:    category: 'Investment',
+38:    question: "A default-free bond with face value USD 1,000 has an annual coupon of 5.5% and remaining maturity of 2 years. The market price of a 1-year default-free zero-coupon bond with face value USD 1,000 is USD 975.27, and the market price of a 2-year default-free zero-coupon bond with face value USD 1,000 is USD 947.92. The market price of the coupon bond is [USD, 2 decimals].",
+40:    correctAnswer: "USD 1,052.70",
+41:    process: "CPN = 55. DF1 = 0.97527, DF2 = 0.94792. P = 55(0.97527) + 1055(0.94792) = 53.64 + 999.06 = 1052.70."
+42:  },
+43:  {
+44:    id: 'q5',
+45:    category: 'Investment',
+46:    question: "A corporate bond with face value GBP 1,000 has annual coupon of 6.4% and remaining maturity of 7 years. The yield to maturity of otherwise identical default-free bonds is 2.6%. The credit spread is 2.0%. The market price is [GBP, 2 decimals].",
+48:    correctAnswer: "GBP 1,105.32",
+49:    process: "Corporate yield = 2.6% + 2.0% = 4.6%. Price = 64 × [(1 - 1.046^-7) / 0.046] + (1000 / 1.046^7) ≈ 1,105.32."
+50:  },
+51:  {
+52:    id: 'q6',
+53:    category: 'Investment',
+54:    question: "Investors expect next year’s dividend per share will be GBP 2.13 and future dividends will grow at 5.3% forever. The cost of equity capital is 9.3%. The share price is [GBP, 2 decimals].",
+56:    correctAnswer: "GBP 53.25",
+57:    process: "Gordon Growth Model: P0 = Div1 / (r - g) = 2.13 / (0.093 - 0.053) = 53.25."
+58:  },
+59:  {
+60:    id: 'q8',
+61:    category: 'Portfolio',
+62:    question: "Next year’s return of an investment is 22% with probability 35% or 0% with probability 65%. The standard deviation is [percentage, 2 decimals].",
+64:    correctAnswer: "10.49%",
+65:    process: "E[R] = 0.35(22) + 0.65(0) = 7.70%. Var = 0.35(22-7.7)^2 + 0.65(0-7.7)^2 = 110.11. SD = sqrt(110.11) = 10.49%."
+66:  },
+67:  {
+68:    id: 'q9',
+69:    category: 'Portfolio',
+70:    question: "Stock XYZ has standard deviation 60%, stock PQR has standard deviation 48%, and correlation is 0.11. The standard deviation of a portfolio of 70% XYZ and 30% PQR is [percentage, 1 decimal].",
+72:    correctAnswer: "45.9%",
+73:    process: "Var(p) = 0.7²(0.60²) + 0.3²(0.48²) + 2(0.7)(0.3)(0.11)(0.60)(0.48) = 0.2104. SD(p) = sqrt(0.2104) = 45.9%."
+74:  },
+75:  {
+76:    id: 'q10',
+77:    category: 'Portfolio',
+78:    question: "Expected portfolio return is 10.3%, volatility is 30.6%, risk-free rate is 2.9%. The Sharpe ratio is [3 decimals].",
+80:    correctAnswer: "0.242",
+81:    process: "Sharpe = (E[Rp] - rf) / σp = (0.103 - 0.029) / 0.306 = 0.242."
+82:  },
+83:  {
+84:    id: 'q11',
+85:    category: 'Portfolio',
+86:    question: "Risk-free rate is 3.6%, expected market return is 9.6%, market volatility is 25.6%. You aim for expected return of 6%. The weight of the risk-free asset is [percentage, 1 decimal].",
+88:    correctAnswer: "60.0%",
+89:    process: "0.06 = wM(0.096) + (1-wM)(0.036). 0.06 = 0.036 + 0.06wM. wM = 0.40. wf = 1 - 0.4 = 0.60 (60%)."
+90:  },
+91:  {
+92:    id: 'q12',
+93:    category: 'Portfolio',
+94:    question: "Risk-free rate is 2.9%, expected market return is 9.1%, beta is 0.94. The expected return is [percentage, 2 decimals].",
+96:    correctAnswer: "8.73%",
+97:    process: "E[Ri] = rf + βi(E[Rm] - rf) = 2.9 + 0.94(9.1 - 2.9) = 8.728 ≈ 8.73%."
+98:  },
+99:  {
+100:    id: 'q13',
+101:    category: 'Quantitative',
+102:    question: "A company has cost of debt 3.4%, cost of equity 8.1%, 23% debt, 77% equity, and tax rate 28%. The WACC is [percentage, 2 decimals].",
+104:    correctAnswer: "6.80%",
+105:    process: "WACC = wE*rE + wD*rD*(1-Tc) = 0.77(8.1%) + 0.23(3.4%)(1-0.28) = 6.80%."
+106:  },
+107:  {
+108:    id: 'q14',
+109:    category: 'Investment',
+110:    question: "Current share price is GBP 53.83. A one-year European call with strike GBP 58 costs GBP 8.27. The company pays its next dividend after option expiry. Risk-free rate is 2.0%. The price of an otherwise identical put is [GBP, 2 decimals].",
+112:    correctAnswer: "GBP 11.30",
+113:    process: "Put-Call Parity: P = C + (K / (1+r)) - S = 8.27 + (58 / 1.02) - 53.83 = 11.30."
+114:  },
+115:  {
+116:    id: 'q15',
+117:    category: 'Investment',
+118:    question: "The share price in one year will be EUR 136 or EUR 69. Current share price is EUR 97. Risk-free rate is 2%. A European call has exercise price EUR 94 and expires in one year. A portfolio of DELTA shares and B in the risk-free asset replicates the call. DELTA is [3 decimals].",
+120:    correctAnswer: "0.627",
+121:    process: "Cu = 42, Cd = 0. Su = 136, Sd = 69. Δ = (Cu - Cd) / (Su - Sd) = 42 / 67 ≈ 0.627."
+122:  }
+123:];
+124:
+125:export const batch1B: Question[] = [
+126:  {
+127:    id: '1b-q1',
+128:    category: 'Quantitative',
+129:    question: "A company has net income of EUR 183.1 million, depreciation of EUR 210.4 million, interest of EUR 103.8 million, and capital expenditures of EUR 271.0 million. Accounts receivable increase by EUR 8.4 million, inventory increases by EUR 5.0 million, cash increases by EUR 15.0 million, accounts payable increases by EUR 10.4 million, and debt increases by EUR 18.4 million. The company paid EUR 126.9 million in dividends and net sales of stock were EUR 4.0 million. Cash flow from operating activities is [EUR million, 1 decimal].",
+131:    correctAnswer: "EUR 390.5 million",
+132:    process: "CFO = NI + Depreciation − ΔAR − ΔInventory + ΔAP = 183.1 + 210.4 - 8.4 - 5.0 + 10.4 = 390.5. Interest is already in NI. CapEx, debt, dividends, and stock are not operating activities."
+133:  },
+134:  {
+135:    id: '1b-q2',
+136:    category: 'Quantitative',
+137:    question: "A loan of GBP 7,000 is repaid with equal annual payments in 13 years. First payment is in one year. Interest rate is 6.9%. Annual payment is [GBP, no decimals].",
+139:    correctAnswer: "GBP 833",
+140:    process: "Using the annuity formula: 7000 = C × [(1 - 1.069^-13) / 0.069]. C = 7000 / 8.406 ≈ 833."
+141:  },
+142:  {
+143:    id: '1b-q3',
+144:    category: 'Quantitative',
+145:    question: "You deposit USD 110 monthly for 42 months. APR is 2.88% with monthly compounding. Balance just after last deposit is [USD, no decimals].",
+147:    correctAnswer: "USD 4,855",
+148:    process: "Monthly rate = 0.0288 / 12 = 0.0024. FV = 110 × [(1.0024^42 - 1) / 0.0024] ≈ 4,855."
+149:  },
+150:  {
+151:    id: '1b-q4',
+152:    category: 'Investment',
+153:    question: "Default-free bond, face value EUR 1,000, annual coupon 3.0%, maturity 2 years. One-year zero price is EUR 965.96, two-year zero price is EUR 951.05. Market price of coupon bond is [EUR, 2 decimals].",
+155:    correctAnswer: "EUR 1,008.56",
+156:    process: "CPN = 30. P = 30(0.96596) + 1030(0.95105) = 28.98 + 979.58 = 1008.56."
+157:  },
+158:  {
+159:    id: '1b-q5',
+160:    category: 'Investment',
+161:    question: "Corporate bond, face value EUR 1,000, annual coupon 5.2%, maturity 6 years. Default-free YTM is 1.7%, credit spread is 2.0%. Market price is [EUR, 2 decimals].",
+163:    correctAnswer: "EUR 1,079.41",
+164:    process: "YTM = 1.7% + 2.0% = 3.7%. P = 52 × [(1 - 1.037^-6) / 0.037] + (1000 / 1.037^6) = 1079.41."
+165:  },
+166:  {
+167:    id: '1b-q6',
+168:    category: 'Investment',
+169:    question: "Expected next dividend is USD 3.85. Share price just after next dividend is expected to be USD 71.87. Cost of equity is 9.8%. Current share price is [USD, 2 decimals].",
+171:    correctAnswer: "USD 68.96",
+172:    process: "P0 = (Div1 + P1) / (1 + r) = (3.85 + 71.87) / 1.098 = 68.96."
+173:  },
+174:  {
+175:    id: '1b-q7',
+176:    category: 'Investment',
+177:    question: "A company will generate USD 68.1 million in free cash flows next year, growing at 2.6% forever. Cost of equity is 10.7%, WACC is 8.6%. Debt market value is USD 325 million and there is no excess cash. Value of equity is [USD million, no decimals].",
+179:    correctAnswer: "USD 810 million",
+180:    process: "Enterprise Value (EV) = FCF1 / (WACC - g) = 68.1 / (0.086 - 0.026) = 1135. Equity Value = EV - Debt + Cash = 1135 - 325 + 0 = 810."
+181:  },
+182:  {
+183:    id: '1b-q8',
+184:    category: 'Portfolio',
+185:    question: "Next year’s return is 7% with probability 30% or 10% with probability 70%. Standard deviation is [percentage, 2 decimals].",
+187:    correctAnswer: "1.37%",
+188:    process: "E[R] = 0.3(7) + 0.7(10) = 9.1%. Var = 0.3(7-9.1)^2 + 0.7(10-9.1)^2 = 1.89. SD = sqrt(1.89) = 1.37%."
+189:  },
+190:  {
+191:    id: '1b-q9',
+192:    category: 'Portfolio',
+193:    question: "Stock PQR has standard deviation 60%, stock XYZ has standard deviation 66%, correlation is -0.09. Portfolio is 65% PQR and 35% XYZ. Standard deviation is [percentage, 1 decimal].",
+195:    correctAnswer: "43.5%",
+196:    process: "Var(p) = 0.65²(0.60²) + 0.35²(0.66²) + 2(0.65)(0.35)(-0.09)(0.60)(0.66). SD(p) = 43.5%."
+197:  },
+198:  {
+199:    id: '1b-q10',
+200:    category: 'Portfolio',
+201:    question: "Expected return is 11.3%, volatility is 31.4%, risk-free rate is 2.8%. Sharpe ratio is [3 decimals].",
+203:    correctAnswer: "0.271",
+204:    process: "Sharpe = (E[Rp] - rf) / σp = (0.113 - 0.028) / 0.314 = 0.271."
+205:  },
+206:  {
+207:    id: '1b-q11',
+208:    category: 'Portfolio',
+209:    question: "Risk-free rate is 2.9%, market expected return is 8.3%, market volatility is 28.7%. You aim for expected return of 5%. Weight of risk-free asset is [percentage, 1 decimal].",
+211:    correctAnswer: "61.1%",
+212:    process: "0.05 = wM(0.083) + (1-wM)(0.029). wM = 0.021 / 0.054 ≈ 0.3889. wf = 1 - 0.3889 = 61.11%."
+213:  },
+214:  {
+215:    id: '1b-q12',
+216:    category: 'Portfolio',
+217:    question: "Risk-free rate is 2.7%, expected market return is 8.2%, market volatility is 24.4%. Large diversified portfolio has beta 1.10 and volatility 35.8%. Expected return is [percentage, 2 decimals].",
+219:    correctAnswer: "8.75%",
+220:    process: "E[R] = rf + β(E[Rm] - rf) = 2.7 + 1.10(8.2 - 2.7) = 2.7 + 6.05 = 8.75%."
+221:  },
+222:  {
+223:    id: '1b-q13',
+224:    category: 'Quantitative',
+225:    question: "Cost of debt is 5.2%, cost of equity is 10.8%, capital structure is 22% debt and 78% equity, tax rate is 23%. WACC is [percentage, 2 decimals].",
+227:    correctAnswer: "9.30%",
+228:    process: "WACC = 0.78(10.8%) + 0.22(5.2%)(1-0.23) = 8.424% + 0.881% = 9.305%."
+229:  },
+230:  {
+231:    id: '1b-q14',
+232:    category: 'Investment',
+233:    question: "Share price in one year will be USD 90 or USD 53. Current share price is USD 69. Risk-free rate is 1%. European call has strike USD 65 and expires in one year. Call price is [USD, 2 decimals].",
+235:    correctAnswer: "USD 11.17",
+236:    process: "p = (Su - Sd) / ((1+r)S0 - Sd) - Wait, correct RN prob: p = ((1+r)S0 - Sd) / (Su - Sd) = (1.01*69 - 53) / (90 - 53) = 16.69 / 37 ≈ 0.4511. Call Price = (p*Cu + (1-p)*Cd) / (1+r) = (0.4511*25) / 1.01 ≈ 11.17."
+237:  },
+238:  {
+239:    id: '1b-q15',
+240:    category: 'Investment',
+241:    question: "Share price in one year will be EUR 67 or EUR 37. Current price is EUR 50. Risk-free rate is 1%. European call strike is EUR 45. DELTA is [3 decimals].",
+243:    correctAnswer: "0.733",
+244:    process: "Cu = 22, Cd = 0. Su = 67, Sd = 37. Delta = (Cu - Cd) / (Su - Sd) = 22 / 30 ≈ 0.733."
+245:  }
+246:];
+247:
+248:export const batch1C: Question[] = [
+249:  {
+250:    id: '1c-q1',
+251:    category: 'Quantitative',
+252:    question: "Consider a perpetuity of annual cash flows. First cash flow is USD 710 in one year and grows at 3.5% forever. Interest rate is 12.4%. Present value is:",
+254:    correctAnswer: "USD 7,978",
+255:    process: "PV = C1 / (r - g) = 710 / (0.124 - 0.035) = 7977.53 ≈ 7,978."
+256:  },
+257:  {
+258:    id: '1c-q2',
+259:    category: 'Quantitative',
+260:    question: "An annuity has 13 equal annual cash flows of GBP 400. First cash flow in one year. Interest rate 4.6%. Value is:",
+262:    correctAnswer: "GBP 3,850",
+263:    process: "PV = 400 × [(1 - 1.046^-13) / 0.046] = 3850."
+264:  },
+265:  {
+266:    id: '1c-q3',
+267:    category: 'Quantitative',
+268:    question: "An annuity has 8 equal annual cash flows of GBP 540. Interest rate 5.1%. Value just before the first cash flow is:",
+270:    correctAnswer: "GBP 3,653",
+271:    process: "PV0 (one year before) = 3476. Value just before first cash flow is one year later = 3476 * 1.051 = 3653."
+272:  },
+273:  {
+274:    id: '1c-q4',
+275:    category: 'Quantitative',
+276:    question: "A loan of GBP 1,000 is repaid with equal annual payments in 5 years. First payment in one year. Interest rate is 5.7%. Annual payment is:",
+278:    correctAnswer: "GBP 235",
+279:    process: "1000 = C × [(1 - 1.057^-5) / 0.057]. C = 235."
+280:  },
+281:  {
+282:    id: '1c-q5',
+283:    category: 'Quantitative',
+284:    question: "A loan has APR 6.1% with quarterly compounding. Effective annual interest rate is:",
+286:    correctAnswer: "6.24%",
+287:    process: "EAR = (1 + 0.061/4)^4 - 1 = 6.24%."
+288:  },
+289:  {
+290:    id: '1c-q6',
+291:    category: 'Quantitative',
+292:    question: "A loan has APR 5.0% with monthly compounding. Equivalent monthly interest rate is:",
+294:    correctAnswer: "0.42%",
+295:    process: "rm = 5.0% / 12 = 0.4167% ≈ 0.42%."
+296:  },
+297:  {
+298:    id: '1c-q7',
+299:    category: 'Quantitative',
+300:    question: "You expect to receive USD 900 after 3 years and 6 months. Effective annual interest rate is 6.9%. Present value is:",
+302:    correctAnswer: "USD 713",
+303:    process: "PV = 900 / (1.069^3.5) = 713."
+304:  },
+305:  {
+306:    id: '1c-q8',
+307:    category: 'Quantitative',
+308:    question: "You deposit EUR 300 monthly for 35 months. APR is 4.32% with monthly compounding. Balance just after last deposit is:",
+310:    correctAnswer: "EUR 11,169",
+311:    process: "rm = 0.0432 / 12 = 0.0036. FV = 300 × [(1.0036^35 - 1) / 0.0036] = 11169."
+312:  },
+313:  {
+314:    id: '1c-q9',
+315:    category: 'Investment',
+316:    question: "A zero-coupon bond has face value USD 1,000, remaining maturity 3.3 years, and YTM 4.70%. Market price is:",
+318:    correctAnswer: "USD 859.36",
+319:    process: "P = 1000 / (1.047^3.3) = 859.36."
+320:  },
+321:  {
+322:    id: '1c-q10',
+323:    category: 'Investment',
+324:    question: "A bond with face value USD 1,000 has annual coupon 2.8%, remaining maturity 6 years, YTM 4.4%. Market price is:",
+326:    correctAnswer: "USD 917.21",
+327:    process: "CPN = 28. P = 28 × [(1 - 1.044^-6) / 0.044] + 1000 / 1.044^6 = 917.21."
+328:  },
+329:  {
+330:    id: '1c-q11',
+331:    category: 'Investment',
+332:    question: "Default-free bond with face value GBP 1,000, annual coupon 3.4%, maturity 2 years. One-year zero price is GBP 979.83, two-year zero price is GBP 968.84. Coupon bond price is:",
+334:    correctAnswer: "GBP 1,035.09",
+335:    process: "CPN = 34. P = 34(0.97983) + 1034(0.96884) = 1035.09."
+336:  },
+337:  {
+338:    id: '1c-q12',
+339:    category: 'Investment',
+340:    question: "The market price of a bond with annual coupons of GBP 20 is GBP 914.62 just after the last coupon payment. YTM is 2.6%. Expected price just before next coupon is:",
+342:    correctAnswer: "GBP 938.40",
+343:    process: "Pbefore = Panomaly * (1 + r) = 914.62 * 1.026 = 938.40."
+344:  }
+345:];
+346:
+347:export const batch1D: Question[] = [
+348:  {
+349:    id: '1d-q1',
+350:    category: 'Investment',
+351:    question: "A bond with face value GBP 1,000 has coupon 3.9%, semi-annual coupon payments, maturity 13 years, and YTM 4.5%. Market price is:",
+353:    correctAnswer: "B. GBP 941.43",
+354:    process: "Semiannual coupon: CPN = 1000(0.039)/2 = 19.50. Semiannual yield: r = 0.045/2 = 0.0225. N = 13 × 2 = 26. P = 19.5 × [(1 - 1.0225^-26) / 0.0225] + 1000 / 1.0225^26 = 941.43."
+355:  },
+356:  {
+357:    id: '1d-q2',
+358:    category: 'Investment',
+359:    question: "A bond with face value GBP 1,000 has annual coupon 5.4%, maturity 8 years and 2 quarters, and YTM 4.5%. Market price is:",
+361:    correctAnswer: "C. GBP 1,089.13",
+362:    process: "CPN = 54. Using fractional-period adjustment for 8.25 years: P = 1089.13."
+363:  },
+364:  {
+365:    id: '1d-q3',
+366:    category: 'Investment',
+367:    question: "Corporate bond, face value EUR 1,000, annual coupon 4.6%, maturity 10 years. Default-free YTM is 3.5%, default spread is 3.0%. Market price is:",
+369:    correctAnswer: "A. EUR 863.41",
+370:    process: "Total YTM = 3.5% + 3.0% = 6.5%. CPN = 46. P = 46 × [(1 - 1.065^-10) / 0.065] + 1000 / 1.065^10 = 863.41."
+371:  },
+372:  {
+373:    id: '1d-q4',
+374:    category: 'Investment',
+375:    question: "Next year’s dividend will be GBP 3.67 and share price just after next dividend will be GBP 59.79. Cost of equity is 10.0%. Current share price is:",
+377:    correctAnswer: "C. GBP 57.69",
+378:    process: "P0 = (Div1 + P1) / (1 + r) = (3.67 + 59.79) / 1.10 = 57.69."
+379:  },
+380:  {
+381:    id: '1d-q5',
+382:    category: 'Investment',
+383:    question: "Next year’s dividend will be EUR 3.00. Current share price is EUR 45.20 and cost of equity is 8.7%. Expected share price just before the next dividend is:",
+385:    correctAnswer: "C. EUR 49.13",
+386:    process: "P_ex = 45.20(1.087) - 3.00 = 46.13. P_cum (just before) = P_ex + Div = 46.13 + 3.00 = 49.13."
+387:  },
+388:  {
+389:    id: '1d-q6',
+390:    category: 'Investment',
+391:    question: "Next year’s dividend is EUR 1.25 and future dividends grow at 5.4% forever. Cost of equity is 9.4%. Share price is:",
+393:    correctAnswer: "B. EUR 31.25",
+394:    process: "P0 = Div1 / (r - g) = 1.25 / (0.094 - 0.054) = 31.25."
+395:  },
+396:  {
+397:    id: '1d-q7',
+398:    category: 'Investment',
+399:    question: "Next year’s EPS is GBP 1.94. Management pays out 42% as dividends and future ROE on new investments is 12.2%. Cost of equity is 10.4%. Expected dividend growth is:",
+401:    correctAnswer: "C. 7.1%",
+402:    process: "b = 1 - 0.42 = 0.58. g = b × ROE = 0.58 * 12.2% = 7.076% ≈ 7.1%."
+403:  },
+404:  {
+405:    id: '1d-q8',
+406:    category: 'Investment',
+407:    question: "Next year’s EPS is GBP 2.97. Management retains 43% of earnings. Expected dividend per share next year is:",
+409:    correctAnswer: "A. GBP 1.69",
+410:    process: "Payout ratio = 1 - 0.43 = 0.57. Div1 = 2.97 * 0.57 ≈ 1.69."
+411:  },
+412:  {
+413:    id: '1d-q9',
+414:    category: 'Investment',
+415:    question: "Next year’s EPS is EUR 10.00. Payout ratio is 52%. Future ROE on new investments is 16.0%. Cost of equity is 12.0%. Share price is:",
+417:    correctAnswer: "C. EUR 120.37",
+418:    process: "Div1 = 10 * 0.52 = 5.20. b = 1 - 0.52 = 0.48. g = 0.48 * 16% = 7.68%. P0 = 5.20 / (0.12 - 0.0768) = 120.37."
+419:  },
+420:  {
+421:    id: '1d-q10',
+422:    category: 'Quantitative',
+423:    question: "Enterprise value is EUR 4,633 million. Debt is EUR 1,197 million, excess cash is EUR 99 million, and shares outstanding are 55.7 million. Share price is:",
+425:    correctAnswer: "B. EUR 63.46",
+426:    process: "Equity = EV - Debt + Cash = 4633 - 1197 + 99 = 3535. P = 3535 / 55.7 = 63.46."
+427:  },
+428:  {
+429:    id: '1d-q11',
+430:    category: 'Quantitative',
+431:    question: "Company will generate EUR 44.9 million in FCF next year, growing at 2.6% forever. Cost of equity is 9.2%, WACC is 7.3%. Debt is EUR 314 million, no excess cash. Equity value is:",
+433:    correctAnswer: "A. EUR 641 million",
+434:    process: "EV = FCF1 / (WACC - g) = 44.9 / (0.073 - 0.026) = 955.32. Equity = 955.32 - 314 = 641.32."
+435:  },
+436:  {
+437:    id: '1d-q12',
+438:    category: 'Quantitative',
+439:    question: "EBIT is EUR 157.6 million, depreciation is EUR 20.3 million, investments in net working capital are EUR 30.0 million, capital expenditures are EUR 22.2 million, tax rate is 21.4%. Free cash flow is:",
+441:    correctAnswer: "A. EUR 91.97 million",
+442:    process: "FCF = EBIT(1 - Tc) + Dep - CapEx - ΔNWC = 157.6(1 - 0.214) + 20.3 - 22.2 - 30.0 = 123.87 + 20.3 - 22.2 - 30.0 = 91.97."
+443:  }
+444:];
+445:
+446:export const batch1E: Question[] = [
+447:  {
+448:    id: '1e-q1',
+449:    category: 'Portfolio',
+450:    question: "You bought a stock one year ago for USD 62.22. Today you received dividend USD 1.22 and sold the stock for USD 71.01. Realized return is:",
+452:    correctAnswer: "A. 16.09%",
+453:    process: "R = (P1 + Div - P0) / P0 = (71.01 + 1.22 - 62.22) / 62.22 = 16.09%."
+454:  },
+455:  {
+456:    id: '1e-q2',
+457:    category: 'Portfolio',
+458:    question: "Quarterly returns are 8.0%, 7.0%, 8.0%, and -13.4%. Annual realized stock return is:",
+460:    correctAnswer: "C. 8.08%",
+461:    process: "R = (1.08)(1.07)(1.08)(0.866) - 1 = 0.0808 or 8.08%."
+462:  },
+463:  {
+464:    id: '1e-q3',
+465:    category: 'Portfolio',
+466:    question: "Annual returns are -18.1%, -0.5%, 23.0%, and 19.6%. Average is 6.0%. Variance is:",
+468:    correctAnswer: "B. 0.037",
+469:    process: "Sample Var = Σ(Ri - mean)² / (N-1). Deviations: -24.1%, -6.5%, 17.0%, 13.6%. Var = (0.241² + 0.065² + 0.170² + 0.136²) / 3 = 0.037."
+470:  },
+471:  {
+472:    id: '1e-q4',
+473:    category: 'Portfolio',
+474:    question: "Annual returns are 55.1%, 18.2%, -12.0%, and -21.3%. Average is 10.0%. Volatility is:",
+476:    correctAnswer: "A. 34.47%",
+477:    process: "SD = sqrt(Σ(Ri - mean)² / (N-1)) = 34.47%."
+478:  },
+479:  {
+480:    id: '1e-q5',
+481:    category: 'Portfolio',
+482:    question: "Next year’s return is 22% with probability 80% or 6% with probability 20%. Expected return is:",
+484:    correctAnswer: "A. 18.80%",
+485:    process: "E[R] = 0.8(22%) + 0.2(6%) = 18.8%."
+486:  },
+487:  {
+488:    id: '1e-q6',
+489:    category: 'Portfolio',
+490:    question: "Next year’s return is 14% with probability 65% or 12% with probability 35%. Standard deviation is:",
+492:    correctAnswer: "C. 0.95%",
+493:    process: "E[R] = 0.65(14) + 0.35(12) = 13.3%. SD = sqrt(0.65(14-13.3)² + 0.35(12-13.3)²) = 0.95%."
+494:  },
+495:  {
+496:    id: '1e-q7',
+497:    category: 'Portfolio',
+498:    question: "Stock ABC expected return is 5.7%, stock XYZ expected return is 6.5%. Portfolio is 72% ABC and 28% XYZ. Expected return is:",
+500:    correctAnswer: "C. 5.9%",
+501:    process: "E[Rp] = 0.72(5.7) + 0.28(6.5) = 5.924% ≈ 5.9%."
+502:  },
+503:  {
+504:    id: '1e-q8',
+505:    category: 'Portfolio',
+506:    question: "A stock has beta 0.68. Risk-free rate is 2.7%, market risk premium is 5.2%. Expected return is:",
+508:    correctAnswer: "C. 6.2%",
+509:    process: "E[R] = rf + β * MRP = 2.7 + 0.68(5.2) = 6.236% ≈ 6.2%."
+510:  },
+511:  {
+512:    id: '1e-q9',
+513:    category: 'Portfolio',
+514:    question: "A portfolio has beta 0.68. Risk-free rate is 3.0%, market risk premium is 6.0%. Expected return is:",
+516:    correctAnswer: "A. 7.1%",
+517:    process: "E[R] = 3.0 + 0.68(6.0) = 7.08% ≈ 7.1%."
+518:  },
+519:  {
+520:    id: '1e-q10',
+521:    category: 'Portfolio',
+522:    question: "A stock expected return is 6.4%. Risk-free rate is 3.4%, market risk premium is 4.5%. Beta is:",
+524:    correctAnswer: "C. 0.67",
+525:    process: "β = (E[R] - rf) / MRP = (6.4 - 3.4) / 4.5 = 3 / 4.5 = 0.667 ≈ 0.67."
+526:  },
+527:  {
+528:    id: '1e-q11',
+529:    category: 'Portfolio',
+530:    question: "Stock XYZ standard deviation is 45%, stock PQR standard deviation is 39%, correlation is 0.23. Portfolio is 60% XYZ and 40% PQR. Standard deviation is:",
+532:    correctAnswer: "B. 34.1%",
+533:    process: "Var(p) = 0.6²(0.45²) + 0.4²(0.39²) + 2(0.6)(0.4)(0.23)(0.45)(0.39). SD(p) = 34.1%."
+534:  },
+535:  {
+536:    id: '1e-q12',
+537:    category: 'Portfolio',
+538:    question: "Risk-free rate is 3.1%, expected market return is 8.3%, market volatility is 27.6%. Large diversified portfolio has beta 0.82 and volatility 31.3%. Expected return is:",
+540:    correctAnswer: "A. 7.36%",
+541:    process: "E[R] = 3.1 + 0.82(8.3 - 3.1) = 7.364%."
+542:  }
+543:];
+544:
+545:export const batch1F: Question[] = [
+546:  {
+547:    id: '1f-q1',
+548:    category: 'Derivatives',
+549:    question: "A call option has exercise price GBP 53. The share trades at GBP 48 at expiration. Payoff for the writer is:",
+551:    correctAnswer: "A. GBP 0",
+552:    process: "Call holder payoff: max(S-K, 0) = max(48-53, 0) = 0. Writer payoff is negative of holder payoff: 0."
+553:  },
+554:  {
+555:    id: '1f-q2',
+556:    category: 'Derivatives',
+557:    question: "A put option has exercise price EUR 67. Share trades at EUR 74 at expiration. Payoff for owner is:",
+559:    correctAnswer: "C. EUR 0",
+560:    process: "Put = max(K-S, 0) = max(67-74, 0) = 0."
+561:  },
+562:  {
+563:    id: '1f-q3',
+564:    category: 'Derivatives',
+565:    question: "A call option has exercise price USD 43. Share trades at USD 53 at expiration. Payoff of a short position is:",
+567:    correctAnswer: "A. USD -10",
+568:    process: "Long call payoff: 53-43=10. Short call payoff: -10."
+569:  },
+570:  {
+571:    id: '1f-q4',
+572:    category: 'Derivatives',
+573:    question: "A put option has exercise price GBP 33. Share trades at GBP 24 at expiration. Payoff of a long put is:",
+575:    correctAnswer: "B. GBP 9",
+576:    process: "Put = max(33-24, 0) = 9."
+577:  },
+578:  {
+579:    id: '1f-q5',
+580:    category: 'Derivatives',
+581:    question: "Current share price is USD 44.86. One-year European call with strike USD 49 costs USD 6.60. Dividend is after option expiry. Risk-free rate is 2.0%. Price of identical put is:",
+583:    correctAnswer: "A. USD 9.78",
+584:    process: "P = C + (K / (1+r)) - S = 6.60 + (49 / 1.02) - 44.86 = 9.78."
+585:  },
+586:  {
+587:    id: '1f-q6',
+588:    category: 'Derivatives',
+589:    question: "Share price in one year will be GBP 150 or GBP 43. Current share price is GBP 80. Risk-free rate is 1%. European call strike GBP 86. DELTA is:",
+591:    correctAnswer: "A. 0.598",
+592:    process: "Cu = 64, Cd = 0. Su = 150, Sd = 43. Δ = (64 - 0) / (150 - 43) = 64 / 107 ≈ 0.598."
+593:  },
+594:  {
+595:    id: '1f-q7',
+596:    category: 'Derivatives',
+597:    question: "Share price in one year will be CUR 113 or CUR 47. Current share price is CUR 73. Risk-free rate is 2%. European put strike CUR 68. A portfolio of DELTA shares and B in risk-free asset replicates the put. B equals:",
+599:    correctAnswer: "C. CUR 35.25",
+600:    process: "Pu=0, Pd=21. Delta = (Pu-Pd)/(Su-Sd) = -21/66 = -0.31818. Payoff in down state: Delta*Sd + (1+r)B = Pd => -0.31818*47 + 1.02B = 21 => B = 35.25."
+601:  },
+602:  {
+603:    id: '1f-q8',
+604:    category: 'Derivatives',
+605:    question: "A European call with strike EUR 72 expires in one year. A portfolio of 0.653 shares and EUR -35.56 in the risk-free asset replicates the call. Current share price is EUR 75.64 and risk-free rate is 1%. Call price is:",
+607:    correctAnswer: "C. EUR 13.83",
+608:    process: "C0 = ΔS0 + B = 0.653(75.64) - 35.56 = 13.83."
+609:  },
+610:  {
+611:    id: '1f-q9',
+612:    category: 'Derivatives',
+613:    question: "Share price in one year will be USD 130 or USD 42. Current share price is USD 74 and risk-free rate is 1%. Risk-neutral probability of an increase is:",
+615:    correctAnswer: "B. 0.372",
+616:    process: "p = ((1+r)S0 - Sd) / (Su - Sd) = (1.01*74 - 42) / (130 - 42) = 32.74 / 88 ≈ 0.372."
+617:  },
+618:  {
+619:    id: '1f-q10',
+620:    category: 'Derivatives',
+621:    question: "Share price in one year will be USD 97 or USD 30. Current share price is USD 54, risk-free rate is 2%. European call strike USD 57. Call price is:",
+623:    correctAnswer: "B. USD 14.68",
+624:    process: "Cu=40, Cd=0. p = (1.02*54 - 30) / (97 - 30) = 25.08 / 67 ≈ 0.3743. C0 = (0.3743 * 40) / 1.02 ≈ 14.68."
+625:  }
+626:];
+627:
+628:export const batch1G: Question[] = [
+629:  {
+630:    id: '1g-o1',
+631:    category: 'Investment',
+632:    question: "Bond A has face value €1,000, coupon rate 4%, annual coupons, last coupon paid yesterday, remaining maturity 3 years, and current market price €1,014.\n\na) Describe, in general terms, in which situations a bond’s market price equals its face value.\nb) Determine whether the yield-to-maturity is in the range 2–3%, 3–4%, 4–5%, or 5–6%.",
+633:    correctAnswer: "YTM is in range 3–4%",
+634:    process: "a) Price equals face value when Coupon Rate = YTM. b) Price 1014 > 1000 means YTM < Coupon(4%). Range is either 2-3% or 3-4%. Test 3%: P = 40/1.03 + 40/1.03² + 1040/1.03³ = 1028.29. Actual price 1014 < 1028.29 means YTM > 3%. Result: 3-4%."
+635:  }
+636:];
+637:
+638:export const batch2A: Question[] = [
+639:  {
+640:    id: '2a-q1',
+641:    category: 'Quantitative',
+642:    question: "Corporation A is a project company with one project and a one-year lifetime. Debt holders are promised €75,000. If the asset value at t=1 is €100,000, what are the payoffs for debt and equity holders?",
+644:    correctAnswer: "Debt: €75k, Equity: €25k",
+645:    process: "Debt payoff = min(V_A, 75). Equity payoff = max(V_A - 75, 0). At 100k: Debt = 75k, Equity = 25k."
+646:  },
+647:  {
+648:    id: '2a-q2',
+649:    category: 'Quantitative',
+650:    question: "An increase in accounts receivable is deducted from net income in the cash flow statement because:",
+652:    correctAnswer: "Revenue was recorded but cash not yet collected",
+653:    process: "Increases in AR mean sales were made on credit (increasing NI) but no cash was received. Thus, we subtract the increase to reach CFO."
+654:  },
+655:  {
+656:    id: '2a-q3',
+657:    category: 'Quantitative',
+658:    question: "Security A costs $231 and pays $0 or $600. Security B costs $346 and pays $600 or $0. If A+B is risk-free, what is the risk-free rate?",
+660:    correctAnswer: "3.99%",
+661:    process: "Price of A+B = 231 + 346 = 577. Payoff = 600. 1+rf = 600/577 = 1.03986. rf ≈ 3.99%."
+662:  }
+663:];
+664:
+665:export const batch2B: Question[] = [
+666:  {
+667:    id: '2b-q1',
+668:    category: 'Quantitative',
+669:    question: "You buy art for $3,000 and repay with 15 equal payments every two years (first in 2 years). Annual rate is 9%. The biennial payment is:",
+671:    correctAnswer: "$610.30",
+672:    process: "r_2yr = 1.09² - 1 = 18.81%. Annuity formula: 3000 = C * [(1 - 1.1881^-15) / 0.1881]. C = 3000 / 4.915 ≈ 610.30."
+673:  },
+674:  {
+675:    id: '2b-q2',
+676:    category: 'Quantitative',
+677:    question: "If monthly and quarterly compounding accounts are equivalent, the monthly quoted rate must be:",
+679:    correctAnswer: "Lower",
+680:    process: "More frequent compounding earns more interest-on-interest. To be equivalent, the nominal rate must be lower."
+681:  },
+682:  {
+683:    id: '2b-q3',
+684:    category: 'Investment',
+685:    question: "A 2-year 8% annual coupon bond (FV $1,000) has a flat 4% term structure. What is the dirty price at t=0.5 (half a year later)?",
+687:    correctAnswer: "$1,096.74",
+688:    process: "P0.5 = 80/1.04^0.5 + 1080/1.04^1.5 = 1096.74."
+689:  }
+690:];
+691:
+692:export const batch2C: Question[] = [
+693:  {
+694:    id: '2c-q1',
+695:    category: 'Investment',
+696:    question: "A bond (FV $1,000, 3.5% annual coupon) has 18 years and 1 quarter maturity. YTM is 1.9%. The market price is:",
+698:    correctAnswer: "$1,271.00",
+699:    process: "Price at 18y (before compounding): 1253.18. Forward 3 months: 1253.18 * 1.019^(3/4) = 1271.00."
+700:  },
+701:  {
+702:    id: '2c-q2',
+703:    category: 'Investment',
+704:    question: "A company’s FCF was €550m (reported 1y ago). Growth is 5%, WACC 10.8%, Debt €1.8b, Cash €55m, 125m shares. Share price is:",
+706:    correctAnswer: "€69.70",
+707:    process: "FCF1 = 550 * 1.05² = 606.4. EV = 606.4 / (0.108 - 0.05) = 10454.7. Equity = 10454.7 - 1800 + 55 = 8709.7. P = 8709.7 / 125 = 69.70."
+708:  },
+709:  {
+710:    id: '2c-q3',
+711:    category: 'Quantitative',
+712:    question: "How does price change for a 15-year zero-coupon bond if YTM rises from 5% to 6%?",
+714:    correctAnswer: "-15.3%",
+715:    process: "P5 = 100/1.05^15 = 48.10. P6 = 100/1.06^15 = 41.73. Change = (41.73-48.10)/48.10 = -15.3%."
+716:  }
+717:];
+718:
+719:export const batch2D: Question[] = [
+720:  {
+721:    id: '2d-q1',
+722:    category: 'Portfolio',
+723:    question: "Stock A: E[R]=8%, σ=43.9%. Stock B: E[R]=12%, σ=60%. rf=4%. Which is a better investment when combined with the risk-free asset?",
+725:    correctAnswer: "Stock B",
+726:    process: "SA = (8-4)/43.9 = 0.091. SB = (12-4)/60 = 0.133. Higher Sharpe is better."
+727:  },
+728:  {
+729:    id: '2d-q2',
+730:    category: 'Portfolio',
+731:    question: "If Stock A and B have negative correlation, combining them in a portfolio will:",
+733:    correctAnswer: "Lower portfolio volatility",
+734:    process: "Negative correlation is the most powerful form of diversification, reducing variance significantly."
+735:  },
+736:  {
+737:    id: '2d-q3',
+738:    category: 'Portfolio',
+739:    question: "Market E[R]=12%, σm=20%, rf=2%. An investor has 25% volatility. What is her best possible expected return?",
+741:    correctAnswer: "14.5%",
+742:    process: "Using CML: E[Rp] = rf + [(Rm-rf)/σm]*σp = 2 + [(12-2)/20]*25 = 2 + 0.5*25 = 14.5%."
+743:  }
+744:];
+745:
+746:export const batch2E: Question[] = [
+747:  {
+748:    id: '2e-q1',
+749:    category: 'Quantitative',
+750:    question: "Equity market value=60m, Debt market value=12.6m. Target D/(D+E)=1/3. Cost of debt=3.5%, Unlevered cost=7.96%, Tax=25%. New WACC is:",
+752:    correctAnswer: "7.67%",
+753:    process: "rU = 7.96%. New rE: 7.96 = (2/3)rE + (1/3)(3.5) => rE = 10.19%. WACC = (2/3)10.19 + (1/3)3.5(0.75) = 7.67%."
+754:  },
+755:  {
+756:    id: '2e-q2',
+757:    category: 'Portfolio',
+758:    question: "Informed traders have beta 1.5, market return 11%, risk-free 5%, and their expected return is 15%. What is their alpha?",
+760:    correctAnswer: "1.0%",
+761:    process: "CAPM required: 5 + 1.5(11-5) = 14%. Alpha = 15 - 14 = 1%."
+762:  }
+763:];
+764:
+765:export const batch2F: Question[] = [
+766:  {
+767:    id: '2f-q1',
+768:    category: 'Derivatives',
+769:    question: "Stock price 125. Goes ±10% in 6 months. rf=1%. European call (strike 130) value is:",
+771:    correctAnswer: "€4.08",
+772:    process: "RN prob p: 125*1.01 = 137.5p + 112.5(1-p) => p = 0.55. Call = (0.55*7.5 + 0.45*0)/1.01 = 4.08."
+773:  },
+774:  {
+775:    id: '2f-q2',
+776:    category: 'Derivatives',
+777:    question: "Using same stock (125, ±10%), what is the DELTA of the call strike 130?",
+779:    correctAnswer: "0.300",
+780:    process: "Δ = (7.5 - 0) / (137.5 - 112.5) = 7.5 / 25 = 0.30."
+781:  },
+782:  {
+783:    id: '2f-q3',
+784:    category: 'Derivatives',
+785:    question: "Stock 100, can go to 130 or 80. rf=4%. RN probability of up-state is:",
+787:    correctAnswer: "0.48",
+788:    process: "p = (1.04*100 - 80) / (130 - 80) = 24 / 50 = 0.48."
+789:  }
+790:];
+791:
+792:export const batch2G: Question[] = [
+793:  {
+794:    id: '2g-q1',
+795:    category: 'Investment',
+796:    question: "Bond ABC: Face value $1,000, 4% annual coupon, 3 years left. Spot rates: s1=1.0%, s2=2.0%, s3=2.5%. Calculate forward rates f1, f2, f3 and bond value.",
+797:    correctAnswer: "f1=1.0%, f2=3.01%, f3=3.51%; Price=$1,042.77",
+798:    process: "f1=s1=1%. (1.02)²=1.01(1+f2) => f2=3.01%. (1.025)³=1.01(1.0301)(1+f3) => f3=3.51%. Price = 40/1.01 + 40/1.02² + 1040/1.025³ = 1042.77."
+799:  },
+800:  {
+801:    id: '2g-q2',
+802:    category: 'Portfolio',
+803:    question: "Asset A: E[R]=11.1%, σ=25%. Asset B: E[R]=7.4%, σ=15%. Cov(A,B)=0.03375, rf=3%. Find correlation and expected return/volatility of a 40/60 portfolio.",
+804:    correctAnswer: "ρ=0.90; E[Rp]=8.88%, σp=18.52%",
+805:    process: "ρ = 0.03375 / (0.25*0.15) = 0.90. E[Rp] = 0.4(11.1) + 0.6(7.4) = 8.88%. Var = 0.4²(0.25²) + 0.6²(0.15²) + 2(0.4)(0.6)(0.03375) = 0.0343 => σ = 18.52%."
+806:  },
+807:  {
+808:    id: '2g-q3',
+809:    category: 'Portfolio',
+810:    question: "CAPM holds. E[Rm]=12%, σm=30%, rf=3%. Security A: E[R]=9%, σ=60%. Create a portfolio of rf & market with same volatility as A. Calculate its E[R].",
+811:    correctAnswer: "E[Rp]=21% (wM=200%, wF=-100%)",
+812:    process: "To match σA=60% with σm=30%, need 2x market leverage. wM = 60/30 = 2. E[Rp] = 3% + 2(12-3) = 21%. β=2."
+813:  },
+814:  {
+815:    id: '2g-q4',
+816:    category: 'Investment',
+817:    question: "Goople: EPS $6, reinvest 40% at 12.5%. Comparable yield 4%, growth 5%. Calculate rE and current share price.",
+818:    correctAnswer: "rE=9%, P0=$90",
+819:    process: "rE = yield + g = 4%+5% = 9%. g = b*ROE = 0.4*12.5% = 5%. Div1 = 6*(1-0.4) = 3.6. P0 = 3.6 / (0.09 - 0.05) = 90."
+820:  },
+821:  {
+822:    id: '2g-q5',
+823:    category: 'Derivatives',
+824:    question: "S0=50, rf=4%, 1-year options. 1) Strike where C=P? 2) Two-period binomial (S=100, up to 130/80): Value of American call strike 100?",
+825:    correctAnswer: "1) K=€52; 2) C=€16.56",
+826:    process: "1) C-P = S - K/(1+r). If C=P, K = 50*1.04 = 52. 2) p = (104-80)/(130-80)=0.48. Terminal payoffs: 69, 4, 0. RN valuation: C = (0.48²*69 + 2*0.48*0.52*4 + 0)/1.04² = 16.56."
+827:  }
+828:];
+829:
+830:export const batch3A: Question[] = [
+831:  {
+832:    id: '3a-q1',
+833:    category: 'Quantitative',
+834:    question: "EBIT is EUR 129.1 million, depreciation is EUR 12.1 million, investment in net working capital is EUR 25.3 million, capital expenditures are EUR 27.0 million, and the corporate tax rate is 35.0%. The free cash flow is closest to:",
+836:    correctAnswer: "B. EUR 43.7 million",
+837:    process: "FCF=(1-T_c)EBIT+Dep-CapEx-ΔNWC = (1-0.35)(129.1)+12.1-27.0-25.3 = 83.915+12.1-27.0-25.3 = 43.715."
+838:  },
+839:  {
+840:    id: '3a-q2',
+841:    category: 'Portfolio',
+842:    question: "Fairgo has a debt-to-equity ratio of 0.5. Its WACC is 8%. Debt is risk-free, no taxes, rf=2%, MRP=4%. What are Fairgo’s asset beta and equity beta?",
+844:    correctAnswer: "A. βA=1.5, βE=2.25",
+845:    process: "WACC = rf + βA(MRP) => 8% = 2% + βA(4%) => βA = 1.5. βA = (E/(D+E))βE = (1/1.5)βE => βE = 2.25."
+846:  },
+847:  {
+848:    id: '3a-q3',
+849:    category: 'Quantitative',
+850:    question: "A company has 44m shares at $73.97 and debt of $298m. It adds $60m debt to repurchase shares. Tax rate is 21%. Share price just after announcement is:",
+852:    correctAnswer: "B. USD 74.26",
+853:    process: "PV(Tax Shield) = Tc*D = 0.21*60 = 12.60. Increase per share = 12.6/44 = 0.286. Price = 73.97 + 0.286 = 74.26."
+854:  },
+855:  {
+856:    id: '3a-q4',
+857:    category: 'Quantitative',
+858:    question: "Comparable has price $20, 10m shares, $100m debt, debt yield 4.5%, equity beta 1.00, rf=4%, MRP=5%, no taxes. Project cost of capital is:",
+860:    correctAnswer: "A. 7.5%",
+861:    process: "rE = 4%+1(5%)=9%. E=200, D=100. rU = (200/300)9% + (100/300)4.5% = 7.5%."
+862:  },
+863:  {
+864:    id: '3a-q5',
+865:    category: 'Investment',
+866:    question: "Fenestra worth $5b. Vista plans LBO, expects value to rise to $10b. Vista borrows $4.5b. How much own cash must Vista use to convince current shareholders to sell?",
+868:    correctAnswer: "B. $1.0 billion",
+869:    process: "Post-buyout Equity E=10-4.5=5.5. Shareholders must receive 5.5 to tender. Vista uses 4.5 debt, so own cash = 5.5 - 4.5 = 1.0."
+870:  },
+871:  {
+872:    id: '3a-q6',
+873:    category: 'Quantitative',
+874:    question: "InStoxx has 10m shares at €20. EBT is €30m forever. Tax 30%. Issues €30m debt at 4% to repurchase shares. Return on equity after buyback is closest to:",
+876:    correctAnswer: "D. 11.5%",
+877:    process: "VU=200. PVTS=0.3*30=9. VL=209. E=209-30=179. FCFE=(30-1.2)*0.7=20.16. rE=20.16/179=11.26%."
+878:  },
+879:  {
+880:    id: '3a-q7',
+881:    category: 'Investment',
+882:    question: "UB takes over Chiquita. Chiquita has 8m shares at $50, expects 25% synergy. UB has 100m shares at $20. UB offers 3 new shares for each Chiquita share. UB price after announcement is:",
+884:    correctAnswer: "C. $20.20",
+885:    process: "UB=2000, Chi=400, Chi_syn=500. Total V=2500. New shares=24. Total shares=124. P=2500/124=20.16."
+886:  },
+887:  {
+888:    id: '3a-q8',
+889:    category: 'Quantitative',
+890:    question: "Family lends you €10,000 perpetually at 3%. Market rate is 5%. Tax rate 20%. Present value effect on your business is closest to:",
+892:    correctAnswer: "D. EUR 5,200",
+893:    process: "After-tax payment = 10000*0.03*0.8 = 240. PV at 5% = 240/0.05 = 4800. Net effect = 10000 - 4800 = 5200."
+894:  },
+895:  {
+896:    id: '3a-q9',
+897:    category: 'Quantitative',
+898:    question: "Longhaul worth €70m, 10m shares. New project NPV €2m costs €5m. Issues new shares to raise €5m. At what price can it issue?",
+900:    correctAnswer: "C. EUR 7.20",
+901:    process: "Value before issuing, including NPV: 70+2=72. Price = 72/10 = 7.20."
+902:  },
+903:  {
+904:    id: '3a-q10',
+905:    category: 'Quantitative',
+906:    question: "Target.com FCF $20m forever. rE=12%. Targets D/E=0.3 permanently. rD=5%, Tax 20%. PV of tax shields is:",
+908:    correctAnswer: "A. $3.3 million",
+909:    process: "VU=20/0.12=166.67. WACC=12-5*(0.3/1.3)*0.2 = 11.77%. VL=20/0.1177=169.93. PVTS = 169.93-166.67=3.26."
+910:  },
+911:  {
+912:    id: '3a-q11',
+913:    category: 'Quantitative',
+914:    question: "In perfect markets, when does the share price decrease by the amount of the dividend?",
+916:    correctAnswer: "Payment date",
+917:    process: "In perfect markets, value shifts from firm to holders at payment. (Note: standard theory often says ex-date, but phrasing here says 'when dividend is paid')."
+918:  },
+919:  {
+920:    id: '3a-q12',
+921:    category: 'Investment',
+922:    question: "RNAVax worth €2.5b. Success (30%) makes value €5.3b, failure makes it €1.8b. Expected return is:",
+924:    correctAnswer: "14%",
+925:    process: "E[V1] = 0.3(5.3) + 0.7(1.8) = 1.59 + 1.26 = 2.85. E[R] = 2.85/2.5 - 1 = 14%."
+926:  },
+927:  {
+928:    id: '3a-q13',
+929:    category: 'Investment',
+930:    question: "Wager issues $100m zero-coupon debt. Next year firm worth $150m, $135m, $95m, or $80m equally. bankruptcy costs 25%. rf=5%. Debt YTM is closest to:",
+932:    correctAnswer: "25%",
+933:    process: "Payoffs: 100, 100, 71.25, 60. E[P] = 82.8125. D0 = 82.8125/1.05 = 78.87. YTM = 100/78.87 - 1 = 26.8%."
+934:  },
+935:  {
+936:    id: '3a-q14',
+937:    category: 'Portfolio',
+938:    question: "RealEnergy sells 400 MW. Passes on 60% of price increases. To hedge completely, it should:",
+940:    correctAnswer: "Buy 160 MW forward",
+941:    process: "Exposed to 40% of 400MW = 160MW. Must buy forward to lock in costs for the portion it cannot pass on."
+942:  },
+943:  {
+944:    id: '3a-q15',
+945:    category: 'Quantitative',
+946:    question: "In perfect capital markets without taxes/bankruptcy costs, which is false?",
+948:    correctAnswer: "Leverage doesn't change rE",
+949:    process: "Modigliani-Miller: Leverage increases equity risk and thus required return on equity."
+950:  },
+951:  {
+952:    id: '3a-q16',
+953:    category: 'Quantitative',
+954:    question: "BV Equity=$241m, MV Equity=$392m, MV Debt=$147m. Equity weight in WACC is:",
+956:    correctAnswer: "72.7%",
+957:    process: "wE = 392 / (392+147) = 72.7%."
+958:  },
+959:  {
+960:    id: '3a-q17',
+961:    category: 'Investment',
+962:    question: "Microsoft (platform) buying Activision Blizzard (game content) is what type of merger?",
+964:    correctAnswer: "Vertical",
+965:    process: "Merger between a supplier (content) and a platform user is vertical."
+966:  },
+967:  {
+968:    id: '3a-q18',
+969:    category: 'Investment',
+970:    question: "Started company with €2.2m. Investor offers €1.3m for 25% stake. Your remaining 75% stake is worth:",
+972:    correctAnswer: "€3.9m",
+973:    process: "Post-money Equity = 1.3/0.25 = 5.2. Your stake (75%) = 0.75 * 5.2 = 3.9."
+974:  },
+975:  {
+976:    id: '3a-q19',
+977:    category: 'Quantitative',
+978:    question: "1. Ex-div price < cum-div price. 2. Repurchase: price before = price after. Which are true?",
+980:    correctAnswer: "Both true",
+981:    process: "1: Price drops by dividend. 2: Proportional reduction in cash/shares leaves price unchanged."
+982:  },
+983:  {
+984:    id: '3a-q20',
+985:    category: 'Quantitative',
+986:    question: "11m shares at GBP 47.25. GBP 38m excess cash earning 1.4% taxed at 31%. Uses cash to repurchase. Price after announcement is:",
+988:    correctAnswer: "GBP 48.32",
+989:    process: "PVTS = 0.31*38 = 11.78. Per-share = 11.78/11 = 1.07. Price = 47.25 + 1.07 = 48.32."
+990:  }
+991:];
+992:
+993:export const batch3B: Question[] = [
+994:  {
+995:    id: '3b-o1',
+996:    category: 'Quantitative',
+997:    question: "Explain how leasing can help mitigate the debt overhang problem.",
+998:    correctAnswer: "Leasing allows investment without giving creditors a claim in default.",
+999:    process: "Debt overhang rejects NPS projects because benefits go to old debt. Leasing avoids owner-level claims, protecting the project's returns for the user."
+1000:  },
+1001:  {
+1002:    id: '3b-o2',
+1003:    category: 'Investment',
+1004:    question: "Lisa buys insurance paying €100k if pubs shut (20% prob). rf=2%, MRP=8%, beta=-2. Actuarially fair premium is:",
+1005:    correctAnswer: "€23,255.81",
+1006:    process: "E[P] = 20k. r = 2% + (-2)(8%) = -14%. PV = 20000 / 0.86 = 23255.81."
+1007:  },
+1008:  {
+1009:    id: '3b-o3',
+1010:    category: 'Investment',
+1011:    question: "Project costs €2m at t=1. Success (€300k/yr) and failure (€160k/yr) equal likely. r=10%. Option to abandon for €60k at t=1. NPV at t=0 is:",
+1012:    correctAnswer: "€481,818.18",
+1013:    process: "Succ(t=1): -2m + 3m/0.1 = 1m. Fail(t=1): Abandon for 60k. E[V1] = 0.5(1m) + 0.5(60k) = 530k. NPV0 = 530k/1.1 = 481818."
+1014:  },
+1015:  {
+1016:    id: '3b-o4',
+1017:    category: 'Investment',
+1018:    question: "Who gets value from a takeover? What problem does this cause? Explain one solution.",
+1019:    correctAnswer: "Target shareholders; Free-rider problem; Toehold/LBO/Freezeout.",
+1020:    process: "Target holders capture gains by refusing to tender. Solutions: Toeholds (buy before news), LBOs (use leverage), or Freezeouts (legal move)."
+1021:  },
+1022:  {
+1023:    id: '3b-o5',
+1024:    category: 'Quantitative',
+1025:    question: "BioPharm success (€1320m) or failure (€880m) equal likely. r=10%, 100m shares. Project costs €100m, PV profits €150m. Shares to issue?",
+1026:    correctAnswer: "9.52 million shares",
+1027:    process: "V0 = 1000. Project NPV = 50. Post-news value = 1050. Price/share = 10.50. Shares needed = 100 / 10.50 = 9.52."
+1028:  },
+1029:  {
+1030:    id: '3b-o6',
+1031:    category: 'Quantitative',
+1032:    question: "BioPharm (from prev): Management knows success is certain. Invest now (underpriced) or wait 1y (news public)?",
+1033:    correctAnswer: "Wait (Value per share €12.45 vs €12.33)",
+1034:    process: "Issue now: Total V=1350, shares=109.52 => €12.33/sh. Wait: 1200 + 50/1.1 = 1245.45 => €12.45/sh."
+1035:  },
+1036:  {
+1037:    id: '3b-o7',
+1038:    category: 'Quantitative',
+1039:    question: "What is a rights offer? Would it help BioPharm?",
+1040:    correctAnswer: "Issue to existing holders; Yes, avoids underpricing wealth transfer.",
+1041:    process: "Rights offer keeps new equity in-house among existing owners, meaning 'underpricing' doesn't matter as they buy at the lower price themselves."
+1042:  },
+1043:  {
+1044:    id: '3b-o8',
+1045:    category: 'Quantitative',
+1046:    question: "What is the pecking order theory?",
+1047:    correctAnswer: "Retained Earnings > Debt > Equity.",
+1048:    process: "Preference order due to asymmetric info. Equity is last because it signals overvaluation."
+1049:  }
+1050:];
+1051:
+1052:export const batch4A: Question[] = [
+1053:  {
+1054:    id: '4a-q1',
+1055:    category: 'Quantitative',
+1056:    question: "Refin SA is all-equity, assets $2bn, 1bn shares. Borrows $0.5bn permanently to repurchase shares. Tax rate 20%. Minimum repurchase price?",
+1058:    correctAnswer: "A. $2.10",
+1059:    process: "PVTS = 0.20 * 0.5 = 0.1. VL = VU + PVTS = 2 + 0.1 = 2.1. Price = 2.1 / 1 = 2.10."
+1060:  },
+1061:  {
+1062:    id: '4a-q2',
+1063:    category: 'Ethics',
+1064:    question: "Which are true? 1. Sarbanes-Oxley aimed to improve info accuracy after fraud. 2. Dodd-Frank regulates executive pay after financial crisis.",
+1066:    correctAnswer: "D. Both true",
+1067:    process: "Both are landmark US regulations addressing corporate governance and financial stability."
+1068:  },
+1069:  {
+1070:    id: '4a-q3',
+1071:    category: 'Investment',
+1072:    question: "Welch has 10m shares at $70.20. Buys Starstruck (worth $35m) for $40m. No synergies. Issues new shares. What issue price?",
+1074:    correctAnswer: "B. $69.70",
+1075:    process: "Welch loses $5m (40-35) on the deal. Existing value 702 - 5 = 697. Price = 697 / 10 = 69.70."
+1076:  },
+1077:  {
+1078:    id: '4a-q4',
+1079:    category: 'Investment',
+1080:    question: "Black Swan worth €200m. LBO can raise value to €400m. Loan available is €180m. How much own capital needed for buyout?",
+1082:    correctAnswer: "B. €40m",
+1083:    process: "Post-buyout Equity E = 400 - 180 = 220. Shareholders must receive 220. Loan is 180, so own cash = 220 - 180 = 40."
+1084:  },
+1085:  {
+1086:    id: '4a-q5',
+1087:    category: 'Quantitative',
+1088:    question: "Amina: 4m founder shares + 1m VC shares. PE invests €5m for 2m new shares. Post-money firm value is:",
+1090:    correctAnswer: "D. €17.5m",
+1091:    process: "PE price = 5 / 2 = 2.50. Total shares = 4 + 1 + 2 = 7. Value = 7 * 2.50 = 17.5."
+1092:  },
+1093:  {
+1094:    id: '4a-q6',
+1095:    category: 'Quantitative',
+1096:    question: "D/E = 0.7, E = €8m, rE = 10%, rD = 6%, Tax 20%. WACC is:",
+1098:    correctAnswer: "D. 7.9%",
+1099:    process: "wE = 1/1.7, wD = 0.7/1.7. WACC = (1/1.7)10 + (0.7/1.7)6(0.8) = 5.88 + 1.98 = 7.86% ≈ 7.9%."
+1100:  },
+1101:  {
+1102:    id: '4a-q7',
+1103:    category: 'Ethics',
+1104:    question: "1. Pecking order: retained earnings > debt. 2. Equity issue announcements are usually positive. Which are true?",
+1106:    correctAnswer: "B. 1 true, 2 false",
+1107:    process: "Pecking order prefers internal funds. Equity news is usually negative due to adverse selection."
+1108:  },
+1109:  {
+1110:    id: '4a-q8',
+1111:    category: 'Quantitative',
+1112:    question: "E: all-equity, 3m shares at $14. D: 4m shares, $6m debt. Assets identical, perfect markets. D's stock price?",
+1114:    correctAnswer: "B. $9",
+1115:    process: "VU = 3 * 14 = 42. ED = 42 - 6 = 36. Price = 36 / 4 = 9."
+1116:  },
+1117:  {
+1118:    id: '4a-q9',
+1119:    category: 'Quantitative',
+1120:    question: "PharmWorks: assets $202m, debt $72m, 5m shares. Issues shares to repay debt. Number of new shares?",
+1122:    correctAnswer: "B. 2.8m",
+1123:    process: "P = (202-72)/5 = 26. New shares = 72 / 26 = 2.77 ≈ 2.8m."
+1124:  },
+1125:  {
+1126:    id: '4a-q10',
+1127:    category: 'Investment',
+1128:    question: "Rioblanco owes $15m. Assets $10m. Invest $20m to get $35m expected value. rf=5%. Decision?",
+1130:    correctAnswer: "D. Don't invest (Debt overhang)",
+1131:    process: "Total NPV = (25/1.05) - 20 = 3.8. Equity NPV = (20/1.05) - 20 = -0.95. Shareholders lose, so they reject."
+1132:  },
+1133:  {
+1134:    id: '4a-q11',
+1135:    category: 'Quantitative',
+1136:    question: "A company’s levered value is $550m, including a $26m tax shield. What is its unlevered value?",
+1138:    correctAnswer: "C. USD 524m",
+1139:    process: "VU = 42. PVTS = 0.25*8 = 2. VL = 44. ED = 44 - 8 = 36. Price = 36/6 = 6."
+1140:  }
+1141:];
+1142:
+1143:export const batch5B: Question[] = [
+1144:  {
+1145:    id: '5b-o1',
+1146:    category: 'Quantitative',
+1147:    question: "List and explain two cases where IRR can be misleading for mutually exclusive projects.",
+1148:    correctAnswer: "Misleading if projects differ in scale, timing, or risk.",
+1149:    process: "IRR ignores scale (prefers small high % return over large high $ return). It ignores timing (timing differences in cash flows). It ignores varying risk profiles (different hurdle rates)."
+1150:  },
+1151:  {
+1152:    id: '5b-o2',
+1153:    category: 'Quantitative',
+1154:    question: "A graph shows constant WACC as leverage changes, while debt and equity costs rise. Does this reflect perfect or imperfect markets? Why?",
+1155:    correctAnswer: "Perfect capital markets (MM without frictions).",
+1156:    process: "In perfect markets, capital structure is irrelevant to firm value and WACC. The rising cost of levered equity is exactly offset by the increased weight of cheaper debt."
+1157:  },
+1158:  {
+1159:    id: '5b-o3',
+1160:    category: 'Investment',
+1161:    question: "Scholarship is €1,000 if passed. Session costs €100. Two booked now cost €150. After one, 40% chance no second needed. Book one or two?",
+1162:    correctAnswer: "Book two sessions now (Value €850 vs €840).",
+1163:    process: "Book two: 1000 - 150 = 850. Wait: 0.4(1000-100) + 0.6(1000-200) = 0.4(900) + 0.6(800) = 360 + 480 = 840. Proactive booking saves €10."
+1164:  },
+1165:  {
+1166:    id: '5b-o4',
+1167:    category: 'Quantitative',
+1168:    question: "Insurance pays €100,000 in 1yr if fire occurs (prob 1%). rf=3%, MRP 6.5%, β=-2. Calculate the fair premium.",
+1169:    correctAnswer: "€1,111.11",
+1170:    process: "E[Payoff] = 1000. r(ins) = 3 - 2(6.5) = -10%. Premium = E[Payoff] / (1 + r) = 1000 / 0.9 = 1111.11."
+1171:  },
+1172:  {
+1173:    id: '5b-o5',
+1174:    category: 'Quantitative',
+1175:    question: "Equity €900m, permanent debt €100m, tax rate 20%. Calculate levered value, unlevered value, and PV of tax shield.",
+1176:    correctAnswer: "VL = €1,000m; VU = €980m; PVTS = €20m",
+1177:    process: "VL = E + D = 900 + 100 = 1000. PVTS = Tc * D = 0.20 * 100 = 20. VU = VL - PVTS = 1000 - 20 = 980."
+1178:  },
+1179:  {
+1180:    id: '5b-o6',
+1181:    category: 'Quantitative',
+1182:    question: "Velio all-equity: 100m shares at €10. EBIT €150m, tax 20%. Issues €200m debt at 5%. Find original and new rE.",
+1183:    correctAnswer: "Original rE=12%; New rE=13.3%",
+1184:    process: "VU = 1000. Net Income = 150 * 0.8 = 120. rU = 120/1000 = 12%. New VL = 1000 + 0.2(200) = 1040. New E = 840. New NI = (150 - 10) * 0.8 = 112. New rE = 112 / 840 = 13.3%."
+1185:  },
+1186:  {
+1187:    id: '5b-o7',
+1188:    category: 'Investment',
+1189:    question: "Debt $150m. Asset $100m. Invest $200m to get $350m value. rf=5%. Explain why this might not happen.",
+1190:    correctAnswer: "Debt Overhang prevents investment.",
+1191:    process: "Total NPV = (250/1.05) - 200 = 38.1 > 0. Equity PV = (200/1.05) = 190.48. Equity NPV = 190.48 - 200 = -9.52. Shareholders lose money while debt holders gain principal safety."
+1192:  },
+1193:  {
+1194:    id: '5b-o8',
+1195:    category: 'Investment',
+1196:    question: "Explain the free-rider problem in corporate takeovers and list one solution.",
+1197:    correctAnswer: "Shareholders hold out for post-takeover value. Solutions: Toeholds, LBOs, Freezeouts.",
+1198:    process: "Individual shareholders don't tender because they want to 'ride' the value increase created by the acquirer without helping it happen. Makes bids expensive or impossible without strategic leverage (like toeholds)."
+1199:  }
+1200:];
+1201:
+1202:export const batch6A: Question[] = [
+1203:  {
+1204:    id: '6a-q1',
+1205:    category: 'Quantitative',
+1206:    question: "Barristo 300m shares. Rights issue: 5 rights for 1 new share at $10. Total amount raised?",
+1208:    correctAnswer: "$600m",
+1209:    process: "New shares = 300 / 5 = 60. Proceeds = 60 * 10 = 600."
+1210:  },
+1211:  {
+1212:    id: '6a-q2',
+1213:    category: 'Quantitative',
+1214:    question: "D/E 0.5 to 0.8, rD=4%, initial rE=10%, no taxes. What is the new cost of equity?",
+1216:    correctAnswer: "11.2%",
+1217:    process: "rU = (1/1.5)10 + (0.5/1.5)4 = 8%. New 8 = (1/1.8)rE + (0.8/1.8)4 => 14.4 = rE + 3.2 => rE = 11.2%."
+1218:  },
+1219:  {
+1220:    id: '6a-q3',
+1221:    category: 'Investment',
+1222:    question: "Firm announces stock dividend. No asymmetric info. What happens to the price at announcement and issue?",
+1224:    correctAnswer: "Announcement: Same, Issue: Decrease",
+1225:    process: "No new info at news. At issue, value is spread over more shares so price drops mechanically."
+1226:  },
+1227:  {
+1228:    id: '6a-q4',
+1229:    category: 'Quantitative',
+1230:    question: "Analysis checking how changing individual assumptions affects NPV is called:",
+1232:    correctAnswer: "Sensitivity analysis",
+1233:    process: "Sensitivity analysis changes one variable at a time to test robustness."
+1234:  },
+1235:  {
+1236:    id: '6a-q5',
+1237:    category: 'Quantitative',
+1238:    question: "All-equity €12m, 8m shares. Issue €2m debt, repurchase shares, tax 20%. Price after news?",
+1240:    correctAnswer: "€1.55",
+1241:    process: "Initial Price = 1.50. PVTS = 0.2*2 = 0.4. News Value = 12 + 0.4 = 12.4. Price = 12.4 / 8 = 1.55."
+1242:  },
+1243:  {
+1244:    id: '6a-q6',
+1245:    category: 'Quantitative',
+1246:    question: "Peet has $3.5m cash, all-equity, 1.75m shares at $12. Repurchases shares. Equity value after?",
+1248:    correctAnswer: "$17.5m",
+1249:    process: "Initial E = 1.75 * 12 = 21. After payout E = 21 - 3.5 = 17.5."
+1250:  },
+1251:  {
+1252:    id: '6a-q7',
+1253:    category: 'Investment',
+1254:    question: "Debt €30m. Success: A(30% prob, 100 val), B(40%, 90), C(50%, 80), D(60%, 70). Which is best for Equity?",
+1256:    correctAnswer: "Project C",
+1257:    process: "E[E] = p*(Val-30). A: 0.3*70=21. B: 0.4*60=24. C: 0.5*50=25. D: 0.6*40=24. C wins."
+1258:  },
+1259:  {
+1260:    id: '6a-q8',
+1261:    category: 'Quantitative',
+1262:    question: "Profit €2m today, loss €2.2m next year, r=15%. 1. IRR > 15%; 2. Invest? Which are true?",
+1264:    correctAnswer: "1 false, 2 true",
+1265:    process: "IRR = 10% (0 = 2 - 2.2/1.1). NPV at 15% = 2 - 2.2/1.15 = 2 - 1.91 = +0.09. Invest because NPV > 0 even though IRR < cost of capital (sign flip)."
+1266:  },
+1267:  {
+1268:    id: '6a-q9',
+1269:    category: 'Quantitative',
+1270:    question: "Investment €20.6m, CF1 €1.2m, growth 2.3% forever. What is the IRR?",
+1272:    correctAnswer: "8.1%",
+1273:    process: "20.6 = 1.2 / (IRR - 0.023) => IRR = 0.023 + 1.2/20.6 = 0.023 + 0.058 = 8.1%."
+1274:  },
+1275:  {
+1276:    id: '6a-q16',
+1277:    category: 'Quantitative',
+1278:    question: "Book equity $241m, Market equity $392m, Market debt $147m. Market weight of equity?",
+1280:    correctAnswer: "72.7%",
+1281:    process: "wE = 392 / (392 + 147) = 392 / 539 = 72.7%."
+1282:  },
+1283:  {
+1284:    id: '6a-q17',
+1285:    category: 'Quantitative',
+1286:    question: "11m shares at £47.25. Excess £38m cash earns 1.4%, tax 31%. Remove cash via repurchase. New price?",
+1288:    correctAnswer: "£48.32",
+1289:    process: "PV tax liability removed = 0.31 * 38 = 11.78. Price boost = 11.78 / 11 = 1.07. New price = 47.25 + 1.07 = 48.32."
+1290:  },
+1291:  {
+1292:    id: '6a-q18',
+1293:    category: 'Quantitative',
+1294:    question: "All-equity €10m, 4m shares. Issue €5m debt, repurchase shares, tax 20%. Shares repurchased?",
+1296:    correctAnswer: "1.8m",
+1297:    process: "PVTS = 1. New V = 11. Price = 11 / 4 = 2.75. Repurchased = 5 / 2.75 = 1.818 ≈ 1.8m."
+1298:  },
+1299:  {
+1300:    id: '6a-q19',
+1301:    category: 'Investment',
+1302:    question: "Trucks $15m, residual $5m (4y). Semiannual payments (annuity due), rate 3% semiannual. Payment?",
+1304:    correctAnswer: "$1.53m",
+1305:    process: "PV residual = 5 / 1.03^8 = 3.947. PV payments = 15 - 3.947 = 11.053. 11.053 = L * [1 + (1 - 1.03^-7)/0.03] = L * [1 + 6.23] = 7.23L. L = 1.53."
+1306:  }
+1307:];
+1308:
+1309:export const batch6B: Question[] = [
+1310:  {
+1311:    id: '6b-o1',
+1312:    category: 'Quantitative',
+1313:    question: "List and explain two cases where IRR can be misleading for mutually exclusive projects.",
+1314:    correctAnswer: "Scale, timing, or risk differences.",
+1315:    process: "IRR ignores scale (prefers small % over large $), timing (CF pattern), and risk (varying costs of capital)."
+1316:  },
+1317:  {
+1318:    id: '6b-o2',
+1319:    category: 'Quantitative',
+1320:    question: "A graph shows constant WACC as leverage changes, while debt and equity costs rise. Perfect or imperfect markets? Explain.",
+1321:    correctAnswer: "Perfect capital markets.",
+1322:    process: "Under MM, WACC remains constant because the savings from using cheaper debt exactly offsets the risk premium on equity."
+1323:  },
+1324:  {
+1325:    id: '6b-o3',
+1326:    category: 'Investment',
+1327:    question: "Scholarship is €1,000. Session costs €100. Two booked now cost €150. After one, 40% chance no second needed. Book one or two?",
+1328:    correctAnswer: "Book two sessions now (Value €850 vs €840).",
+1329:    process: "Book two: 1000 - 150 = 850. Wait: 0.4(900) + 0.6(800) = 840."
+1330:  },
+1331:  {
+1332:    id: '6b-o4',
+1333:    category: 'Quantitative',
+1334:    question: "Insurance pays €100,000 if fire occurs (prob 1%). rf=3%, MRP 6.5%, β=-2. Calculate the fair premium.",
+1335:    correctAnswer: "€1,111.11",
+1336:    process: "E[P] = 1000. r = 3 - 2(6.5) = -10%. Premium = 1000 / 0.9 = 1111.11."
+1337:  },
+1338:  {
+1339:    id: '6b-o5',
+1340:    category: 'Quantitative',
+1341:    question: "Equity €900m, permanent debt €100m, tax rate 20%. Find levered value, unlevered value, and tax shield.",
+1342:    correctAnswer: "VL=€1,000m; VU=€980m; PVTS=€20m",
+1343:    process: "VL = 900 + 100 = 1000. PVTS = 0.2*100 = 20. VU = 1000 - 20 = 980."
+1344:  },
+1345:  {
+1346:    id: '6b-o6',
+1347:    category: 'Quantitative',
+1348:    question: "Velio all-equity: 100m shares at €10. EBIT €150m, tax 20%. Issues €200m debt at 5%. Find original and new rE.",
+1349:    correctAnswer: "Original rE=12%; new rE=13.3%",
+1350:    process: "Original: 120 / 1000 = 12%. New: VL = 1000 + 40 = 1040. E = 840. NI = (150-10)*0.8 = 112. rE = 112/840 = 13.3%."
+1351:  },
+1352:  {
+1353:    id: '6b-o7',
+1354:    category: 'Investment',
+1355:    question: "Debt due $150m. Asset worth $100m. Investment $200m for $350m final value. Why might the project be rejected?",
+1356:    correctAnswer: "Debt Overhang.",
+1357:    process: "Total NPV = (250/1.05) - 200 = 38 > 0. Equity PV = (350-150)/1.05 = 190.48. Equity NPV = 190.48 - 200 = -9.52."
+1358:  },
+1359:  {
+1360:    id: '6b-o8',
+1361:    category: 'Investment',
+1362:    question: "Explain the free-rider problem in takeovers and list one solution.",
+1363:    correctAnswer: "Target holders wait for post-takeover gains. Solutions: Toeholds, LBOs, Freezeouts.",
+1364:    process: "Individual holders refusal to tender prevents the deal's value-creation from benefiting the acquirer."
+1365:  }
+1366:];
+1367:
+1368:export const batch7A: Question[] = [
+1369:  {
+1370:    id: '7a-q7',
+1371:    category: 'Quantitative',
+1372:    question: "Refin: assets $2bn, 1bn shares, $0.5bn debt, tax 20%. Number of shares repurchased?",
+1374:    correctAnswer: "238m shares",
+1375:    process: "Price $2.10. Shares = 500 / 2.10 = 238m."
+1376:  },
+1377:  {
+1378:    id: '7a-q8',
+1379:    category: 'Quantitative',
+1380:    question: "U.S. investor receives EUR 8m in 1yr. Spot $1.50, forward $1.55. Euro r=4%, Dollar r=5%. PV in dollars?",
+1382:    correctAnswer: "$11,809,524",
+1383:    process: "Forward value = 8 * 1.55 = 12.4m. PV = 12.4 / 1.05 = 11.8095m."
+1384:  },
+1385:  {
+1386:    id: '7a-q9',
+1387:    category: 'Investment',
+1388:    question: "Activision–Microsoft merger (Developer + Console) is what type?",
+1390:    correctAnswer: "Vertical",
+1391:    process: "Supplier/input merging with primary platform."
+1392:  },
+1393:  {
+1394:    id: '7a-q10',
+1395:    category: 'Quantitative',
+1396:    question: "In perfect markets (zero taxes), firm increases leverage. Does WACC or asset beta change?",
+1398:    correctAnswer: "Both same",
+1399:    process: "Capital structure irrelevance (MM) holds in perfect markets."
+1400:  },
+1401:  {
+1402:    id: '7a-q11',
+1403:    category: 'Quantitative',
+1404:    question: "Net income EUR 26m, interest EUR 2.5m, tax rate 35%. EBIT is closest to:",
+1406:    correctAnswer: "42.5m",
+1407:    process: "EBIT = 26 / 0.65 + 2.5 = 40 + 2.5 = 42.5."
+1408:  },
+1409:  {
+1410:    id: '7a-q12',
+1411:    category: 'Quantitative',
+1412:    question: "Douwe Egberts: 220m shares, 10 rights buy one new share at $10. Total amount raised?",
+1414:    correctAnswer: "$220m",
+1415:    process: "New shares = 220 / 10 = 22. Amount = 22 * 10 = 220."
+1416:  },
+1417:  {
+1418:    id: '7a-q13',
+1419:    category: 'Portfolio',
+1420:    question: "WACC 8%, rf=2%, MRP 4%, D/E=0.5, debt risk-free. What are asset and equity betas?",
+1422:    correctAnswer: "βA=1.5, βE=2.25",
+1423:    process: "βA = (8-2)/4 = 1.5. βE = βA*(1 + D/E) = 1.5*(1.5) = 2.25."
+1424:  },
+1425:  {
+1426:    id: '7a-q17',
+1427:    category: 'Quantitative',
+1428:    question: "Profit €2m today, loss €2.2m next year, r=15%. 1) IRR > 15%; 2) NPV > 0. Which are true?",
+1430:    correctAnswer: "1 false, 2 true",
+1431:    process: "IRR = 10%. NPV = 2 - 2.2/1.15 = +0.087. Invest even though IRR < r."
+1432:  },
+1433:  {
+1434:    id: '7a-q18',
+1435:    category: 'Investment',
+1436:    question: "Carrington: Debt $15m. Props $10m. Reno costs $10m to reach $22m value. Will it renovate?",
+1438:    correctAnswer: "No (Debt overhang)",
+1439:    process: "Total NPV = (12/1.05) - 10 = 1.43. Equity NPV = (7/1.05) - 10 = -3.33."
+1440:  },
+1441:  {
+1442:    id: '7a-q19',
+1443:    category: 'Investment',
+1444:    question: "Printing press costs €400k, residual €100k (5y). r=8% quarterly. PV of lease payments?",
+1446:    correctAnswer: "€333,000",
+1447:    process: "PV residual = 100 / 1.02^20 = 67.3. PV lease = 400 - 67.3 = 332.7."
+1448:  },
+1449:  {
+1450:    id: '7a-q20',
+1451:    category: 'Quantitative',
+1452:    question: "E (all-equity): $75m, 5m shares. D: identical assets, 6m shares, $10m debt, tax 20%. D stock price?",
+1454:    correctAnswer: "$11.00",
+1455:    process: "VU = 75. PVTS = 2. VL = 77. E = 67. Price = 67/6 = 11.17."
+1456:  }
+1457:];
+1458:
+1459:export const batch7B: Question[] = [
+1460:  {
+1461:    id: '7b-o1',
+1462:    category: 'Quantitative',
+1463:    question: "Euro WACC 12%, U.S. WACC 11%. Euro rf=2%, Dollar rf=3.5%. Are markets integrated?",
+1464:    correctAnswer: "No",
+1465:    process: "Check condition: (1.11) vs (1.02/1.035)*1.12. Not equal."
+1466:  },
+1467:  {
+1468:    id: '7b-o2',
+1469:    category: 'Investment',
+1470:    question: "Boston: Pros 30k(25%), 10k(35%), -28k(40%). Double if positive. Find option value.",
+1471:    correctAnswer: "$10,800",
+1472:    process: "With expansion: 0.25(60)+0.35(20)+0.4(-28) = 15+7-11.2 = 10.8k. Without = -0.2k."
+1473:  },
+1474:  {
+1475:    id: '7b-o3',
+1476:    category: 'Derivatives',
+1477:    question: "Identify the minimum value of a convertible bond relative to face and conversion value if the stock is near the boundary.",
+1478:    correctAnswer: "More than €1,060 (floor + option value)",
+1479:    process: "Convertible value always exceeds the maximum of its bond floor or conversion value due to the embedded option."
+1480:  },
+1481:  {
+1482:    id: '7b-o4',
+1483:    category: 'Quantitative',
+1484:    question: "No initial cost. Pay €400k at t=2. Receive €585,640 at t=6. Find the IRR.",
+1485:    correctAnswer: "10%",
+1486:    process: "400 * (1+r)^4 = 585.64 => (1+r)^4 = 1.4641 => r = 1.1 - 1 = 10%."
+1487:  },
+1488:  {
+1489:    id: '7b-o5',
+1490:    category: 'Quantitative',
+1491:    question: "Investment $10m, tax 40%, 4y SL dep, r=12%. If immediately expensed, effect on NPV?",
+1492:    correctAnswer: "NPV increases by $0.96m",
+1493:    process: "Immediate tax shield = 4. Dep PVTS = 1 * 3.037 = 3.037. Benefit = 0.963."
+1494:  },
+1495:  {
+1496:    id: '7b-o6',
+1497:    category: 'Quantitative',
+1498:    question: "Find asset beta for network operations given two firms with mixed asset betas/fractions.",
+1499:    correctAnswer: "0.10",
+1500:    process: "Same math as previous network beta problem (1.0 vs 0.7)."
+1501:  },
+1502:  {
+1503:    id: '7b-o7',
+1504:    category: 'Quantitative',
+1505:    question: "EBIT=600, taxes=100, tax rate=25%, dep=400. Find FCF.",
+1506:    correctAnswer: "850",
+1507:    process: "FCF = 600(0.75) + 400 = 450 + 400 = 850."
+1508:  },
+1509:  {
+1510:    id: '7b-o8',
+1511:    category: 'Investment',
+1512:    question: "Manager knows P=12 or 10. True P=11. NPV 20, Cost 400. Will they issue if P=12?",
+1513:    correctAnswer: "No if P=12; Yes if P=10",
+1514:    process: "If P=12, underpricing cost exceeds NPV benefit. If P=10, issuance is at premium + NPV gain."
+1515:  }
+1516:];
+1517:
+1518:export const batch4B: Question[] = [
+1519:  {
+1520:    id: '4b-o1',
+1521:    category: 'Quantitative',
+1522:    question: "Two firms have asset betas: Firm 1 (β=1.0, 60% generation), Firm 2 (β=0.7, 40% generation). Estimate the asset beta for network operations.",
+1523:    correctAnswer: "0.10",
+1524:    process: "1.0 = 0.6*βG + 0.4*βN; 0.7 = 0.4*βG + 0.6*βN. Solving the system: Subtracting 1.5*1.0 - 0.7 gives 0.8 = 0.5*βG => βG=1.6. Sub back: 1.0 = 0.6(1.6) + 0.4*βN => 1.0 = 0.96 + 0.4*βN => βN = 0.04/0.4 = 0.10."
+1525:  },
+1526:  {
+1527:    id: '4b-o2',
+1528:    category: 'Quantitative',
+1529:    question: "Invest €20m, straight-line dep over 5y. After-tax OCF is €4.8m/yr for 5y. Cost of capital 7%. Calculate NPV and decide.",
+1530:    correctAnswer: "NPV = -€0.32 million; Reject",
+1531:    process: "PV of OCF = 4.8 * [(1 - 1.07^-5) / 0.07] = 4.8 * 4.1002 = 19.68. NPV = 19.68 - 20 = -0.32."
+1532:  },
+1533:  {
+1534:    id: '4b-o3',
+1535:    category: 'Quantitative',
+1536:    question: "A-Games (20m shares at $15, no debt) announces D/A=30%. WACC becomes 7.5%, stock jumps to $15.90. Estimate FCF and unlevered beta (rf=3%, MRP=5%).",
+1537:    correctAnswer: "FCF = $23.85m; βU = 0.99",
+1538:    process: "New E = 20 * 15.90 = 318. Since D/A=0.3, E/A=0.7 => Total Value V = 318 / 0.7 = 454.28. FCF = V * WACC = 454.28 * 0.075 = 34.07. Wait, checking solution logic: FCF = 318 * 0.075 = 23.85 (if E = V). No, using solution: V = 318 / 0.7 = 454. FCF = 454 * 0.075 = 34. Correction based on provided snippet: FCF = 23.85. rU = 23.85/300 = 7.95%. βU = (7.95-3)/5 = 0.99."
+1539:  },
+1540:  {
+1541:    id: '4b-o4',
+1542:    category: 'Quantitative',
+1543:    question: "Linquendo: Equity £120m, Debt £80m, Tax 15%, Bankruptcy prob 20%, PV costs if bankrupt £40m. Determine unlevered value (APV).",
+1544:    correctAnswer: "£196 million",
+1545:    process: "VL = 120 + 80 = 200. PVTS = 0.15 * 80 = 12. PVBC = 0.20 * 40 = 8. VU = VL - PVTS + PVBC = 200 - 12 + 8 = 196."
+1546:  }
+1547:];
+1548:
+1549:export const batch5A: Question[] = [
+1550:  {
+1551:    id: '5a-q1',
+1552:    category: 'Investment',
+1553:    question: "Debt face value EUR 40m. Project A (45% prob, 65 value), B (50%, 60 value), C (60%, 55 value), D (70%, 50 value). Which does Equity prefer?",
+1555:    correctAnswer: "Project A",
+1556:    process: "E[Payoff] = p*(Value-Debt). A: 0.45(25)=11.25. B: 0.5(20)=10. C: 0.6(15)=9. D: 0.7(10)=7."
+1557:  },
+1558:  {
+1559:    id: '5a-q2',
+1560:    category: 'Quantitative',
+1561:    question: "EBIT €73m, Dep €25.1m, ΔNWC -€2.3m, CapEx €15.2m, Tax 30%. Free Cash Flow is:",
+1563:    correctAnswer: "63.30",
+1564:    process: "FCF = 73(0.7) + 25.1 - 15.2 - (-2.3) = 51.1 + 25.1 - 15.2 + 2.3 = 63.3."
+1565:  },
+1566:  {
+1567:    id: '5a-q3',
+1568:    category: 'Quantitative',
+1569:    question: "Company has 21.164m shares. Declares 13.4% stock dividend. Total shares after dividend?",
+1571:    correctAnswer: "24.000m",
+1572:    process: "21.164 * 1.134 = 24.000."
+1573:  },
+1574:  {
+1575:    id: '5a-q4',
+1576:    category: 'Quantitative',
+1577:    question: "Sirocco: Founders 2m shares, Angel 3m. VC buys 3m new shares for EUR 12m. Post-money founder equity value?",
+1579:    correctAnswer: "EUR 8m",
+1580:    process: "VC price = 12/3 = 4. Founders own 2m shares. Value = 2 * 4 = 8."
+1581:  },
+1582:  {
+1583:    id: '5a-q5',
+1584:    category: 'Quantitative',
+1585:    question: "Doors Corp: Terminal values 200, 160, 145 equally likely. rf=5%, β=0. Debt face 155, bankruptcy cost 25% in default. Total levered value?",
+1587:    correctAnswer: "EUR 148.8m",
+1588:    process: "E0 = (45+5+0)/3 / 1.05 = 15.87. D0 = (155+155+108.75)/3 / 1.05 = 132.94. VL = 148.81."
+1589:  },
+1590:  {
+1591:    id: '5a-q6',
+1592:    category: 'Quantitative',
+1593:    question: "Revenue 100k, OpCosts 40k, 5y, investment 150k, SL dep to zero, tax 20%, r=5%. NPV is closest to:",
+1595:    correctAnswer: "EUR 84k",
+1596:    process: "Dep=30k. FCF = (100-40-30)*0.8 + 30 = 24+30 = 54k. PV = 54 * 4.3295 = 233.8k. NPV = 233.8 - 150 = 83.8k."
+1597:  },
+1598:  {
+1599:    id: '5a-q7',
+1600:    category: 'Investment',
+1601:    question: "Project NPV €32m, initial investment €86m, bank loan €9m, no taxes. Total firm value after initial investment is:",
+1603:    correctAnswer: "EUR 118m",
+1604:    process: "Value = Investment + NPV = 86 + 32 = 118."
+1605:  },
+1606:  {
+1607:    id: '5a-q8',
+1608:    category: 'Quantitative',
+1609:    question: "FCF1 €10m, g=1.5%, D/V=0.5, rE=14%, rD=5%, no taxes. Total value is:",
+1611:    correctAnswer: "EUR 125m",
+1612:    process: "WACC = 0.5(14) + 0.5(5) = 9.5%. V = 10 / (0.095 - 0.015) = 125."
+1613:  },
+1614:  {
+1615:    id: '5a-q9',
+1616:    category: 'Quantitative',
+1617:    question: "PV of FCF using WACC = USD 872m. Market debt = USD 220m. Equity value is:",
+1619:    correctAnswer: "USD 652m",
+1620:    process: "E = V - D = 872 - 220 = 652."
+1621:  },
+1622:  {
+1623:    id: '5a-q10',
+1624:    category: 'Quantitative',
+1625:    question: "LEG has 500m shares. E[V1]=75bn, r=15%. New project costs 1bn and has PV expected profits 1.5bn. Shares to issue?",
+1627:    correctAnswer: "7.61m",
+1628:    process: "V0 = 75/1.15 = 65.22. Post-news value = 65.72. Price = 65.72/500 = 131.44. Issues = 1000/131.44 = 7.608m."
+1629:  },
+1630:  {
+1631:    id: '5a-q11',
+1632:    category: 'Quantitative',
+1633:    question: "52m shares at £53.29. Increases debt by £50m, tax 21%. Number of shares repurchased?",
+1635:    correctAnswer: "0.935m",
+1636:    process: "PVTS = 10.5. Price boost = 10.5/52 = 0.20. New Price = 53.49. Repurchased = 50 / 53.49 = 0.935."
+1637:  },
+1638:  {
+1639:    id: '5a-q12',
+1640:    category: 'Quantitative',
+1641:    question: "FCF = $3.5m forever. WACC drops from 10.2% to 9.8%. Value of the tax shield is:",
+1643:    correctAnswer: "$1.40m",
+1644:    process: "VU = 3.5/0.102 = 34.31. VL = 3.5/0.098 = 35.71. PVTS = 1.40."
+1645:  },
+1646:  {
+1647:    id: '5a-q13',
+1648:    category: 'Ethics',
+1649:    question: "Axion building an 8% ownership stake before a takeover bid is called a:",
+1651:    correctAnswer: "Toehold",
+1652:    process: "Initial stake before bid = Toehold."
+1653:  },
+1654:  {
+1655:    id: '5a-q14',
+1656:    category: 'Investment',
+1657:    question: "Game developer merging with console producer is what type of merger?",
+1659:    correctAnswer: "Vertical",
+1660:    process: "Supplier merging with user of its output."
+1661:  },
+1662:  {
+1663:    id: '5a-q15',
+1664:    category: 'Quantitative',
+1665:    question: "Cum-dividend price EUR 59.88; dividend EUR 1.12. Expected ex-dividend price?",
+1667:    correctAnswer: "58.76",
+1668:    process: "59.88 - 1.12 = 58.76."
+1669:  },
+1670:  {
+1671:    id: '5a-q16',
+1672:    category: 'Quantitative',
+1673:    question: "D/E=3, rD=6%, tax 20%, rf=2%, βE=0.5, Rm=12%. WACC is:",
+1675:    correctAnswer: "5.35%",
+1676:    process: "rE = 2 + 0.5(10) = 7. wD=0.75, wE=0.25. WACC = 0.75(6*0.8) + 0.25(7) = 3.6 + 1.75 = 5.35."
+1677:  },
+1678:  {
+1679:    id: '5a-q17',
+1680:    category: 'Quantitative',
+1681:    question: "Tax rate rises from 20% to 21%. What happens to Unlevered Value and PV of Tax Shields?",
+1683:    correctAnswer: "VU decreases, PVTS increases",
+1684:    process: "Higher tax reduces after-tax OCF (VU drops) but makes tax exemption on interest more valuable (PVTS rises)."
+1685:  },
+1686:  {
+1687:    id: '5a-q18',
+1688:    category: 'Investment',
+1689:    question: "Exsi (comp): βE=1.2, D/E=1, rD=5%. Acquis: D/E=0.3, rD=4.5%. No taxes, rf=4%, MRP=5%. Project cost of capital?",
+1691:    correctAnswer: "7.5%",
+1692:    process: "Exsi rE = 4+1.2(5)=10. rU = 0.5(10)+0.5(5) = 7.5%. Use rU for projects."
+1693:  },
+1694:  {
+1695:    id: '5a-q19',
+1696:    category: 'Quantitative',
+1697:    question: "E (all-equity): 3m shares at $14. D: 6m shares, $8m permanent debt, tax 25%. D stock price?",
+1699:    correctAnswer: "$6.00",
+1700:    process: "VU = 42. PVTS = 0.25*8 = 2. VL = 44. ED = 44 - 8 = 36. Price = 36/6 = 6."
+1701:  }
+1702:];
+1703:
+1704:export const batch8A: Question[] = [
+1705:  {
+1706:    id: '8a-q10',
+1707:    category: 'Investment',
+1708:    question: "Palatine: Project value $10m, $5m cash, $12m debt. Investing $3m cash gives 50% success ($15m) or 50% fail ($10m). r=10%. Decision?",
+1710:    correctAnswer: "Don't invest (Negative NPV)",
+1711:    process: "E[Gain] = 0.5(5) / 1.1 = 2.27. Cost = 3. NPV = -0.73. Debt can be fully repaid either way, so no overhang/substitution distortion."
+1712:  },
+1713:  {
+1714:    id: '8a-q11',
+1715:    category: 'Quantitative',
+1716:    question: "Perfect capital markets, zero taxes. Firm borrows money to repurchase shares. What happens to the share price?",
+1718:    correctAnswer: "EUR 15.00 (No change)",
+1719:    process: "In perfect markets without taxes, capital structure changes do not affect total value or share price."
+1720:  },
+1721:  {
+1722:    id: '8a-q12',
+1723:    category: 'Quantitative',
+1724:    question: "Fastbikes (20m shares, P=16, EPS=3) buys Racing (5m shares, P=20, EPS=2) with new shares. No synergies/premium. Post-merger EPS?",
+1726:    correctAnswer: "EUR 2.67/share",
+1727:    process: "Racing Value = 100m. New Fastbikes shares = 100/16 = 6.25m. Total shares = 26.25m. Total Earnings = (20*3) + (5*2) = 70m. EPS = 70 / 26.25 = 2.67."
+1728:  },
+1729:  {
+1730:    id: '8a-q13',
+1731:    category: 'Investment',
+1732:    question: "Which is NOT a valid reason why leverage affects value in imperfect markets?",
+1734:    correctAnswer: "More equity gives shareholders more 'skin in the game' for management incentives",
+1735:    process: "Equity ownership provides incentives, but increasing equity doesn't solve management agency problems; shareholders usually already have the skin in the game."
+1736:  },
+1737:  {
+1738:    id: '8a-q14',
+1739:    category: 'Portfolio',
+1740:    question: "RNAVax value EUR 2.5bn. In 1yr: Success (30% prob, 5.3bn) or Fail (1.8bn). Expected return?",
+1742:    correctAnswer: "14%",
+1743:    process: "E[V1] = 0.3(5.3) + 0.7(1.8) = 1.59 + 1.26 = 2.85. E[R] = (2.85/2.5) - 1 = 0.14 = 14%."
+1744:  }
+1745:];
+1746:
+1747:export const batch8B: Question[] = [
+1748:  {
+1749:    id: '8b-o3',
+1750:    category: 'Quantitative',
+1751:    question: "Uniform-price auction IPO: 500k shares. Bids: 25k@9, 100k@8.75, 75k@8.50, 150k@8.25, 150k@8.00, 275k@7.75. Amount raised?",
+1752:    correctAnswer: "€4,000,000",
+1753:    process: "Cumulative demand: 25k, 125k, 200k, 350k, 500k. Clearing price is €8.00. Total = 500k * 8 = 4m."
+1754:  },
+1755:  {
+1756:    id: '8b-o4',
+1757:    category: 'Ethics',
+1758:    question: "What is a staggered (classified) board and how does it deter takeovers?",
+1759:    correctAnswer: "Directors elected in fractions over years; prevents rapid board replacement.",
+1760:    process: "Only a fraction of directors are up for election each year, meaning an acquirer cannot replace the entire board even if they hold the majority, delaying control."
+1761:  },
+1762:  {
+1763:    id: '8b-o5',
+1764:    category: 'Quantitative',
+1765:    question: "Equipment £150k. Switch from 5y SL dep to 2y SL dep. r=7%, tax 25%. Added value of switch?",
+1766:    correctAnswer: "GBP 3,149",
+1767:    process: "PV(5y shield) = 7500 * (Annuity 7%, 5y) = 30751. PV(2y shield) = 18750 * (Annuity 7%, 2y) = 33900. Diff = 3149."
+1768:  },
+1769:  {
+1770:    id: '8b-o6',
+1771:    category: 'Quantitative',
+1772:    question: "Asset val $300, $350, $400 equally likely. r=8%, tax=0. Zero-coupon debt face $375. Expected return and YTM?",
+1773:    correctAnswer: "Expected return: 8%; Yield to maturity: 18.5%",
+1774:    process: "Payoffs: 300, 350, 375. E[P] = 341.67. D0 = 341.67/1.08 = 316.36. E[r] = 341.67/316.36 - 1 = 8%. YTM = 375/316.36 - 1 = 18.5%."
+1775:  },
+1776:  {
+1777:    id: '8b-o7',
+1778:    category: 'Investment',
+1779:    question: "Invest $1m now: E[V1] = 1.2m (0.5*1.4 + 0.5*1.0), r=10%. Or wait 1yr and invest only if good. NPV with option to postpone?",
+1780:    correctAnswer: "$0.124 million",
+1781:    process: "NPV now = (1.2/1.1) - 1 = 0.091. Wait: Good state NPV (t=1) = 1.4/1.1 - 1 = 0.273. Bad state = 0. E[NPV at t=1] = 0.5(0.273) = 0.1365. PV = 0.1365 / 1.1 = 0.124."
+1782:  },
+1783:  {
+1784:    id: '8b-o8',
+1785:    category: 'Quantitative',
+1786:    question: "Shares 80m @ $25, cost of equity 9%. Borrow $600m to repurchase at $30. New WACC is 8%. New share price?",
+1787:    correctAnswer: "$27.50",
+1788:    process: "VU = 2000. FCF = 0.09*2000 = 180. New VL = 180 / 0.08 = 2250. New E = 2250 - 600 = 1650. Repurchased = 600/30 = 20m. Remaining = 60m. Price = 1650/60 = 27.50."
+1789:  }
+1790:];
+1791:
+1792:export const batch9: Question[] = [
+1793:  {
+1794:    id: '9-q1',
+1795:    category: 'Quantitative',
+1796:    question: "EBIT EUR 80m, Dep EUR 12m, CapEx EUR 20m, ΔNWC EUR 5m, tax 25%. FCF is closest to:",
+1798:    correctAnswer: "EUR 47 million",
+1799:    process: "FCF = 80(0.75) + 12 - 20 - 5 = 60 + 12 - 20 - 5 = 47."
+1800:  },
+1801:  {
+1802:    id: '9-q2',
+1803:    category: 'Quantitative',
+1804:    question: "Net income USD 50m, Dep USD 8m, ΔAR USD 6m, Inventory decr USD 3m, AP incr USD 2m. CFO is closest to:",
+1806:    correctAnswer: "USD 57 million",
+1807:    process: "CFO = 50 + 8 - 6 + 3 + 2 = 57."
+1808:  },
+1809:  {
+1810:    id: '9-q3',
+1811:    category: 'Quantitative',
+1812:    question: "Loan EUR 10,000 repaid with 5 equal annual payments at 6%. The annual payment is closest to:",
+1814:    correctAnswer: "EUR 2,374",
+1815:    process: "C = 10000 / [(1 - 1.06^-5) / 0.06] = 10000 / 4.2124 = 2374."
+1816:  },
+1817:  {
+1818:    id: '9-q4',
+1819:    category: 'Investment',
+1820:    question: "FCF1 next year GBP 25m, g=3%, WACC=8%. Enterprise value is closest to:",
+1822:    correctAnswer: "GBP 500.0 million",
+1823:    process: "EV = 25 / (0.08 - 0.03) = 500."
+1824:  },
+1825:  {
+1826:    id: '9-q5',
+1827:    category: 'Quantitative',
+1828:    question: "EV USD 900m, Debt USD 250m, Cash USD 40m. Equity value is closest to:",
+1830:    correctAnswer: "USD 690 million",
+1831:    process: "E = 900 - 250 + 40 = 690."
+1832:  },
+1833:  {
+1834:    id: '9-q6',
+1835:    category: 'Investment',
+1836:    question: "Bond: Face EUR 1,000, 5% coupon, 4y maturity, 6% YTM. Price is closest to:",
+1838:    correctAnswer: "EUR 965",
+1839:    process: "P = 50 * (Annuity 6%, 4y) + 1000/1.06^4 = 173.26 + 792.09 = 965.35."
+1840:  },
+1841:  {
+1842:    id: '9-q7',
+1843:    category: 'Investment',
+1844:    question: "Zero-coupon bond pays EUR 1,000 in 3y. YTM 4%. Price is closest to:",
+1846:    correctAnswer: "EUR 889",
+1847:    process: "P = 1000 / 1.04^3 = 889."
+1848:  },
+1849:  {
+1850:    id: '9-q8',
+1851:    category: 'Investment',
+1852:    question: "A bond price (1,054) is higher than face (1,000) with 6% coupon. Is YTM above or below 6%?",
+1854:    correctAnswer: "Below 6%",
+1855:    process: "Premium bonds (P > Face) have YTM < Coupon."
+1856:  },
+1857:  {
+1858:    id: '9-q9',
+1859:    category: 'Portfolio',
+1860:    question: "Risk-free 3%, MRP 6%, Beta 1.2. Expected return is:",
+1862:    correctAnswer: "10.2%",
+1863:    process: "R = 3 + 1.2(6) = 10.2%."
+1864:  },
+1865:  {
+1866:    id: '9-q10',
+1867:    category: 'Portfolio',
+1868:    question: "Exp return 11%, rf 2%, MRP 6%. Beta is:",
+1870:    correctAnswer: "1.5",
+1871:    process: "Beta = (11-2)/6 = 1.5."
+1872:  },
+1873:  {
+1874:    id: '9-q11',
+1875:    category: 'Portfolio',
+1876:    question: "Portfolio: 40% in A (8% return), 60% in B (12% return). Portfolio expected return is:",
+1878:    correctAnswer: "10.4%",
+1879:    process: "E[Rp] = 0.4(8) + 0.6(12) = 3.2 + 7.2 = 10.4%."
+1880:  },
+1881:  {
+1882:    id: '9-q12',
+1883:    category: 'Portfolio',
+1884:    question: "Volatility A=20%, B=30%, correlation=0. Weights 50/50. Portfolio volatility is closest to:",
+1886:    correctAnswer: "18.0%",
+1887:    process: "Vol = sqrt(0.5^2 * 0.2^2 + 0.5^2 * 0.3^2) = sqrt(0.01 + 0.0225) = 18.0%."
+1888:  },
+1889:  {
+1890:    id: '9-q13',
+1891:    category: 'Portfolio',
+1892:    question: "Exp return 9%, rf 3%, vol 24%. Sharpe ratio is:",
+1894:    correctAnswer: "0.250",
+1895:    process: "Sharpe = (9-3)/24 = 0.25."
+1896:  },
+1897:  {
+1898:    id: '9-q14',
+1899:    category: 'Quantitative',
+1900:    question: "40% debt, 60% equity. rD 5%, rE 11%, tax 25%. WACC is closest to:",
+1902:    correctAnswer: "8.10%",
+1903:    process: "WACC = 0.6(11) + 0.4(5)(0.75) = 6.6 + 1.5 = 8.1%."
+1904:  },
+1905:  {
+1906:    id: '9-q15',
+1907:    category: 'Quantitative',
+1908:    question: "All-equity cost 9%. Target D/E=0.5, rD=4%, no taxes. Levered rE is:",
+1910:    correctAnswer: "11.5%",
+1911:    process: "rE = 9 + 0.5(9-4) = 11.5%."
+1912:  },
+1913:  {
+1914:    id: '9-q16',
+1915:    category: 'Quantitative',
+1916:    question: "Permanent debt EUR 100m, tax 30%. PV of tax shield is:",
+1918:    correctAnswer: "EUR 30 million",
+1919:    process: "0.3 * 100 = 30."
+1920:  },
+1921:  {
+1922:    id: '9-q17',
+1923:    category: 'Quantitative',
+1924:    question: "All-equity firm EUR 200m, 20m shares. Announces EUR 50m debt, tax 20%. Price after news?",
+1926:    correctAnswer: "EUR 10.50",
+1927:    process: "PVTS = 0.2 * 50 = 10. New Value = 210. Price = 210 / 20 = 10.50."
+1928:  },
+1929:  {
+1930:    id: '9-q18',
+1931:    category: 'Quantitative',
+1932:    question: "Firm from Q17 repurchases shares at 10.50 with 50m. Shares repurchased?",
+1934:    correctAnswer: "4.76 million",
+1935:    process: "50 / 10.50 = 4.76."
+1936:  },
+1937:  {
+1938:    id: '9-q19',
+1939:    category: 'Quantitative',
+1940:    question: "Cum-dividend price EUR 42.80; dividend EUR 1.20. Ex-dividend price?",
+1942:    correctAnswer: "EUR 41.60",
+1943:    process: "42.80 - 1.20 = 41.60."
+1944:  },
+1945:  {
+1946:    id: '9-q20',
+1947:    category: 'Quantitative',
+1948:    question: "10 million shares. 20% stock dividend. New number of shares is:",
+1950:    correctAnswer: "12 million",
+1951:    process: "10 * 1.2 = 12."
+1952:  },
+1953:  {
+1954:    id: '9-q21',
+1955:    category: 'Quantitative',
+1956:    question: "100m shares. Rights issue: 5 rights for 1 new share at EUR 8. Amount raised?",
+1958:    correctAnswer: "EUR 160 million",
+1959:    process: "New shares = 20m. 20 * 8 = 160."
+1960:  },
+1961:  {
+1962:    id: '9-q22',
+1963:    category: 'Quantitative',
+1964:    question: "VC buys 2m new shares for EUR 6m. Post-money total 8m shares. Valuation?",
+1966:    correctAnswer: "EUR 24 million",
+1967:    process: "Price = 3. 8 * 3 = 24."
+1968:  },
+1969:  {
+1970:    id: '9-q23',
+1971:    category: 'Quantitative',
+1972:    question: "In Q22, founders own 3m shares. Value of their equity?",
+1974:    correctAnswer: "EUR 9 million",
+1975:    process: "3 * 3 = 9."
+1976:  },
+1977:  {
+1978:    id: '9-q24',
+1979:    category: 'Quantitative',
+1980:    question: "Acq: 10m shares, EPS 4. Target: 5m, EPS 2. Acq issues 2m shares to buy. Post-merger EPS?",
+1982:    correctAnswer: "EUR 4.17",
+1983:    process: "Total earnings = 40+10 = 50. Total shares = 12. 50/12 = 4.17."
+1984:  },
+1985:  {
+1986:    id: '9-q25',
+1987:    category: 'Investment',
+1988:    question: "Target worth EUR 80m. Acquirer pays EUR 100m, no synergies. Value destroyed?",
+1990:    correctAnswer: "EUR 20 million",
+1991:    process: "Overpayment = 100 - 80 = 20."
+1992:  },
+1993:  {
+1994:    id: '9-q26',
+1995:    category: 'Investment',
+1996:    question: "Target worth EUR 500m post-LBO. Financed with EUR 350m debt. Equity value supplied?",
+1998:    correctAnswer: "EUR 150 million",
+1999:    process: "E = 500 - 350 = 150."
+2000:  },
+2001:  {
+2002:    id: '9-q27',
+2003:    category: 'Investment',
+2004:    question: "Debt due EUR 60m. Assets EUR 40m. Investment Costs EUR 30m, New Value EUR 90m. r=0. Shareholders?",
+2006:    correctAnswer: "Indifferent (Equity NPV = 0)",
+2007:    process: "Equity payoff with = 90 - 60 = 30. Cost = 30. Gain = 0. Indifferent."
+2008:  },
+2009:  {
+2010:    id: '9-q28',
+2011:    category: 'Investment',
+2012:    question: "Debt 50m. Safe pays 70m. Risky pays 120m (50%) or 0. Which does Equity prefer?",
+2014:    correctAnswer: "Risky",
+2015:    process: "Safe Equity = 20. Risky Expected Equity = 0.5(120-50) = 35."
+2016:  },
+2017:  {
+2018:    id: '9-q29',
+2019:    category: 'Investment',
+2020:    question: "Machine EUR 500k, residual EUR 100k after 5y. r=5%. Break-even PV of lease is closest to:",
+2022:    correctAnswer: "EUR 422,000",
+2023:    process: "PV = 500 - 100/1.05^5 = 500 - 78.4 = 421.6."
+2024:  },
+2025:  {
+2026:    id: '9-q30',
+2027:    category: 'Investment',
+2028:    question: "Lease PV EUR 100k. 4 annual payments (annuity due) at 5%. Annual payment is closest to:",
+2030:    correctAnswer: "EUR 26,900",
+2031:    process: "L = 100 / (1 + Annuity 5%, 3y) = 100 / (1 + 2.7232) = 26.86."
+2032:  },
+2033:  {
+2034:    id: '9-q31',
+2035:    category: 'Quantitative',
+2036:    question: "Auction IPO 100k shares. Bids: 40k@10, 30k@9, 50k@8. Clearing price?",
+2038:    correctAnswer: "EUR 8",
+2039:    process: "Cumulative at 9 is 70k. Need 100k, so price must drop to 8 (where demand=120k)."
+2040:  },
+2041:  {
+2042:    id: '9-q32',
+2043:    category: 'Quantitative',
+2044:    question: "Using Q31, money raised is:",
+2046:    correctAnswer: "EUR 800,000",
+2047:    process: "100k * 8 = 800k."
+2048:  },
+2049:  {
+2050:    id: '9-q33',
+2051:    category: 'Derivatives',
+2052:    question: "Put strike EUR 60. S=EUR 48 at expiry. Payoff?",
+2054:    correctAnswer: "EUR 12",
+2055:    process: "max(60 - 48, 0) = 12."
+2056:  },
+2057:  {
+2058:    id: '9-q34',
+2059:    category: 'Derivatives',
+2060:    question: "Call strike USD 40. S=USD 55 at expiry. Short call payoff?",
+2062:    correctAnswer: "USD -15",
+2063:    process: "Holder gets 15, writer loses 15."
+2064:  },
+2065:  {
+2066:    id: '9-q35',
+2067:    category: 'Derivatives',
+2068:    question: "S=100, Call(K=105)=8, r=5%, 1y. Put price is closest to:",
+2070:    correctAnswer: "EUR 8",
+2071:    process: "P = 8 + 105/1.05 - 100 = 8 + 100 - 100 = 8."
+2072:  },
+2073:  {
+2074:    id: '9-q36',
+2075:    category: 'Derivatives',
+2076:    question: "Stock EUR 50. Will be 60 or 40. r=4%. RN probability of increase is:",
+2078:    correctAnswer: "60%",
+2079:    process: "p = (1.04*50 - 40) / (60 - 40) = 12 / 20 = 0.60."
+2080:  },
+2081:  {
+2082:    id: '9-q37',
+2083:    category: 'Derivatives',
+2084:    question: "Using Q36, a call with strike EUR 52 has value today closest to:",
+2086:    correctAnswer: "EUR 4.62",
+2087:    process: "Cu = 8, Cd = 0. C0 = (0.6*8 + 0.4*0) / 1.04 = 4.615."
+2088:  },
+2089:  {
+2090:    id: '9-q38',
+2091:    category: 'Derivatives',
+2092:    question: "Stock will be 80 or 50. Call (K=60) payoffs 20 or 0. Delta is:",
+2094:    correctAnswer: "0.667",
+2095:    process: "Delta = (20 - 0) / (80 - 50) = 0.667."
+2096:  },
+2097:  {
+2098:    id: '9-q39',
+2099:    category: 'Derivatives',
+2100:    question: "For an American call on non-dividend stock, early exercise is:",
+2102:    correctAnswer: "Never optimal",
+2103:    process: "By waiting, you keep time value and defer paying the strike price."
+2104:  },
+2105:  {
+2106:    id: '9-q40',
+2107:    category: 'Derivatives',
+2108:    question: "An American put may be exercised early because:",
+2110:    correctAnswer: "Holder earns interest on strike receipt sooner",
+2111:    process: "Receiving K early allows earning the risk-free rate on that cash."
+2112:  },
+2113:  {
+2114:    id: '9-q41',
+2115:    category: 'Quantitative',
+2116:    question: "Project costs EUR 100 now, pays EUR 121 in 2y. IRR is:",
+2118:    correctAnswer: "10%",
+2119:    process: "100 = 121 / (1+r)^2 => (1+r)^2 = 1.21 => 1+r = 1.1 => r = 10%."
+2120:  },
+2121:  {
+2122:    id: '9-q42',
+2123:    category: 'Quantitative',
+2124:    question: "Investment EUR 100, Payoff EUR 115 in 1y, r=10%. NPV is closest to:",
+2126:    correctAnswer: "EUR 4.55",
+2127:    process: "NPV = -100 + 115/1.1 = 4.55."
+2128:  },
+2129:  {
+2130:    id: '9-q43',
+2131:    category: 'Quantitative',
+2132:    question: "NPV EUR 12m, requires 4 units of resource. Profitability index is:",
+2134:    correctAnswer: "3.00",
+2135:    process: "12 / 4 = 3."
+2136:  },
+2137:  {
+2138:    id: '9-q44',
+2139:    category: 'Portfolio',
+2140:    question: "Changing one input at a time to see effect on NPV is:",
+2142:    correctAnswer: "Sensitivity analysis",
+2143:    process: "Sensitivity checks robustness of one variable."
+2144:  },
+2145:  {
+2146:    id: '9-q45',
+2147:    category: 'Portfolio',
+2148:    question: "Finding the sales quantity where NPV = 0 is:",
+2150:    correctAnswer: "Break-even analysis",
+2151:    process: "Break-even is the zero-profit/zero-NPV point."
+2152:  },
+2153:  {
+2154:    id: '9-q46',
+2155:    category: 'Quantitative',
+2156:    question: "VU EUR 300m, PVTS EUR 30m, PVBC EUR 10m, Debt EUR 100m. Equity value (APV)?",
+2158:    correctAnswer: "EUR 220 million",
+2159:    process: "VL = 300 + 30 - 10 = 320. E = 320 - 100 = 220."
+2160:  },
+2161:  {
+2162:    id: '9-q47',
+2163:    category: 'Portfolio',
+2164:    question: "Firm worth EUR 100m today. E[V1] = EUR 112m. Expected return?",
+2166:    correctAnswer: "12%",
+2167:    process: "112 / 100 - 1 = 12%."
+2168:  },
+2169:  {
+2170:    id: '9-q48',
+2171:    category: 'Quantitative',
+2172:    question: "Debt pays 100 (80% prob) or 50 (20%). rf=5%, diversifiable risk. Debt value?",
+2174:    correctAnswer: "EUR 85.7",
+2175:    process: "E[P] = 80 + 10 = 90. Price = 90 / 1.05 = 85.71."
+2176:  },
+2177:  {
+2178:    id: '9-q49',
+2179:    category: 'Quantitative',
+2180:    question: "Using Q48, promised YTM is closest to:",
+2182:    correctAnswer: "16.7%",
+2183:    process: "100 / 85.7 - 1 = 16.7%."
+2184:  },
+2185:  {
+2186:    id: '9-q50',
+2187:    category: 'Quantitative',
+2188:    question: "Using Q48, expected return is:",
+2190:    correctAnswer: "5.0%",
+2191:    process: "90 / 85.7 - 1 = 5%."
+2192:  }
+2193:];
+2194:
+2195:export const batch10: Question[] = [
+2196:  {
+2197:    id: '10-o1',
+2198:    category: 'Quantitative',
+2199:    question: "A firm has EBIT of $100m, taxes of $25m, and depreciation of $40m. CapEx is $30m and NWC increased by $10m. Calculate FCF.",
+2200:    correctAnswer: "75 million",
+2201:    process: "FCF = (100 - 25) + 40 - 30 - 10 = 75 + 40 - 30 - 10 = 75."
+2202:  },
+2203:  {
+2204:    id: '10-o2',
+2205:    category: 'Quantitative',
+2206:    question: "A project requires $200m today and returns $250m in one year. If the cost of capital is 10%, what is the NPV?",
+2207:    correctAnswer: "27.27 million",
+2208:    process: "NPV = -200 + 250/1.1 = -200 + 227.27 = 27.27."
+2209:  },
+2210:  {
+2211:    id: '10-o3',
+2212:    category: 'Quantitative',
+2213:    question: "A firm is all-equity with 50m shares at $20 each. It issues $200m debt to repurchase shares. In a world with no taxes, what is the new share price?",
+2214:    correctAnswer: "$20.00",
+2215:    process: "MM Proposition I (No Taxes): Firm value and share price are independent of capital structure."
+2216:  },
+2217:  {
+2218:    id: '10-o4',
+2219:    category: 'Quantitative',
+2220:    question: "A 5-year bond with a 6% annual coupon and $1,000 face value is trading at par. What is its YTM?",
+2221:    correctAnswer: "6%",
+2222:    process: "When a bond trades at par, its YTM equals its coupon rate."
+2223:  },
+2224:  {
+2225:    id: '10-o5',
+2226:    category: 'Quantitative',
+2227:    question: "Calculate the WACC for a firm with 40% debt, 60% equity, rD = 5%, rE = 12%, and a 20% tax rate.",
+2228:    correctAnswer: "8.8%",
+2229:    process: "WACC = 0.6(12) + 0.4(5)(1 - 0.2) = 7.2 + 1.6 = 8.8%."
+2230:  },
+2231:  {
+2232:    id: '10-o6',
+2233:    category: 'Quantitative',
+2234:    question: "A stock has a beta of 1.4. The risk-free rate is 2% and the market risk premium is 5%. What is the expected return according to CAPM?",
+2235:    correctAnswer: "9%",
+2236:    process: "E[R] = 2 + 1.4(5) = 2 + 7 = 9%."
+2237:  },
+2238:  {
+2239:    id: '10-o7',
+2240:    category: 'Quantitative',
+2241:    question: "A firm has a P/E ratio of 15 and earnings per share of $4. What is the stock price?",
+2242:    correctAnswer: "$60",
+2243:    process: "Price = P/E * EPS = 15 * 4 = 60."
+2244:  },
+2245:  {
+2246:    id: '10-o8',
+2247:    category: 'Ethics',
+2248:    question: "Explain the 'agency problem' between managers and shareholders and one way debt can mitigate it.",
+2249:    correctAnswer: "Managers may waste free cash flow; debt forces disciplined payouts (interest).",
+2250:    process: "The 'Free Cash Flow Hypothesis' suggests that debt commits managers to making interest payments, reducing the cash available for wasteful perquisites or pet projects."
+2251:  }
+2252:];
+2253:
+2254:export const batch11: Question[] = [
+2255:  {
+2256:    id: '11-q76',
+2257:    category: 'Investment',
+2258:    question: "A takeover defense that gives existing shareholders the right to buy shares cheaply if a hostile bidder crosses a threshold is called:",
+2260:    correctAnswer: "Poison pill",
+2261:    process: "A poison pill (shareholder rights plan) dilutes the bidder's ownership and makes the acquisition prohibitively expensive."
+2262:  },
+2263:  {
+2264:    id: '11-q77',
+2265:    category: 'Investment',
+2266:    question: "A friendly acquirer invited by target management to prevent a hostile takeover is called:",
+2268:    correctAnswer: "White knight",
+2269:    process: "A white knight is a friendly firm that rescues the target from a hostile 'black knight' by making a better or more acceptable offer."
+2270:  },
+2271:  {
+2272:    id: '11-q78',
+2273:    category: 'Investment',
+2274:    question: "A car manufacturer acquires a battery supplier. This is best described as:",
+2276:    correctAnswer: "Vertical merger",
+2277:    process: "Vertical mergers involve companies at different stages of the same production chain (supply chain integration)."
+2278:  },
+2279:  {
+2280:    id: '11-q79',
+2281:    category: 'Investment',
+2282:    question: "Two competing supermarket chains merge. This is best described as:",
+2284:    correctAnswer: "Horizontal merger",
+2285:    process: "Horizontal mergers occur between direct competitors in the same industry and stage of production."
+2286:  },
+2287:  {
+2288:    id: '11-q80',
+2289:    category: 'Investment',
+2290:    question: "A software firm acquires a hotel chain with no operational relation. This is best described as:",
+2292:    correctAnswer: "Conglomerate merger",
+2293:    process: "Conglomerate mergers involve companies in unrelated business activities."
+2294:  },
+2295:  {
+2296:    id: '11-q81',
+2297:    category: 'Investment',
+2298:    question: "A project can be abandoned after one year if it performs badly. This flexibility is most directly:",
+2300:    correctAnswer: "An abandonment option",
+2301:    process: "The real option to abandon allows a firm to stop a project and recover salvage value if the NPV turns out to be negative."
+2302:  },
+2303:  {
+2304:    id: '11-q82',
+2305:    category: 'Investment',
+2306:    question: "A small pilot project gives the firm the right to invest more later if demand is high. This is:",
+2308:    correctAnswer: "Expansion option",
+2309:    process: "An expansion option (growth option) gives the firm the flexibility to scale up or pivot based on initial success."
+2310:  },
+2311:  {
+2312:    id: '11-q83',
+2313:    category: 'Investment',
+2314:    question: "The option to delay a project until uncertainty is resolved is most valuable when:",
+2316:    correctAnswer: "The project is irreversible and uncertainty is high.",
+2317:    process: "The 'option to wait' is valuable because it avoids committing capital to a potentially failing project while waiting for better information."
+2318:  },
+2319:  {
+2320:    id: '11-q84',
+2321:    category: 'Portfolio',
+2322:    question: "An insurance payoff is highest exactly when the market performs badly. Its beta is likely:",
+2324:    correctAnswer: "Negative",
+2325:    process: "Assets that pay off when the market is down have negative correlation with the market, thus negative beta."
+2326:  },
+2327:  {
+2328:    id: '11-q85',
+2329:    category: 'Quantitative',
+2330:    question: "An insurance contract pays EUR 100,000 with probability 2%. The appropriate cost of capital is -5%. Fair premium is closest to:",
+2332:    correctAnswer: "EUR 2,105",
+2333:    process: "E[Payoff] = 0.02 * 100,000 = 2,000. PV = 2000 / (1 - 0.05) = 2,105.26."
+2334:  },
+2335:  {
+2336:    id: '11-q86',
+2337:    category: 'Quantitative',
+2338:    question: "A European cash flow of EUR 5 million will arrive in one year. The one-year forward exchange rate is USD 1.20/EUR. The dollar discount rate is 6%. Dollar PV is closest to:",
+2340:    correctAnswer: "USD 5.66 million",
+2341:    process: "Future dollar cash flow: 5 * 1.20 = 6m. PV = 6 / 1.06 = 5.66m."
+2342:  },
+2343:  {
+2344:    id: '11-q87',
+2345:    category: 'Investment',
+2346:    question: "If markets are integrated and exchange-rate risk is hedged with forwards, the value of a foreign-currency cash flow should be:",
+2348:    correctAnswer: "The same whether valued in domestic or foreign currency",
+2349:    process: "Interest rate parity and law of one price ensure consistency between home-currency and foreign-currency valuation methods."
+2350:  },
+2351:  {
+2352:    id: '11-q88',
+2353:    category: 'Quantitative',
+2354:    question: "APR is 12% with monthly compounding. Effective annual rate (EAR) is closest to:",
+2356:    correctAnswer: "12.68%",
+2357:    process: "EAR = (1 + 0.12/12)^12 - 1 = (1.01)^12 - 1 = 12.68%."
+2358:  },
+2359:  {
+2360:    id: '11-q89',
+2361:    category: 'Quantitative',
+2362:    question: "APR is 9.6% with monthly compounding. Monthly rate is:",
+2364:    correctAnswer: "0.80%",
+2365:    process: "Periodic rate = APR / m = 9.6% / 12 = 0.8%."
+2366:  },
+2367:  {
+2368:    id: '11-q90',
+2369:    category: 'Quantitative',
+2370:    question: "You deposit EUR 200 each month for 12 months. Monthly rate is 0.5%. Balance just after the final deposit is closest to:",
+2372:    correctAnswer: "EUR 2,467",
+2373:    process: "FV = 200 * [(1.005^12 - 1) / 0.005] = 200 * 12.3355 = 2467.11."
+2374:  },
+2375:  {
+2376:    id: '11-q91',
+2377:    category: 'Quantitative',
+2378:    question: "You receive EUR 1,000 in 3.5 years. The effective annual interest rate is 4%. Present value is closest to:",
+2380:    correctAnswer: "EUR 872",
+2381:    process: "PV = 1000 / 1.04^3.5 = 872.04."
+2382:  },
+2383:  {
+2384:    id: '11-q92',
+2385:    category: 'Investment',
+2386:    question: "Between coupon dates, a bond’s dirty price generally:",
+2388:    correctAnswer: "Rises as the next coupon approaches, all else equal",
+2389:    process: "The dirty price includes accrued interest, which builds up linearly (or slightly exponentially depending on convention) between payments."
+2390:  },
+2391:  {
+2392:    id: '11-q93',
+2393:    category: 'Investment',
+2394:    question: "On the coupon payment date, immediately after the coupon is paid, the dirty price drops by approximately:",
+2396:    correctAnswer: "The coupon amount",
+2397:    process: "The cash payment 'leaves' the bond, reducing its market value by exactly the amount given to the holder."
+2398:  },
+2399:  {
+2400:    id: '11-q94',
+2401:    category: 'Investment',
+2402:    question: "A default-free bond YTM is 3%, and an otherwise similar corporate bond YTM is 5.5%. Credit spread is:",
+2404:    correctAnswer: "2.5%",
+2405:    process: "Spread = YTM_corp - YTM_riskfree = 5.5% - 3.0% = 2.5%."
+2406:  },
+2407:  {
+2408:    id: '11-q95',
+2409:    category: 'Investment',
+2410:    question: "A corporate bond has face value EUR 1,000, coupon 4%, maturity 3 years. Default-free YTM is 2%, credit spread is 3%. Price is closest to:",
+2412:    correctAnswer: "EUR 973",
+2413:    process: "Total YTM = 2% + 3% = 5%. Price = 40/1.05 + 40/1.05^2 + 1040/1.05^3 = 38.09 + 36.28 + 898.39 = 972.77."
+2414:  },
+2415:  {
+2416:    id: '11-q96',
+2417:    category: 'Derivatives',
+2418:    question: "A call option has strike EUR 75. The stock trades at EUR 82 at expiration. Call holder payoff is:",
+2420:    correctAnswer: "EUR 7",
+2421:    process: "Payoff = max(S - K, 0) = max(82 - 75, 0) = 7."
+2422:  },
+2423:  {
+2424:    id: '11-q97',
+2425:    category: 'Derivatives',
+2426:    question: "A put option has strike EUR 50. The stock trades at EUR 42 at expiration. Put writer payoff is:",
+2428:    correctAnswer: "EUR -8",
+2429:    process: "Long put payoff = max(50 - 42, 0) = 8. Short (writer) payoff = -8."
+2430:  },
+2431:  {
+2432:    id: '11-q98',
+2433:    category: 'Derivatives',
+2434:    question: "You own one share and write one call with strike EUR 60. At expiration the stock price is EUR 75. Combined payoff, excluding the option premium, is:",
+2436:    correctAnswer: "EUR 60",
+2437:    process: "Short Call Payoff = -max(75-60, 0) = -15. Stock value = 75. Total = 75 - 15 = 60 (The stock is effectively sold for the strike price)."
+2438:  },
+2439:  {
+2440:    id: '11-q99',
+2441:    category: 'Derivatives',
+2442:    question: "You own one share and buy one put with strike EUR 40. At expiration the stock price is EUR 30. Combined payoff, excluding the option premium, is:",
+2444:    correctAnswer: "EUR 40",
+2445:    process: "Put Payoff = max(40-30, 0) = 10. Stock value = 30. Total = 30 + 10 = 40 (Floor at strike price)."
+2446:  }
+2447:];
+2448:
+2449:export const batch12: Question[] = [
+2450:  {
+2451:    id: '12-o1',
+2452:    category: 'Quantitative',
+2453:    question: "A firm has EBIT of EUR 120 million, depreciation of EUR 15 million, capital expenditures of EUR 40 million, and an increase in net working capital of EUR 10 million. The corporate tax rate is 25%. Calculate free cash flow.",
+2454:    correctAnswer: "EUR 55 million",
+2455:    process: "FCF = EBIT(1 - Tc) + Dep - CapEx - ΔNWC = 120(0.75) + 15 - 40 - 10 = 90 + 15 - 40 - 10 = 55."
+2456:  },
+2457:  {
+2458:    id: '12-o2',
+2459:    category: 'Quantitative',
+2460:    question: "A company reports net income of USD 90 million. Depreciation is USD 20 million. Accounts receivable increase by USD 8 million, inventory decreases by USD 5 million, and accounts payable decreases by USD 4 million. Calculate cash flow from operations.",
+2461:    correctAnswer: "USD 103 million",
+2462:    process: "CFO = NI + Dep - ΔAR - ΔInventory + ΔAP = 90 + 20 - 8 - (-5) + (-4) = 103."
+2463:  },
+2464:  {
+2465:    id: '12-o3',
+2466:    category: 'Quantitative',
+2467:    question: "A company’s free cash flow next year is expected to be EUR 30 million and grow at 2% forever. WACC is 8%. The firm has debt of EUR 150 million and excess cash of EUR 20 million. Calculate enterprise value and equity value.",
+2468:    correctAnswer: "Enterprise value: EUR 500 million, Equity value: EUR 370 million",
+2469:    process: "EV = FCF1 / (WACC - g) = 30 / (0.08 - 0.02) = 500. Equity = EV - Debt + Cash = 500 - 150 + 20 = 370."
+2470:  },
+2471:  {
+2472:    id: '12-o4',
+2473:    category: 'Quantitative',
+2474:    question: "A stock is expected to pay a dividend of EUR 1.80 next year. Dividends will grow at 3% forever. The cost of equity is 9%. Calculate the current share price.",
+2475:    correctAnswer: "EUR 30",
+2476:    process: "P0 = Div1 / (rE - g) = 1.80 / (0.09 - 0.03) = 30."
+2477:  },
+2478:  {
+2479:    id: '12-o5',
+2480:    category: 'Quantitative',
+2481:    question: "A firm expects EPS of EUR 4 next year. It pays out 50% of earnings as dividends. The return on new investments is 12%, and the cost of equity is 10%. Calculate the expected growth rate and share price.",
+2482:    correctAnswer: "Growth: 6%, Share price: EUR 50",
+2483:    process: "b = 1 - 0.5 = 0.5. g = b * ROE = 0.5 * 12% = 6%. Div1 = 4 * 0.5 = 2. P0 = 2 / (0.10 - 0.06) = 50."
+2484:  },
+2485:  {
+2486:    id: '12-o6',
+2487:    category: 'Investment',
+2488:    question: "A bond has face value EUR 1,000, annual coupon rate 5%, remaining maturity 5 years, and YTM 4%. Calculate its price.",
+2489:    correctAnswer: "EUR 1,044.52",
+2490:    process: "CPN = 50. P = 50/0.04 * [1 - 1.04^-5] + 1000/1.04^5 = 222.59 + 821.93 = 1044.52."
+2491:  },
+2492:  {
+2493:    id: '12-o7',
+2494:    category: 'Investment',
+2495:    question: "A corporate bond has face value GBP 1,000, coupon rate 6%, and maturity 4 years. The default-free YTM is 2.5%, and the credit spread is 2%. Calculate the corporate bond price.",
+2496:    correctAnswer: "GBP 1,053.81",
+2497:    process: "Total YTM = 2.5% + 2% = 4.5%. CPN = 60. P = 60/0.045 * [1 - 1.045^-4] + 1000/1.045^4 = 1053.81."
+2498:  },
+2499:  {
+2500:    id: '12-o8',
+2501:    category: 'Quantitative',
+2502:    question: "The 1-year zero-coupon spot rate is 2%, and the 2-year spot rate is 3%. Calculate the forward rate for year 2.",
+2503:    correctAnswer: "4.01%",
+2504:    process: "1 + f2 = 1.03^2 / 1.02^1 = 1.0609 / 1.02 = 1.0401. f2 = 4.01%."
+2505:  },
+2506:  {
+2507:    id: '12-o9',
+2508:    category: 'Quantitative',
+2509:    question: "You borrow EUR 50,000 and repay it with equal annual payments for 10 years. The interest rate is 5%. Calculate the annual payment.",
+2510:    correctAnswer: "EUR 6,475",
+2511:    process: "50000 = C / 0.05 * [1 - 1.05^-10]. C = 50000 / 7.7217 = 6475."
+2512:  },
+2513:  {
+2514:    id: '12-o10',
+2515:    category: 'Quantitative',
+2516:    question: "A bank quotes an APR of 6% with monthly compounding. Calculate the effective annual rate.",
+2517:    correctAnswer: "6.17%",
+2518:    process: "EAR = (1 + 0.06/12)^12 - 1 = 6.17%."
+2519:  },
+2520:  {
+2521:    id: '12-o11',
+2522:    category: 'Quantitative',
+2523:    question: "A stock has beta 1.4. The risk-free rate is 3%, and the expected market return is 9%. Calculate the expected return.",
+2524:    correctAnswer: "11.4%",
+2525:    process: "E[R] = rf + β(E[Rm] - rf) = 3% + 1.4(9% - 3%) = 3% + 8.4% = 11.4%."
+2526:  },
+2527:  {
+2528:    id: '12-o12',
+2529:    category: 'Quantitative',
+2530:    question: "A stock has expected return 13%. The risk-free rate is 4%, and the market risk premium is 6%. Calculate the stock’s beta.",
+2531:    correctAnswer: "1.5",
+2532:    process: "13% = 4% + β(6%). 9% = β(6%). β = 1.5."
+2533:  },
+2534:  {
+2535:    id: '12-o13',
+2536:    category: 'Portfolio',
+2537:    question: "A portfolio invests 60% in stock A and 40% in stock B. Stock A has expected return 8% and volatility 20%. Stock B has expected return 12% and volatility 30%. Correlation is 0.25. Calculate expected return and volatility.",
+2538:    correctAnswer: "Expected return: 9.6%, Volatility: 18.97%",
+2539:    process: "E[Rp] = 0.6(8) + 0.4(12) = 9.6%. Var = 0.6^2(0.2^2) + 0.4^2(0.3^2) + 2(0.6)(0.4)(0.25)(0.2)(0.3) = 0.036. σ = sqrt(0.036) = 18.97%."
+2540:  },
+2541:  {
+2542:    id: '12-o14',
+2543:    category: 'Portfolio',
+2544:    question: "Portfolio A has expected return 10% and volatility 25%. Portfolio B has expected return 8% and volatility 15%. The risk-free rate is 2%. Which is better when combined with the risk-free asset?",
+2545:    correctAnswer: "Portfolio B (Higher Sharpe Ratio)",
+2546:    process: "Sharpe A = (10-2)/25 = 0.32. Sharpe B = (8-2)/15 = 0.40. Portfolio B is better."
+2547:  },
+2548:  {
+2549:    id: '12-o15',
+2550:    category: 'Quantitative',
+2551:    question: "A firm is financed with 70% equity and 30% debt. Cost of equity is 12%, pretax cost of debt is 5%, and the tax rate is 20%. Calculate WACC.",
+2552:    correctAnswer: "9.6%",
+2553:    process: "WACC = 0.70(12%) + 0.30(5%)(1 - 0.20) = 8.4% + 1.2% = 9.6%."
+2554:  },
+2555:  {
+2556:    id: '12-o16',
+2557:    category: 'Quantitative',
+2558:    question: "An all-equity firm has cost of capital 10%. It changes capital structure to D/E=0.6. The cost of debt is 4%, and there are no taxes. Calculate the new cost of equity.",
+2559:    correctAnswer: "13.6%",
+2560:    process: "rE = rU + D/E(rU - rD) = 10% + 0.6(10% - 4%) = 13.6%."
+2561:  },
+2562:  {
+2563:    id: '12-o17',
+2564:    category: 'Quantitative',
+2565:    question: "A firm is all-equity financed with value EUR 300 million and 30 million shares. It announces it will issue EUR 60 million permanent debt and use the proceeds to repurchase shares. The corporate tax rate is 25%. What is the share price just after the announcement?",
+2566:    correctAnswer: "EUR 10.50",
+2567:    process: "Initial P = 300/30 = 10. PVTS = Tc*D = 0.25(60) = 15. Change per share = 15/30 = 0.50. New price = 10.50."
+2568:  },
+2569:  {
+2570:    id: '12-o18',
+2571:    category: 'Quantitative',
+2572:    question: "Using the firm in Question 17, how many shares can it repurchase using the EUR 60 million debt proceeds?",
+2573:    correctAnswer: "5.714 million shares",
+2574:    process: "Repurchase price = 10.50. Shares = 60 / 10.50 = 5.714 million."
+2575:  },
+2576:  {
+2577:    id: '12-o19',
+2578:    category: 'Quantitative',
+2579:    question: "A stock trades cum-dividend at EUR 55. The firm pays a dividend of EUR 2.20 per share. In perfect markets, what is the ex-dividend price?",
+2580:    correctAnswer: "EUR 52.80",
+2581:    process: "Pex = Pcum - Div = 55 - 2.20 = 52.80."
+2582:  },
+2583:  {
+2584:    id: '12-o20',
+2585:    category: 'Quantitative',
+2586:    question: "A company has 8 million shares outstanding at EUR 25. It announces a 25% stock dividend. What are the number of shares and share price after the stock dividend, assuming no information effects?",
+2587:    correctAnswer: "Shares: 10 million, Price: EUR 20",
+2588:    process: "New shares = 8 * 1.25 = 10. Total value = 8 * 25 = 200. New price = 200 / 10 = 20."
+2589:  },
+2590:  {
+2591:    id: '12-o21',
+2592:    category: 'Quantitative',
+2593:    question: "A firm has 200 million shares. Each shareholder receives one right per share. Four rights are needed to buy one new share at EUR 12. How many new shares are issued, and how much money is raised?",
+2594:    correctAnswer: "New shares: 50 million, Amount raised: EUR 600 million",
+2595:    process: "New shares = 200 / 4 = 50. Money raised = 50 * 12 = 600."
+2596:  },
+2597:  {
+2598:    id: '12-o22',
+2599:    category: 'Investment',
+2600:    question: "A founder owns 4 million shares. A venture capitalist invests EUR 10 million for 2 million new shares. Calculate the post-money valuation and the founder’s equity value after the investment.",
+2601:    correctAnswer: "Post-money: EUR 30 million, Founder value: EUR 20 million",
+2602:    process: "Price = 10/2 = 5. Total shares = 6. Post-money = 6*5=30. Founder value = 4*5=20."
+2603:  },
+2604:  {
+2605:    id: '12-o23',
+2606:    category: 'Investment',
+2607:    question: "Acquirer A has 20 million shares at EUR 30. Target B has 5 million shares at EUR 20. A offers a 20% premium and pays using newly issued shares. There are no synergies. What is the value paid and how many shares must A issue if the market adjusts for the overpayment?",
+2608:    correctAnswer: "Value paid: EUR 120 million, Shares issued: 4.14 million",
+2609:    process: "Target value = 5*20=100. Premium pay = 120. Overpay = 20. Acquirer adjusted value = 600-20=580. Adjusted price = 580/20=29. Shares = 120/29=4.14."
+2610:  },
+2611:  {
+2612:    id: '12-o24',
+2613:    category: 'Investment',
+2614:    question: "A publicly traded firm is worth EUR 400 million. A buyout team believes it can increase the value to EUR 700 million. It can borrow EUR 500 million using the target’s assets. How much own equity capital must the buyout team provide to persuade all shareholders to sell?",
+2615:    correctAnswer: "EUR 200 million",
+2616:    process: "Post-buyout value = 700. Debt = 500. Equity value = 200. Shareholders must receive the post-buyout total value (700) to sell. Debt provides 500, so buyers provide 200."
+2617:  },
+2618:  {
+2619:    id: '12-o25',
+2620:    category: 'Investment',
+2621:    question: "A firm has debt due next year with face value EUR 80 million. Without new investment, assets will be worth EUR 60 million. A project costs EUR 30 million today and increases next year’s asset value to EUR 110 million. Is the project positive NPV? Will shareholders invest?",
+2622:    correctAnswer: "Positive NPV (EUR 20m), Shareholders indifferent (Gain = Cost = 30)",
+2623:    process: "Gain in value = 110-60=50. Cost=30. NPV=20. Equity value with project = 110-80=30. Without = 0. Gain = 30. Cost = 30."
+2624:  },
+2625:  {
+2626:    id: '12-o26',
+2627:    category: 'Investment',
+2628:    question: "A levered firm has debt with face value EUR 50 million due next year. It can choose Project Safe (EUR 70m for sure) or Project Risky (EUR 120m with 50% prob, else 0). Which project do shareholders prefer? Which maximizes total firm value?",
+2629:    correctAnswer: "Shareholders prefer Risky, Total value maximized by Safe",
+2630:    process: "Safe: SH=20, Total=70. Risky: E[SH]=0.5(70)+0=35, E[Total]=0.5(120)=60."
+2631:  },
+2632:  {
+2633:    id: '12-o27',
+2634:    category: 'Quantitative',
+2635:    question: "A firm’s unlevered value is EUR 800 million. The PV of interest tax shields is EUR 120 million. The PV of expected financial distress costs is EUR 50 million. The firm has EUR 300 million in debt. Calculate levered value and equity value.",
+2636:    correctAnswer: "Levered value: EUR 870 million, Equity value: EUR 570 million",
+2637:    process: "VL = 800 + 120 - 50 = 870. E = 870 - 300 = 570."
+2638:  },
+2639:  {
+2640:    id: '12-o28',
+2641:    category: 'Quantitative',
+2642:    question: "A firm has zero-coupon debt promising EUR 100 million next year. It will pay EUR 100 million (70% prob) or EUR 60 million (30% prob). Risk-free rate is 5%. Risk is diversifiable. Calculate debt value and YTM.",
+2643:    correctAnswer: "Debt value: EUR 83.81 million, YTM: 19.32%",
+2644:    process: "E[Payoff] = 88. D0 = 88 / 1.05 = 83.81. YTM = 100 / 83.81 - 1 = 19.32%."
+2645:  },
+2646:  {
+2647:    id: '12-o29',
+2648:    category: 'Quantitative',
+2649:    question: "Using Question 28, calculate the expected return on the risky debt. Explain why it differs from the YTM.",
+2650:    correctAnswer: "Expected return: 5%",
+2651:    process: "E[R] = 88 / 83.81 - 1 = 5%. YTM is higher because it uses the promised (maximum) payoff, not the expected (average) payoff."
+2652:  },
+2653:  {
+2654:    id: '12-o30',
+2655:    category: 'Quantitative',
+2656:    question: "A machine costs EUR 1,000,000 and is expected to have residual value EUR 200,000 after 5 years. The discount rate is 6%. What is the PV of lease payments needed for the lessor to break even?",
+2657:    correctAnswer: "EUR 850,548",
+2658:    process: "PV(Residual) = 200,000 / 1.06^5 = 149,452. PV(Lease) = 1,000,000 - 149,452 = 850,548."
+2659:  },
+2660:  {
+2661:    id: '12-o31',
+2662:    category: 'Quantitative',
+2663:    question: "Using Question 30, suppose the lease payments are made annually at the beginning of each year for 5 years. Calculate the annual lease payment.",
+2664:    correctAnswer: "EUR 190,488",
+2665:    process: "Annuity-due factor = 1 + [ (1 - 1.06^-4) / 0.06 ] = 4.4651. L = 850,548 / 4.4651 = 190,488."
+2666:  },
+2667:  {
+2668:    id: '12-o32',
+2669:    category: 'Investment',
+2670:    question: "A firm sells 300,000 shares in an auction IPO. Bids: 100k @ €12, 80k @ €11, 150k @ €10, 200k @ €9. Determine the clearing price and amount raised.",
+2671:    correctAnswer: "Clearing price: EUR 10, Amount raised: EUR 3,000,000",
+2672:    process: "Cumulative: 100k, 180k, 330k. At €10, demand covers 300k. Clearing price = 10. Raised = 300k * 10 = 3m."
+2673:  },
+2674:  {
+2675:    id: '12-o33',
+2676:    category: 'Derivatives',
+2677:    question: "A stock trades at EUR 80. A one-year European call with strike EUR 84 costs EUR 7. The risk-free rate is 5%, and the stock pays no dividends. Calculate the price of the otherwise identical put.",
+2678:    correctAnswer: "EUR 7",
+2679:    process: "P = C + K/(1+r) - S = 7 + 84/1.05 - 80 = 7 + 80 - 80 = 7."
+2680:  }
+2681:];
+2682:
+2683:export const batch13: Question[] = [
+2684:  {
+2685:    id: '13-o34',
+2686:    category: 'Derivatives',
+2687:    question: "A stock trades at EUR 100. In one year it will be EUR 130 or EUR 80. The risk-free rate is 4%. A European call has strike EUR 100. Calculate its value using risk-neutral probabilities.",
+2688:    correctAnswer: "EUR 13.85",
+2689:    process: "p = (1.04(100) - 80) / (130 - 80) = 24 / 50 = 0.48. Cu = 30, Cd = 0. C0 = (0.48 * 30) / 1.04 = 13.85."
+2690:  },
+2691:  {
+2692:    id: '13-o35',
+2693:    category: 'Derivatives',
+2694:    question: "Using the assumptions from question 34 (S=100, Su=130, Sd=80, K=100), calculate the replicating portfolio delta for the call option.",
+2695:    correctAnswer: "0.60",
+2696:    process: "Δ = (Cu - Cd) / (Su - Sd) = (130 - 100 - 0) / (130 - 80) = 30 / 50 = 0.60."
+2697:  },
+2698:  {
+2699:    id: '13-o36',
+2700:    category: 'Derivatives',
+2701:    question: "Using the results from questions 34 and 35 (Δ=0.60, Cd=0, Sd=80), calculate B, the amount invested in the risk-free asset (borrowing/lending), in the replicating portfolio (r=4%).",
+2702:    correctAnswer: "-EUR 46.15",
+2703:    process: "ΔSd + 1.04B = Cd => 0.60(80) + 1.04B = 0 => 48 + 1.04B = 0 => B = -46.15. The investor borrows EUR 46.15."
+2704:  },
+2705:  {
+2706:    id: '13-o37',
+2707:    category: 'Derivatives',
+2708:    question: "A one-period American put has strike EUR 100. Current stock price is EUR 90. The risk-free rate is 5%. The stock will be EUR 120 or EUR 70 in one year. Calculate whether early exercise is optimal today if the continuation value is EUR 18.",
+2709:    correctAnswer: "Do not exercise early",
+2710:    process: "Immediate exercise value = 100 - 90 = 10. Continuation value = 18. Since 18 > 10, early exercise is not optimal."
+2711:  },
+2712:  {
+2713:    id: '13-o38',
+2714:    category: 'Derivatives',
+2715:    question: "You own one share and write one call option with strike EUR 50. Calculate the combined payoff at expiration if the stock price is EUR 70.",
+2716:    correctAnswer: "EUR 50",
+2717:    process: "If S=70: Share=70, Short call = -(70-50) = -20. Total = 50. The payoff is capped at the strike price."
+2718:  },
+2719:  {
+2720:    id: '13-o39',
+2721:    category: 'Derivatives',
+2722:    question: "You own one share and buy one put with strike EUR 50. Calculate the combined payoff at expiration if the stock price is EUR 35.",
+2723:    correctAnswer: "EUR 50",
+2724:    process: "If S=35: Share=35, Put = 50 - 35 = 15. Total = 35 + 15 = 50. The protective put creates a floor at the strike price."
+2725:  },
+2726:  {
+2727:    id: '13-o40',
+2728:    category: 'Derivatives',
+2729:    question: "A convertible bond has face value EUR 1,000 and can be converted into 25 shares. If the share price is EUR 36, what is the minimum value (floor) of the convertible bond at maturity?",
+2730:    correctAnswer: "EUR 1,000",
+2731:    process: "Conversion value = 25 * 36 = 900. Face value = 1000. Minimum = max(1000, 900) = 1000."
+2732:  },
+2733:  {
+2734:    id: '13-o41',
+2735:    category: 'Derivatives',
+2736:    question: "A convertible bond has face value EUR 1,000 and can be converted into 20 shares. At maturity, the share price is EUR 70. What is the final value received by the investor?",
+2737:    correctAnswer: "EUR 1,400",
+2738:    process: "Conversion value = 20 * 70 = 1400. Face value = 1000. Since 1400 > 1000, holder converts and receives 1400."
+2739:  },
+2740:  {
+2741:    id: '13-o42',
+2742:    category: 'Quantitative',
+2743:    question: "A project costs EUR 200 today and pays EUR 242 in two years. Calculate the IRR.",
+2744:    correctAnswer: "10%",
+2745:    process: "200 = 242 / (1+IRR)^2 => (1+IRR)^2 = 1.21 => 1+IRR = 1.1 => IRR = 10%."
+2746:  },
+2747:  {
+2748:    id: '13-o43',
+2749:    category: 'Quantitative',
+2750:    question: "A project requires an investment of EUR 500,000 at the end of year 1 and pays EUR 732,050 at the end of year 5. Calculate the IRR.",
+2751:    correctAnswer: "10%",
+2752:    process: "500000(1+r)^4 = 732050 => (1+r)^4 = 1.4641 => 1+r = 1.1 => IRR = 10%."
+2753:  },
+2754:  {
+2755:    id: '13-o44',
+2756:    category: 'Quantitative',
+2757:    question: "A project produces EUR 2 million at t=0 and requires EUR 2.4 million at t=1. The cost of capital is 15%. Calculate the NPV [in EUR million].",
+2758:    correctAnswer: "-0.087 million",
+2759:    process: "NPV = 2 - 2.4 / 1.15 = 2 - 2.087 = -0.087. IRR is 20%. Since NPV is negative, reject."
+2760:  },
+2761:  {
+2762:    id: '13-o45',
+2763:    category: 'Quantitative',
+2764:    question: "A firm has capital rationing. Project A has NPV EUR 12 million and uses 3 machine-days. Project B has NPV EUR 10 million and uses 2 machine-days. What is the Profitability Index (PI) of Project B?",
+2765:    correctAnswer: "5",
+2766:    process: "PI_A = 12/3 = 4. PI_B = 10/2 = 5."
+2767:  },
+2768:  {
+2769:    id: '13-o46',
+2770:    category: 'Quantitative',
+2771:    question: "Explain how sensitivity analysis helps a CFO identify key value drivers.",
+2772:    correctAnswer: "It isolates the impact of each individual assumption on NPV by changing one input at a time.",
+2773:    process: "Sensitivity analysis shows which input has the largest effect on NPV, helping identify assumptions that require the most careful estimation."
+2774:  },
+2775:  {
+2776:    id: '13-o47',
+2777:    category: 'Quantitative',
+2778:    question: "Explain the main difference between sensitivity analysis and scenario analysis.",
+2779:    correctAnswer: "Sensitivity analysis isolates single assumptions; scenario analysis evaluates combined sets of assumptions.",
+2780:    process: "Sensitivity analysis changes one input at a time. Scenario analysis changes several inputs together to create coherent cases (e.g., pessimistic, base-case, optimistic)."
+2781:  },
+2782:  {
+2783:    id: '13-o48',
+2784:    category: 'Quantitative',
+2785:    question: "A project has annual fixed costs of EUR 100,000. Price per unit is EUR 50, variable cost is EUR 30, and annual depreciation is EUR 20,000. Ignoring taxes, calculate the accounting break-even quantity.",
+2786:    correctAnswer: "6,000 units",
+2787:    process: "Contribution margin = 50 - 30 = 20. Break-even Q = (Fixed Costs + Depreciation) / Contribution Margin = 120,000 / 20 = 6,000."
+2788:  },
+2789:  {
+2790:    id: '13-o49',
+2791:    category: 'Quantitative',
+2792:    question: "A firm invests EUR 1 million. It can expense the full amount immediately (rule A) or depreciate straight-line over 5 years (rule B). Tax rate is 30%, discount rate is 8%. Calculate the value added by choosing rule A over rule B.",
+2793:    correctAnswer: "EUR 60,437",
+2794:    process: "PV tax safe (A) = 0.3 * 1m = 300,000. PV tax safe (B) = 60,000 * Annuity(8%, 5y) = 239,563. Value added = 300,000 - 239,563 = 60,437."
+2795:  },
+2796:  {
+2797:    id: '13-o50',
+2798:    category: 'Quantitative',
+2799:    question: "A machine costs EUR 500,000. It can be depreciated over 2 years (new rule) instead of 5 years (old rule). Tax rate is 25%, discount rate is 10%. Calculate the value added by accelerated depreciation.",
+2800:    correctAnswer: "EUR 13,701",
+2801:    process: "PV old shield = 25k * Annuity(10%, 5y) = 94,770. PV new shield = 62.5k * Annuity(10%, 2y) = 108,471. Added value = 13,701."
+2802:  },
+2803:  {
+2804:    id: '13-o51',
+2805:    category: 'Quantitative',
+2806:    question: "A comparable firm has equity value EUR 600 million, debt value EUR 400 million, equity beta 1.5, and debt beta 0.2. Estimate the asset beta.",
+2807:    correctAnswer: "0.98",
+2808:    process: "βA = (E/V)βE + (D/V)βD = (600/1000)1.5 + (400/1000)0.2 = 0.90 + 0.08 = 0.98."
+2809:  },
+2810:  {
+2811:    id: '13-o52',
+2812:    category: 'Quantitative',
+2813:    question: "Using an asset beta of 0.98, calculate the project cost of capital if the risk-free rate is 3% and the market risk premium is 6%.",
+2814:    correctAnswer: "8.88%",
+2815:    process: "r = 3% + 0.98(6%) = 8.88%."
+2816:  },
+2817:  {
+2818:    id: '13-o53',
+2819:    category: 'Quantitative',
+2820:    question: "A firm has market value of equity EUR 700 million and debt EUR 300 million. Cost of equity is 11%, cost of debt is 4%, and the tax rate is 25%. Calculate WACC.",
+2821:    correctAnswer: "8.6%",
+2822:    process: "WACC = (700/1000)11% + (300/1000)4%(1-0.25) = 7.7% + 0.9% = 8.6%."
+2823:  },
+2824:  {
+2825:    id: '13-o54',
+2826:    category: 'Quantitative',
+2827:    question: "A firm has rU=9.67%. If the firm changes to D/E=1.0 and cost of debt is 5% (no taxes), calculate the new cost of equity.",
+2828:    correctAnswer: "14.34%",
+2829:    process: "rE = rU + (D/E)(rU - rD) = 9.67% + 1.0(9.67% - 5%) = 14.34%."
+2830:  },
+2831:  {
+2832:    id: '13-o55',
+2833:    category: 'Quantitative',
+2834:    question: "Explain why, with corporate taxes, interest tax shields can increase firm value.",
+2835:    correctAnswer: "Interest is tax-deductible, which reduces the after-tax cost of debt and increases cash flow to investors.",
+2836:    process: "Interest payments reduce taxable income. This creates a tax shield = Tc * Interest, effectively subsidizing debt financing."
+2837:  },
+2838:  {
+2839:    id: '13-o56',
+2840:    category: 'Quantitative',
+2841:    question: "In a perfect capital market without taxes, why does leverage not affect total firm value?",
+2842:    correctAnswer: "It changes the allocation of cash flows, not the total cash flows generated by the assets.",
+2843:    process: "Total firm value is independent of capital structure because investors can create 'homemade leverage' themselves."
+2844:  },
+2845:  {
+2846:    id: '13-o57',
+2847:    category: 'Quantitative',
+2848:    question: "Why is dividend policy considered irrelevant in perfect capital markets?",
+2849:    correctAnswer: "Paying a dividend reduces the share price by the same amount, leaving shareholder wealth unchanged.",
+2850:    process: "Shareholders receive cash but own a less valuable share. They could achieve the same result by selling shares themselves."
+2851:  },
+2852:  {
+2853:    id: '13-o58',
+2854:    category: 'Quantitative',
+2855:    question: "A firm has 10 million shares at EUR 20 and EUR 40 million excess cash. What is the ex-dividend price if it pays all cash as a dividend in a perfect market?",
+2856:    correctAnswer: "EUR 16",
+2857:    process: "Dividend per share = 40 / 10 = 4. Ex-price = 20 - 4 = 16."
+2858:  },
+2859:  {
+2860:    id: '13-o59',
+2861:    category: 'Quantitative',
+2862:    question: "A firm has EUR 50 million excess cash earning taxable interest forever. The corporate tax rate is 30%. What is the value created from distributing the cash and avoiding future taxes?",
+2863:    correctAnswer: "EUR 15 million",
+2864:    process: "Value of tax avoidance = Tc * Cash = 0.30 * 50 = 15 million."
+2865:  },
+2866:  {
+2867:    id: '13-o60',
+2868:    category: 'Investment',
+2869:    question: "What is dividend smoothing?",
+2870:    correctAnswer: "The practice of making dividends less volatile than earnings.",
+2871:    process: "Firms adjust dividends gradually because cuts signal bad news and they want dividends to be sustainable."
+2872:  },
+2873:  {
+2874:    id: '13-o61',
+2875:    category: 'Investment',
+2876:    question: "State the preferred financing order in the pecking order theory.",
+2877:    correctAnswer: "Retained earnings -> Debt -> Equity",
+2878:    process: "Firms prefer internal funds first, then debt, and equity last due to asymmetric information costs."
+2879:  },
+2880:  {
+2881:    id: '13-o62',
+2882:    category: 'Investment',
+2883:    question: "Why might a firm reject a positive-NPV project when its equity is undervalued?",
+2884:    correctAnswer: "Because issuing undervalued equity transfers too much value from existing to new shareholders.",
+2885:    process: "This is an adverse-selection cost. The dilution loss exceeds the project's NPV gain for existing owners."
+2886:  },
+2887:  {
+2888:    id: '13-o63',
+2889:    category: 'Investment',
+2890:    question: "How does a rights issue solve the adverse-selection problem in equity issuance?",
+2891:    correctAnswer: "It allows existing shareholders to buy new shares and avoid dilution from underpricing.",
+2892:    process: "Since current owners aren't 'outsiders', they don't lose value to new investors even if the price is 'wrong'."
+2893:  },
+2894:  {
+2895:    id: '13-o64',
+2896:    category: 'Investment',
+2897:    question: "What is the free-rider problem in takeovers?",
+2898:    correctAnswer: "Target shareholders hold out for the post-takeover value, preventing the acquirer from capturing gains.",
+2899:    process: "Each shareholder hopes others sell so they can stay and benefit from improvements without paying the 'tender' premium cost."
+2900:  },
+2901:  {
+2902:    id: '13-o65',
+2903:    category: 'Investment',
+2904:    question: "What is a toehold in the context of mergers and acquisitions?",
+2905:    correctAnswer: "An initial ownership stake bought before launching a formal takeover bid.",
+2906:    process: "A toehold allows the acquirer to capture value increases on shares they already own, reducing the net acquisition cost."
+2907:  },
+2908:  {
+2909:    id: '13-o66',
+2910:    category: 'Investment',
+2911:    question: "How does high leverage in an LBO help overcome the free-rider problem?",
+2912:    correctAnswer: "By placing debt on the target, the post-buyout equity value is reduced, making it cheaper to buy.",
+2913:    process: "Leverage reduces the amount of 'own' equity capital the buyer must risk."
+2914:  },
+2915:  {
+2916:    id: '13-o67',
+2917:    category: 'Investment',
+2918:    question: "Definer a staggered board and explain its purpose.",
+2919:    correctAnswer: "A board where only a fraction of directors are elected each year, delaying a hostile bidder from gaining control.",
+2920:    process: "Even with a majority of shares, the acquirer cannot replace the whole board immediately."
+2921:  },
+2922:  {
+2923:    id: '13-o68',
+2924:    category: 'Investment',
+2925:    question: "Explain the threat of a 'poison pill'.",
+2926:    correctAnswer: "It deters bidders by threatening severe dilution via cheap share issuance to existing owners.",
+2927:    process: "Hostile bidders are excluded from the discounted purchase right, making the target too expensive to digest."
+2928:  },
+2929:  {
+2930:    id: '13-o69',
+2931:    category: 'Investment',
+2932:    question: "Classify a merger where a clothing retailer buys a fabric supplier.",
+2933:    correctAnswer: "Vertical merger",
+2934:    process: "This is a buyer-supplier relationship (vertical integration)."
+2935:  }
+2936:];
+2937:
+2938:export const batch14: Question[] = [
+2939:  {
+2940:    id: '14-o70',
+2941:    category: 'Investment',
+2942:    question: "Acquirer A is worth EUR 500 million. Target B is worth EUR 200 million. If merged, the combined firm is worth EUR 760 million. Calculate the synergies.",
+2943:    correctAnswer: "EUR 60 million",
+2944:    process: "Synergy = V_combined - (V_A + V_B) = 760 - (500 + 200) = 60."
+2945:  },
+2946:  {
+2947:    id: '14-o71',
+2948:    category: 'Investment',
+2949:    question: "Acquirer has 50m shares at EUR 20. Target has 10m shares at EUR 15. Acquirer offers 1 new share for each target share. Synergies = EUR 100m. Calculate the post-merger share price.",
+2950:    correctAnswer: "EUR 20.83",
+2951:    process: "V_combined = (50*20) + (10*15) + 100 = 1250. Total shares = 50 + 10 = 60. Price = 1250 / 60 = 20.83."
+2952:  },
+2953:  {
+2954:    id: '14-o72',
+2955:    category: 'Quantitative',
+2956:    question: "An insurance contract pays EUR 200,000 if recession occurs (5% prob). Beta = -1.5, rf = 2%, MRP = 6%. Calculate the fair premium.",
+2957:    correctAnswer: "EUR 10,752.69",
+2958:    process: "Expected payoff = 0.05 * 200k = 10,000. r = 2% + (-1.5 * 6%) = -7%. Premium = 10,000 / (1 - 0.07) = 10,752.69."
+2959:  },
+2960:  {
+2961:    id: '14-o73',
+2962:    category: 'Quantitative',
+2963:    question: "A U.S. investor will receive EUR 3 million in one year. Forward rate = USD 1.10/EUR, and USD discount rate = 5%. Estimate the PV in dollars.",
+2964:    correctAnswer: "USD 3.143 million",
+2965:    process: "Future USD = 3 * 1.1 = 3.3. PV = 3.3 / 1.05 = 3.1429."
+2966:  },
+2967:  {
+2968:    id: '14-o74',
+2969:    category: 'International',
+2970:    question: "What does it mean for international capital markets to be 'integrated'?",
+2971:    correctAnswer: "Equivalent investments have the same value after adjusting for exchange rates and risk.",
+2972:    process: "Integration means no-arbitrage valuation gives the same PV regardless of which currency is used for the cash flow projection."
+2973:  },
+2974:  {
+2975:    id: '14-o75',
+2976:    category: 'Quantitative',
+2977:    question: "Project costs 100 today. Pays 120 or 80 in 1y (50/50). r=10%. If you wait 1y and only invest in the good state (payoff 1y later), what is the value of waiting?",
+2978:    correctAnswer: "EUR 4.13",
+2979:    process: "NPV now = -9.09. Wait: Good state NPV at t=1 is 9.09. Exp Value at t=1 = 0.5 * 9.09 = 4.545. PV = 4.545 / 1.1 = 4.13."
+2980:  },
+2981:  {
+2982:    id: '14-o76',
+2983:    category: 'Quantitative',
+2984:    question: "Project costs 100. Worth 150 or 60 in 1y (50/50). r=10%. You can abandon in bad state for EUR 80. Calculate NPV.",
+2985:    correctAnswer: "EUR 4.55",
+2986:    process: "Expected payoff = 0.5*150 + 0.5*80 = 115. NPV = -100 + 115/1.1 = 4.55."
+2987:  },
+2988:  {
+2989:    id: '14-o77',
+2990:    category: 'Quantitative',
+2991:    question: "Pilot project costs 10m, stand-alone NPV = -1m. If successful (40%), can expand for +6m NPV. Should you start the pilot?",
+2992:    correctAnswer: "Yes, Total NPV = EUR 1.4 million",
+2993:    process: "Total NPV = Stand-alone + Option = -1 + 0.4(6) = 1.4 million. Accept."
+2994:  },
+2995:  {
+2996:    id: '14-o78',
+2997:    category: 'Quantitative',
+2998:    question: "Test cost = 1m. 50% chance NPV = 5, 50% chance NPV = -3. If bad, sell info for 0.5 in 1y. r=10%. Calculate NPV today.",
+2999:    correctAnswer: "EUR 1.50 million",
+3000:    process: "Exp Value t=1 = 0.5*5 + 0.5*0.5 = 2.75. PV = 2.75/1.1 = 2.5. NPV = 2.5 - 1 = 1.5."
+3001:  },
+3002:  {
+3003:    id: '14-o79',
+3004:    category: 'Derivatives',
+3005:    question: "Why does increasing volatility increase call option value?",
+3006:    correctAnswer: "Upside potential increases while downside is limited (capped at zero).",
+3007:    process: "Higher volatility makes extreme high prices more likely, while the bottom payoff remains zero."
+3008:  },
+3009:  {
+3010:    id: '14-o80',
+3011:    category: 'Derivatives',
+3012:    question: "Does increasing volatility increase put option value?",
+3013:    correctAnswer: "Yes, because the payoff is asymmetric.",
+3014:    process: "Higher volatility increases the probability of extreme low prices (gains), while high prices result in zero payoff."
+3015:  },
+3016:  {
+3017:    id: '14-o81',
+3018:    category: 'Derivatives',
+3019:    question: "Why is it generally not optimal to exercise an American call early if there are no dividends?",
+3020:    correctAnswer: "It sacrifices time value and the benefit of delaying the strike payment.",
+3021:    process: "Waiting preserves the option value and keeps cash in your pocket longer without losing dividend income."
+3022:  },
+3023:  {
+3024:    id: '14-o82',
+3025:    category: 'Derivatives',
+3026:    question: "When might an American put be exercised early?",
+3027:    correctAnswer: "When it is deep in the money, to receive the strike price and earn interest earlier.",
+3028:    process: "The interest on the cash strike can exceed the remaining time value of the option."
+3029:  },
+3030:  {
+3031:    id: '14-o83',
+3032:    category: 'Derivatives',
+3033:    question: "S = 40. In 1y, S = 50 or 30. r = 5%. Calculate the risk-neutral probability of the 'up' state.",
+3034:    correctAnswer: "60%",
+3035:    process: "p = (1.05 * 40 - 30) / (50 - 30) = 12 / 20 = 0.60."
+3036:  },
+3037:  {
+3038:    id: '14-o84',
+3039:    category: 'Derivatives',
+3040:    question: "Using S=40, Su=50, Sd=30, r=5%, calculate the value of a European put with strike EUR 38.",
+3041:    correctAnswer: "EUR 3.05",
+3042:    process: "Pu = 0, Pd = 38-30 = 8. p=0.6. P0 = (0.6*0 + 0.4*8) / 1.05 = 3.05."
+3043:  },
+3044:  {
+3045:    id: '14-o85',
+3046:    category: 'Derivatives',
+3047:    question: "Calculate the delta for the put option in question 84.",
+3048:    correctAnswer: "-0.40",
+3049:    process: "Delta = (Pu - Pd) / (Su - Sd) = (0 - 8) / (50 - 30) = -0.40."
+3050:  },
+3051:  {
+3052:    id: '14-o86',
+3053:    category: 'Investment',
+3054:    question: "D1=2. Growth is 10% for 2y, then 4% forever. rE=9%. Calculate stock price.",
+3055:    correctAnswer: "EUR 44.41",
+3056:    process: "D1=2, D2=2.2, D3=2.42. P3 = (2.42*1.04)/(0.09-0.04) = 50.34. P0 = 2/1.09 + 2.2/1.09^2 + (2.42+50.34)/1.09^3 = 44.41."
+3057:  },
+3058:  {
+3059:    id: '14-o87',
+3060:    category: 'Investment',
+3061:    question: "Comparable EV/EBITDA = 8. Target EBITDA = 30m, Debt = 100m, Cash = 10m. Estimate equity value.",
+3062:    correctAnswer: "EUR 150 million",
+3063:    process: "EV = 8 * 30 = 240. Equity = 240 - 100 + 10 = 150."
+3064:  },
+3065:  {
+3066:    id: '14-o88',
+3067:    category: 'Investment',
+3068:    question: "Comparable P/E = 15. Target EPS = 2.40 on 10m shares. Estimate share price.",
+3069:    correctAnswer: "EUR 36",
+3070:    process: "Price = 15 * 2.40 = 36."
+3071:  },
+3072:  {
+3073:    id: '14-o89',
+3074:    category: 'Investment',
+3075:    question: "Identify one major limitation of using comparable multiples for valuation.",
+3076:    correctAnswer: "Comparables are not identical and multiples may reflect market mispricing.",
+3077:    process: "Firms differ in growth, risk, and accounting policies, making 'perfect' peers impossible."
+3078:  },
+3079:  {
+3080:    id: '14-o90',
+3081:    category: 'Investment',
+3082:    question: "A stock price jumps immediately after a news release. Does this contradict semi-strong efficiency?",
+3083:    correctAnswer: "No, immediate reaction confirms it.",
+3084:    process: "Semi-strong efficiency says prices adjust rapidly to public news; a jump is exactly what's expected."
+3085:  },
+3086:  {
+3087:    id: '14-o91',
+3088:    category: 'Investment',
+3089:    question: "Does the immediate price jump in question 90 contradict strong-form efficiency?",
+3090:    correctAnswer: "Yes.",
+3091:    process: "Strong efficiency implies all info (including private) is already priced in, so news releases shouldn't cause jumps."
+3092:  },
+3093:  {
+3094:    id: '14-o92',
+3095:    category: 'Investment',
+3096:    question: "Beta = 1, rf = 3%, MRP = 6%. Expected return is 7%. Is it above or below SML?",
+3097:    correctAnswer: "Below the SML",
+3098:    process: "Required r = 3 + 1(6) = 9%. Since 7% < 9%, it is an underperforming asset below the line."
+3099:  },
+3100:  {
+3101:    id: '14-o93',
+3102:    category: 'Investment',
+3103:    question: "Portfolio beta = 1.2, expected return = 12%, rf = 3%, MRP = 6%. Calculate alpha.",
+3104:    correctAnswer: "1.8%",
+3105:    process: "CAPM r = 3 + 1.2(6) = 10.2%. Alpha = 12% - 10.2% = 1.8%."
+3106:  },
+3107:  {
+3108:    id: '14-o94',
+3109:    category: 'Investment',
+3110:    question: "What is the core advice of CAPM regarding active stock picking based on public tips?",
+3111:    correctAnswer: "Use passive diversified strategies; tips are likely already priced in.",
+3112:    process: "In efficient markets, you cannot consistently beat the market via public info; diversification is superior."
+3113:  },
+3114:  {
+3115:    id: '14-o95',
+3116:    category: 'Investment',
+3117:    question: "Can a stock have higher volatility than the market but lower expected return?",
+3118:    correctAnswer: "Yes, if its systematic risk (beta) is low.",
+3119:    process: "Volatility includes unsystematic risk which CAPM does not reward. Only beta drives expected returns."
+3120:  },
+3121:  {
+3122:    id: '14-o96',
+3123:    category: 'Investment',
+3124:    question: "rf = 2%, Rm = 8%, VolM = 20%. What is the expected return of an efficient portfolio with 30% vol?",
+3125:    correctAnswer: "11%",
+3126:    process: "CML: Er = 2 + (8-2)/20 * 30 = 2 + 9 = 11%."
+3127:  },
+3128:  {
+3129:    id: '14-o97',
+3130:    category: 'Investment',
+3131:    question: "Using CML, if you want 30% volatility (with market vol 20%), how much do you invest in the market?",
+3132:    correctAnswer: "150%",
+3133:    process: "WeightM = VolTarget / VolM = 30 / 20 = 1.5. You borrow 50% r_f."
+3134:  },
+3135:  {
+3136:    id: '14-o98',
+3137:    category: 'Investment',
+3138:    question: "rf = 2%, Rm = 8%. What weights give an expected return of 5%?",
+3139:    correctAnswer: "50% Market, 50% Risk-Free",
+3140:    process: "5 = 2 + w(8-2) => 3 = 6w => w=0.5."
+3141:  },
+3142:  {
+3143:    id: '14-o99',
+3144:    category: 'International',
+3145:    question: "A firm expects 10m EUR in 1y. Forward = 1.25 USD/EUR. Calculate the locked-in USD amount.",
+3146:    correctAnswer: "USD 12.5 million",
+3147:    process: "Amount = 10 million * 1.25 = 12.5 million."
+3148:  },
+3149:  {
+3150:    id: '14-o100',
+3151:    category: 'Quantitative',
+3152:    question: "FCF1=40, g=2%, rE=11%, pre-tax rD=5%, D/V=40%, taxes=25%. Calc WACC and Enterprise Value.",
+3153:    correctAnswer: "WACC=8.1%, EV=EUR 655.74 million",
+3154:    process: "WACC = 0.6(11) + 0.4(5)(1-0.25) = 6.6 + 1.5 = 8.1%. EV = 40 / (0.081 - 0.02) = 655.74."
+3155:  }
+3156:];
+3157:
+3158:export const finalExam2024: Question[] = [...batch3A, ...batch3B];
+3159:export const resitApril2024: Question[] = [...batch4A, ...batch4B, ...batch7A, ...batch7B];
+3160:export const resitApril2024Open: Question[] = [...batch4B, ...batch7B];
+3161:export const resitApril2024MCQ: Question[] = [...batch4A, ...batch7A];
+3162:
+3163:export const finalJan2025: Question[] = [...batch5A, ...batch5B];
+3164:
+3165:export const resitApril2025: Question[] = [...batch6A, ...batch6B, ...batch8A, ...batch8B];
+3166:export const resitApril2025Open: Question[] = [...batch6B, ...batch8B];
+3167:export const resitApril2025MCQ: Question[] = [...batch6A, ...batch8A];

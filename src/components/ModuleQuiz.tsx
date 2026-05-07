@@ -1,0 +1,1195 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
+import { supabaseData } from '../services/supabaseData';
+import { useAuth } from './AuthContext';
+
+interface QuizData {
+  id: string;
+  type: 'multiple-choice' | 'numerical';
+  question: string;
+  options?: string[];
+  correctAnswer: string | number;
+  explanation: string;
+}
+
+const quizzes: Record<string, QuizData> = {
+  "finance-landscape": {
+    "id": "finance-landscape",
+    "type": "multiple-choice",
+    "question": "What is the primary difference between the 'buy-side' and the 'sell-side' in finance?",
+    "options": [
+      "Buy-side creates products, sell-side invests",
+      "Buy-side invests capital, sell-side facilitates trades and creates products",
+      "Buy-side only deals with retail, sell-side with institutions",
+      "There is no difference"
+    ],
+    "correctAnswer": "Buy-side invests capital, sell-side facilitates trades and creates products",
+    "explanation": "The buy-side (hedge funds, asset managers) buys assets to generate returns, while the sell-side (investment banks) creates, promotes, and sells financial products."
+  },
+  "role-spotlights": {
+    "id": "role-spotlights",
+    "type": "multiple-choice",
+    "question": "Which role is primarily responsible for executing trades and managing risk for a firm's own capital?",
+    "options": [
+      "Investment Banker",
+      "Equity Researcher",
+      "Proprietary Trader",
+      "Wealth Manager"
+    ],
+    "correctAnswer": "Proprietary Trader",
+    "explanation": "Proprietary traders trade the firm's own money, taking direct market risk."
+  },
+  "how-to-break-in": {
+    "id": "how-to-break-in",
+    "type": "multiple-choice",
+    "question": "What is often considered the most critical factor for breaking into competitive finance roles?",
+    "options": [
+      "Having a perfect GPA",
+      "Networking and building relationships",
+      "Knowing advanced calculus",
+      "Applying to hundreds of jobs online"
+    ],
+    "correctAnswer": "Networking and building relationships",
+    "explanation": "Finance is a relationship business; networking often gets your resume past the initial screen."
+  },
+  "cv-and-application": {
+    "id": "cv-and-application",
+    "type": "multiple-choice",
+    "question": "When formatting a finance CV, which of the following is a standard best practice?",
+    "options": [
+      "Using multiple colors and fonts",
+      "Including a photo",
+      "Keeping it to a single page with a clean, conservative layout",
+      "Writing long paragraphs for descriptions"
+    ],
+    "correctAnswer": "Keeping it to a single page with a clean, conservative layout",
+    "explanation": "Finance CVs should be highly professional, concise (one page), and easy to scan."
+  },
+  "building-your-profile": {
+    "id": "building-your-profile",
+    "type": "multiple-choice",
+    "question": "How can someone without a finance degree best demonstrate their interest and capability to employers?",
+    "options": [
+      "Complaining about their major",
+      "Publishing investment write-ups and building a personal portfolio",
+      "Only applying to non-finance roles first",
+      "Waiting for a recruiter to reach out"
+    ],
+    "correctAnswer": "Publishing investment write-ups and building a personal portfolio",
+    "explanation": "Showing tangible proof of your passion and skills (like a stock pitch) bridges the gap of a non-finance degree."
+  },
+  "certifications": {
+    "id": "certifications",
+    "type": "multiple-choice",
+    "question": "Which certification is most widely recognized for roles in portfolio management and equity research?",
+    "options": [
+      "CPA",
+      "CFA",
+      "Series 7",
+      "PMP"
+    ],
+    "correctAnswer": "CFA",
+    "explanation": "The Chartered Financial Analyst (CFA) designation is the gold standard for investment management."
+  },
+  "how-events-are-impounded": {
+    "id": "how-events-are-impounded",
+    "type": "multiple-choice",
+    "question": "According to the Efficient Market Hypothesis, how quickly should new public information be reflected in asset prices?",
+    "options": [
+      "Over several weeks",
+      "Instantly",
+      "Only after the next earnings report",
+      "Never"
+    ],
+    "correctAnswer": "Instantly",
+    "explanation": "EMH states that prices fully reflect all available information immediately."
+  },
+  "event-taxonomy": {
+    "id": "event-taxonomy",
+    "type": "multiple-choice",
+    "question": "Which of the following is considered an 'endogenous' or internal market event?",
+    "options": [
+      "A central bank rate hike",
+      "A natural disaster",
+      "A massive short squeeze",
+      "A geopolitical conflict"
+    ],
+    "correctAnswer": "A massive short squeeze",
+    "explanation": "A short squeeze is generated by the mechanics and positioning within the market itself."
+  },
+  "market-conditions-lens": {
+    "id": "market-conditions-lens",
+    "type": "multiple-choice",
+    "question": "How does a 'bull market' typically react to bad news compared to a 'bear market'?",
+    "options": [
+      "It ignores it or buys the dip",
+      "It crashes immediately",
+      "It halts trading",
+      "It reacts exactly the same way"
+    ],
+    "correctAnswer": "It ignores it or buys the dip",
+    "explanation": "Strong markets tend to shrug off bad news, while weak markets amplify it."
+  },
+  "expectations-vs-outcomes": {
+    "id": "expectations-vs-outcomes",
+    "type": "multiple-choice",
+    "question": "If a company reports record profits, but the stock price drops, what is the most likely reason?",
+    "options": [
+      "The profits were expected to be even higher (missed expectations)",
+      "The market is broken",
+      "Record profits are bad for companies",
+      "Investors don't care about profits"
+    ],
+    "correctAnswer": "The profits were expected to be even higher (missed expectations)",
+    "explanation": "Markets trade on expectations. If the record profit was lower than the 'whisper number', the stock will fall."
+  },
+  "reaction-mechanics": {
+    "id": "reaction-mechanics",
+    "type": "multiple-choice",
+    "question": "What does the 'half-life' of a market reaction refer to?",
+    "options": [
+      "The time it takes for the asset to lose half its value",
+      "The time it takes for half of the price impact of an event to decay or be absorbed",
+      "The time until the next earnings report",
+      "The duration of a trading halt"
+    ],
+    "correctAnswer": "The time it takes for half of the price impact of an event to decay or be absorbed",
+    "explanation": "It measures the speed at which the market digests the new information."
+  },
+  "microstructure-around-events": {
+    "id": "microstructure-around-events",
+    "type": "multiple-choice",
+    "question": "What typically happens to the bid-ask spread immediately following a surprise news announcement?",
+    "options": [
+      "It narrows",
+      "It stays the same",
+      "It widens significantly as liquidity providers pull back",
+      "It becomes zero"
+    ],
+    "correctAnswer": "It widens significantly as liquidity providers pull back",
+    "explanation": "Market makers widen spreads to protect themselves from adverse selection during high volatility."
+  },
+  "economic-reports": {
+    "id": "economic-reports",
+    "type": "multiple-choice",
+    "question": "Which economic report is generally considered the most impactful for US interest rate expectations?",
+    "options": [
+      "Retail Sales",
+      "Non-Farm Payrolls (NFP) and CPI",
+      "Housing Starts",
+      "Consumer Confidence"
+    ],
+    "correctAnswer": "Non-Farm Payrolls (NFP) and CPI",
+    "explanation": "Employment (NFP) and inflation (CPI) are the dual mandates of the Federal Reserve."
+  },
+  "policymaker-speech": {
+    "id": "policymaker-speech",
+    "type": "multiple-choice",
+    "question": "What is a 'hawkish' tone from a central banker?",
+    "options": [
+      "Signaling a desire to lower interest rates",
+      "Signaling a desire to raise interest rates to fight inflation",
+      "Refusing to answer questions",
+      "Promising to print more money"
+    ],
+    "correctAnswer": "Signaling a desire to raise interest rates to fight inflation",
+    "explanation": "Hawks favor tighter monetary policy to control inflation."
+  },
+  "geopolitics-elections": {
+    "id": "geopolitics-elections",
+    "type": "multiple-choice",
+    "question": "Why do markets generally dislike geopolitical uncertainty?",
+    "options": [
+      "It makes modeling future cash flows and risks much more difficult",
+      "It guarantees higher profits",
+      "It lowers taxes",
+      "It always leads to lower interest rates"
+    ],
+    "correctAnswer": "It makes modeling future cash flows and risks much more difficult",
+    "explanation": "Uncertainty increases the risk premium, which lowers asset valuations."
+  },
+  "weather-disasters": {
+    "id": "weather-disasters",
+    "type": "multiple-choice",
+    "question": "Which sector is most directly and immediately impacted by a severe hurricane in the Gulf of Mexico?",
+    "options": [
+      "Technology",
+      "Energy (Oil and Gas)",
+      "Healthcare",
+      "Financials"
+    ],
+    "correctAnswer": "Energy (Oil and Gas)",
+    "explanation": "The Gulf of Mexico is a major hub for oil extraction and refining."
+  },
+  "market-interventions": {
+    "id": "market-interventions",
+    "type": "multiple-choice",
+    "question": "What is the primary goal of a central bank intervening directly in the currency markets?",
+    "options": [
+      "To make a profit",
+      "To stabilize or manipulate the value of their domestic currency",
+      "To bankrupt other nations",
+      "To increase global inflation"
+    ],
+    "correctAnswer": "To stabilize or manipulate the value of their domestic currency",
+    "explanation": "Interventions are used to prevent excessive currency volatility or achieve trade advantages."
+  },
+  "internal-catalysts-reflexivity": {
+    "id": "internal-catalysts-reflexivity",
+    "type": "multiple-choice",
+    "question": "What is George Soros's theory of 'Reflexivity'?",
+    "options": [
+      "Prices always revert to the mean",
+      "Market prices and the underlying fundamentals influence each other in a feedback loop",
+      "Markets are perfectly efficient",
+      "Fundamentals never matter"
+    ],
+    "correctAnswer": "Market prices and the underlying fundamentals influence each other in a feedback loop",
+    "explanation": "Reflexivity suggests that investor perceptions alter fundamentals, which in turn alter perceptions."
+  },
+  "accidental-catalyst": {
+    "id": "accidental-catalyst",
+    "type": "multiple-choice",
+    "question": "What is a 'fat finger' trade?",
+    "options": [
+      "A highly profitable algorithmic trade",
+      "An erroneous order caused by human typing error",
+      "A trade executed by a central bank",
+      "A type of derivative"
+    ],
+    "correctAnswer": "An erroneous order caused by human typing error",
+    "explanation": "It refers to a keyboard error, like adding an extra zero to an order size."
+  },
+  "special-situations-overview": {
+    "id": "special-situations-overview",
+    "type": "multiple-choice",
+    "question": "What defines a 'special situation' in investing?",
+    "options": [
+      "Buying an index fund",
+      "An investment relying on a specific corporate event rather than general market trends",
+      "Day trading forex",
+      "Holding bonds to maturity"
+    ],
+    "correctAnswer": "An investment relying on a specific corporate event rather than general market trends",
+    "explanation": "Special situations depend on catalysts like mergers, spinoffs, or bankruptcies."
+  },
+  "merger-arbitrage": {
+    "id": "merger-arbitrage",
+    "type": "multiple-choice",
+    "question": "In a cash merger arbitrage, what does the 'spread' represent?",
+    "options": [
+      "The difference between the target's current stock price and the offer price",
+      "The fee paid to the investment bank",
+      "The difference between the acquirer and target's P/E ratio",
+      "The dividend yield"
+    ],
+    "correctAnswer": "The difference between the target's current stock price and the offer price",
+    "explanation": "The spread compensates the arbitrageur for the risk that the deal might fall through."
+  },
+  "insider-transactions": {
+    "id": "insider-transactions",
+    "type": "multiple-choice",
+    "question": "Why is insider buying generally considered a stronger signal than insider selling?",
+    "options": [
+      "Insiders sell for many reasons (taxes, diversification), but they usually only buy for one reason: they think the price will go up",
+      "Selling is illegal",
+      "Buying is required by the SEC",
+      "Selling means the company is bankrupt"
+    ],
+    "correctAnswer": "Insiders sell for many reasons (taxes, diversification), but they usually only buy for one reason: they think the price will go up",
+    "explanation": "Peter Lynch famously noted that insiders might sell for various personal reasons, but they buy to make money."
+  },
+  "corporate-actions": {
+    "id": "corporate-actions",
+    "type": "multiple-choice",
+    "question": "What happens to a company's stock price on the ex-dividend date (all else being equal)?",
+    "options": [
+      "It doubles",
+      "It drops by approximately the amount of the dividend",
+      "It stays exactly the same",
+      "It goes up by the amount of the dividend"
+    ],
+    "correctAnswer": "It drops by approximately the amount of the dividend",
+    "explanation": "The company's value decreases by the amount of cash paid out, so the stock price adjusts downward."
+  },
+  "management-changes": {
+    "id": "management-changes",
+    "type": "multiple-choice",
+    "question": "How does the market typically react to the unexpected resignation of a highly respected CEO?",
+    "options": [
+      "Positively",
+      "Negatively, due to increased uncertainty",
+      "No reaction",
+      "It depends on the weather"
+    ],
+    "correctAnswer": "Negatively, due to increased uncertainty",
+    "explanation": "Markets hate uncertainty, and losing a proven leader creates a leadership vacuum."
+  },
+  "integrated-workflow": {
+    "id": "integrated-workflow",
+    "type": "multiple-choice",
+    "question": "What is the final step in an event-driven trading workflow?",
+    "options": [
+      "Reading the news",
+      "Placing the trade",
+      "Post-trade review and updating the playbook",
+      "Ignoring the outcome"
+    ],
+    "correctAnswer": "Post-trade review and updating the playbook",
+    "explanation": "Continuous improvement requires analyzing what happened and refining your strategy."
+  },
+  "risk-control-map": {
+    "id": "risk-control-map",
+    "type": "multiple-choice",
+    "question": "Why is sizing positions appropriately crucial in event-driven trading?",
+    "options": [
+      "To maximize leverage",
+      "Because binary events can result in immediate, massive gap moves against you",
+      "To pay more commissions",
+      "It is not crucial"
+    ],
+    "correctAnswer": "Because binary events can result in immediate, massive gap moves against you",
+    "explanation": "Stop losses may not work during a gap down, so position sizing is your primary risk control."
+  },
+  "macro-analysis-context": {
+    "id": "macro-analysis-context",
+    "type": "multiple-choice",
+    "question": "Why is macroeconomic context important?",
+    "options": [
+      "Guarantees profit",
+      "Dictates the overall environment affecting growth and profitability",
+      "Only for day traders",
+      "Replaces company analysis"
+    ],
+    "correctAnswer": "Dictates the overall environment affecting growth and profitability",
+    "explanation": "Macro context sets the stage for company performance."
+  },
+  "macro-analysis-drivers": {
+    "id": "macro-analysis-drivers",
+    "type": "multiple-choice",
+    "question": "Which is a primary driver of long-term economic growth?",
+    "options": [
+      "Short-term rates",
+      "Daily volatility",
+      "Productivity growth and demographics",
+      "Share buybacks"
+    ],
+    "correctAnswer": "Productivity growth and demographics",
+    "explanation": "Long-term GDP growth is driven by workers and productivity."
+  },
+  "macro-analysis-cycle": {
+    "id": "macro-analysis-cycle",
+    "type": "multiple-choice",
+    "question": "When do cyclical stocks typically perform best?",
+    "options": [
+      "Late Recession",
+      "Early Recovery / Expansion",
+      "Peak",
+      "Contraction"
+    ],
+    "correctAnswer": "Early Recovery / Expansion",
+    "explanation": "Cyclical stocks outperform as economic activity accelerates."
+  },
+  "macro-analysis-rates-inflation": {
+    "id": "macro-analysis-rates-inflation",
+    "type": "multiple-choice",
+    "question": "How do rising interest rates generally affect equity valuations?",
+    "options": [
+      "Increase valuations",
+      "Decrease valuations by increasing the discount rate",
+      "No effect",
+      "Only affect bonds"
+    ],
+    "correctAnswer": "Decrease valuations by increasing the discount rate",
+    "explanation": "Higher rates increase the discount rate, lowering present value."
+  },
+  "macro-analysis-policy-flows": {
+    "id": "macro-analysis-policy-flows",
+    "type": "multiple-choice",
+    "question": "What is Quantitative Easing (QE)?",
+    "options": [
+      "Tax cut",
+      "Central bank buying securities to increase money supply",
+      "Infrastructure spending",
+      "Bank regulation"
+    ],
+    "correctAnswer": "Central bank buying securities to increase money supply",
+    "explanation": "QE injects liquidity into the economy."
+  },
+  "sector-analysis-overview": {
+    "id": "sector-analysis-overview",
+    "type": "multiple-choice",
+    "question": "What is the purpose of GICS?",
+    "options": [
+      "Predict performance",
+      "Standardize classification of companies into sectors",
+      "Regulate earnings",
+      "Determine taxes"
+    ],
+    "correctAnswer": "Standardize classification of companies into sectors",
+    "explanation": "GICS provides a consistent framework for categorizing companies."
+  },
+  "sector-analysis-growth": {
+    "id": "sector-analysis-growth",
+    "type": "multiple-choice",
+    "question": "What characterizes a \"secular\" growth trend?",
+    "options": [
+      "Lasts a few months",
+      "Driven by business cycle",
+      "Long-term, structural shift persisting regardless of economic cycles",
+      "Affects one company"
+    ],
+    "correctAnswer": "Long-term, structural shift persisting regardless of economic cycles",
+    "explanation": "Secular trends are long-lasting structural changes."
+  },
+  "sector-analysis-competition": {
+    "id": "sector-analysis-competition",
+    "type": "multiple-choice",
+    "question": "Which of Porter's Five Forces assesses barriers to entry?",
+    "options": [
+      "Bargaining Power of Suppliers",
+      "Threat of Substitutes",
+      "Threat of New Entrants",
+      "Competitive Rivalry"
+    ],
+    "correctAnswer": "Threat of New Entrants",
+    "explanation": "Evaluates how easy it is for new companies to enter an industry."
+  },
+  "sector-analysis-risks": {
+    "id": "sector-analysis-risks",
+    "type": "multiple-choice",
+    "question": "What is \"regulatory risk\"?",
+    "options": [
+      "CEO resigns",
+      "New laws negatively impact profitability",
+      "Natural disaster",
+      "Consumer preference change"
+    ],
+    "correctAnswer": "New laws negatively impact profitability",
+    "explanation": "Involves changes in government policy altering industry economics."
+  },
+  "company-analysis-moats": {
+    "id": "company-analysis-moats",
+    "type": "multiple-choice",
+    "question": "What moat is created when a product becomes more valuable as more people use it?",
+    "options": [
+      "Cost Advantage",
+      "Intangible Assets",
+      "Network Effects",
+      "Switching Costs"
+    ],
+    "correctAnswer": "Network Effects",
+    "explanation": "Value increases with the number of users."
+  },
+  "company-analysis-financials": {
+    "id": "company-analysis-financials",
+    "type": "multiple-choice",
+    "question": "If Revenue is $100M and COGS is $40M, what is Gross Margin?",
+    "options": [
+      "40%",
+      "60%",
+      "100%",
+      "140%"
+    ],
+    "correctAnswer": "60%",
+    "explanation": "Gross Profit = $60M. Gross Margin = $60M / $100M = 60%."
+  },
+  "company-analysis-ratios": {
+    "id": "company-analysis-ratios",
+    "type": "multiple-choice",
+    "question": "What does ROIC measure?",
+    "options": [
+      "Debt level",
+      "Dividend payout",
+      "How efficiently a company allocates capital to generate returns",
+      "P/E ratio"
+    ],
+    "correctAnswer": "How efficiently a company allocates capital to generate returns",
+    "explanation": "ROIC shows how well a company generates cash flow relative to invested capital."
+  },
+  "company-analysis-management": {
+    "id": "company-analysis-management",
+    "type": "multiple-choice",
+    "question": "Why is insider ownership viewed positively?",
+    "options": [
+      "Immune to bankruptcy",
+      "Aligns financial interests of management with shareholders",
+      "Guarantees stock price",
+      "Ignores SEC"
+    ],
+    "correctAnswer": "Aligns financial interests of management with shareholders",
+    "explanation": "Executives have \"skin in the game.\""
+  },
+  "company-analysis-risks": {
+    "id": "company-analysis-risks",
+    "type": "multiple-choice",
+    "question": "What is \"concentration risk\"?",
+    "options": [
+      "Too many employees",
+      "Relying heavily on a single customer, supplier, or product",
+      "Too much cash",
+      "Diversified products"
+    ],
+    "correctAnswer": "Relying heavily on a single customer, supplier, or product",
+    "explanation": "Over-dependence on one source is risky."
+  },
+  "valuation-methods-i": {
+    "id": "valuation-methods-i",
+    "type": "multiple-choice",
+    "question": "What does the P/E ratio stand for?",
+    "options": [
+      "Price-to-Equity",
+      "Price-to-Earnings",
+      "Profit-to-Enterprise",
+      "Present-value-to-EBITDA"
+    ],
+    "correctAnswer": "Price-to-Earnings",
+    "explanation": "Compares share price to per-share earnings."
+  },
+  "valuation-methods-ii": {
+    "id": "valuation-methods-ii",
+    "type": "multiple-choice",
+    "question": "What is the \"Terminal Value\" in a DCF model?",
+    "options": [
+      "Bankruptcy value",
+      "Estimated value beyond the explicit forecast period",
+      "Total cash",
+      "Real estate value"
+    ],
+    "correctAnswer": "Estimated value beyond the explicit forecast period",
+    "explanation": "Captures the value of all future cash flows beyond the projection period."
+  },
+  "valuation-synthesis": {
+    "id": "valuation-synthesis",
+    "type": "multiple-choice",
+    "question": "What is a \"Margin of Safety\"?",
+    "options": [
+      "Stop-loss order",
+      "Buying at a discount to intrinsic value to allow for errors",
+      "Cash in bank",
+      "Regulatory requirement"
+    ],
+    "correctAnswer": "Buying at a discount to intrinsic value to allow for errors",
+    "explanation": "Provides a cushion against estimation errors or bad luck."
+  },
+  "instrument-basics": {
+    "id": "instrument-basics",
+    "type": "multiple-choice",
+    "question": "Which of the following represents a residual claim on a company's assets?",
+    "options": [
+      "Secured Debt",
+      "Unsecured Debt",
+      "Preferred Equity",
+      "Common Equity"
+    ],
+    "correctAnswer": "Common Equity",
+    "explanation": "Common equity holders are the last to be paid in the event of liquidation."
+  },
+  "risk-and-return": {
+    "id": "risk-and-return",
+    "type": "numerical",
+    "question": "If a portfolio experiences a 50% drawdown, what percentage gain is required to recover to the original value? (Enter a number only)",
+    "correctAnswer": 100,
+    "explanation": "A 50% loss means you have half your money left. You need a 100% gain to double it back."
+  },
+  "diversification": {
+    "id": "diversification",
+    "type": "multiple-choice",
+    "question": "When does diversification provide the most benefit to a portfolio?",
+    "options": [
+      "Perfectly positively correlated",
+      "Perfectly negatively correlated",
+      "Zero correlation",
+      "Highly correlated"
+    ],
+    "correctAnswer": "Perfectly negatively correlated",
+    "explanation": "Negative correlation provides the maximum reduction in portfolio volatility."
+  },
+  "derivatives-and-greeks": {
+    "id": "derivatives-and-greeks",
+    "type": "multiple-choice",
+    "question": "Which Greek measures an option's sensitivity to changes in implied volatility?",
+    "options": [
+      "Delta",
+      "Gamma",
+      "Theta",
+      "Vega"
+    ],
+    "correctAnswer": "Vega",
+    "explanation": "Vega measures sensitivity to implied volatility."
+  },
+  "where-and-how-to-trade": {
+    "id": "where-and-how-to-trade",
+    "type": "multiple-choice",
+    "question": "Which order type prioritizes execution certainty over price certainty?",
+    "options": [
+      "Limit Order",
+      "Market Order",
+      "Stop-Limit Order",
+      "Good-Till-Canceled"
+    ],
+    "correctAnswer": "Market Order",
+    "explanation": "Market orders prioritize speed and certainty of execution."
+  },
+  "forex-basics": {
+    "id": "forex-basics",
+    "type": "multiple-choice",
+    "question": "In the EUR/USD currency pair, which currency is the \"base\" currency?",
+    "options": [
+      "EUR",
+      "USD",
+      "Both",
+      "Neither"
+    ],
+    "correctAnswer": "EUR",
+    "explanation": "The first currency in the pair is the base currency."
+  },
+  "position-sizing": {
+    "id": "position-sizing",
+    "type": "multiple-choice",
+    "question": "What is the primary purpose of defining a \"max-loss\" scenario?",
+    "options": [
+      "To predict the exact future price",
+      "To guarantee a profit",
+      "To establish a boundary for survivability",
+      "To maximize leverage"
+    ],
+    "correctAnswer": "To establish a boundary for survivability",
+    "explanation": "Max loss helps size positions so a negative scenario does not end your trading process."
+  },
+  "review-routine": {
+    "id": "review-routine",
+    "type": "multiple-choice",
+    "question": "What should a decision journal primarily focus on?",
+    "options": [
+      "The final financial outcome",
+      "Rewriting history",
+      "What you controlled (process, assumptions)",
+      "Predicting the next move"
+    ],
+    "correctAnswer": "What you controlled (process, assumptions)",
+    "explanation": "A journal should focus on process over outcome."
+  },
+  "market-data-taxonomy": {
+    "id": "market-data-taxonomy",
+    "type": "multiple-choice",
+    "question": "Which type of market data provides the full order book depth?",
+    "options": [
+      "Level 1 Data",
+      "Level 2 / Level 3 Data",
+      "Trade Data",
+      "Reference Data"
+    ],
+    "correctAnswer": "Level 2 / Level 3 Data",
+    "explanation": "Level 2 and 3 data provide depth of book."
+  },
+  "data-engineering-pipeline": {
+    "id": "data-engineering-pipeline",
+    "type": "multiple-choice",
+    "question": "What is the primary purpose of a \"tick database\"?",
+    "options": [
+      "Store passwords",
+      "Host websites",
+      "Efficiently store and query massive volumes of time-series market data",
+      "Execute trades"
+    ],
+    "correctAnswer": "Efficiently store and query massive volumes of time-series market data",
+    "explanation": "Tick databases are optimized for time-series data."
+  },
+  "cleaning-transactions-quotes": {
+    "id": "cleaning-transactions-quotes",
+    "type": "multiple-choice",
+    "question": "Why is it necessary to clean raw tick data?",
+    "options": [
+      "Make files smaller",
+      "Remove erroneous prints and crossed markets",
+      "Change historical prices",
+      "Convert to integers"
+    ],
+    "correctAnswer": "Remove erroneous prints and crossed markets",
+    "explanation": "Cleaning ensures the data reflects true market conditions."
+  },
+  "alignment-asynchrony-covariance": {
+    "id": "alignment-asynchrony-covariance",
+    "type": "numerical",
+    "question": "If Asset A trades at 10:00:01 and Asset B trades at 10:00:05, what is the time difference in seconds?",
+    "correctAnswer": 4,
+    "explanation": "The difference is 4 seconds. This asynchrony makes calculating true covariance difficult."
+  },
+  "microstructure-noise": {
+    "id": "microstructure-noise",
+    "type": "multiple-choice",
+    "question": "What causes \"bid-ask bounce\"?",
+    "options": [
+      "Macro news",
+      "Trades randomly hitting the bid and lifting the ask",
+      "Central bank interventions",
+      "Dividends"
+    ],
+    "correctAnswer": "Trades randomly hitting the bid and lifting the ask",
+    "explanation": "Transaction prices bounce between bid and ask, creating artificial volatility."
+  },
+  "volatility-quadratic-variation": {
+    "id": "volatility-quadratic-variation",
+    "type": "multiple-choice",
+    "question": "What happens to the standard realized variance estimator as sampling frequency approaches infinity with microstructure noise?",
+    "options": [
+      "Converges to true variance",
+      "Goes to zero",
+      "Blows up to infinity",
+      "Becomes exactly 1"
+    ],
+    "correctAnswer": "Blows up to infinity",
+    "explanation": "Microstructure noise accumulates, causing the estimator to diverge."
+  },
+  "noise-robust-volatility": {
+    "id": "noise-robust-volatility",
+    "type": "multiple-choice",
+    "question": "Which method estimates volatility robustly in the presence of microstructure noise?",
+    "options": [
+      "Simple Moving Average",
+      "Two-Scale Realized Volatility (TSRV)",
+      "CAPM",
+      "DCF"
+    ],
+    "correctAnswer": "Two-Scale Realized Volatility (TSRV)",
+    "explanation": "TSRV subsamples data to avoid noise."
+  },
+  "jumps-discontinuities": {
+    "id": "jumps-discontinuities",
+    "type": "multiple-choice",
+    "question": "How does Bipower Variation (BPV) help in jump detection?",
+    "options": [
+      "Amplifies jumps",
+      "Robust to jumps, separating continuous volatility from jump variation",
+      "Predicts jumps",
+      "Prevents jumps"
+    ],
+    "correctAnswer": "Robust to jumps, separating continuous volatility from jump variation",
+    "explanation": "BPV multiplies adjacent absolute returns to estimate continuous variance."
+  },
+  "liquidity-measurement": {
+    "id": "liquidity-measurement",
+    "type": "multiple-choice",
+    "question": "What does the Amihud Illiquidity ratio measure?",
+    "options": [
+      "Total volume",
+      "Absolute price return per unit of trading volume",
+      "Bid-ask spread",
+      "Number of market makers"
+    ],
+    "correctAnswer": "Absolute price return per unit of trading volume",
+    "explanation": "It measures price impact per unit of volume."
+  },
+  "durations-intensity": {
+    "id": "durations-intensity",
+    "type": "multiple-choice",
+    "question": "What does the Autoregressive Conditional Duration (ACD) model analyze?",
+    "options": [
+      "Closing prices",
+      "Time intervals (durations) between market events",
+      "Dividend yield",
+      "Correlation"
+    ],
+    "correctAnswer": "Time intervals (durations) between market events",
+    "explanation": "ACD models treat the time between events as a random variable."
+  },
+  "self-exciting-intensity-models": {
+    "id": "self-exciting-intensity-models",
+    "type": "multiple-choice",
+    "question": "What is the defining characteristic of a Hawkes process?",
+    "options": [
+      "Independent events",
+      "Past events temporarily increase the probability of future events",
+      "Continuous price paths",
+      "Constant volatility"
+    ],
+    "correctAnswer": "Past events temporarily increase the probability of future events",
+    "explanation": "A Hawkes process is \"self-exciting.\""
+  },
+  "predictive-modeling-baselines": {
+    "id": "predictive-modeling-baselines",
+    "type": "multiple-choice",
+    "question": "Why establish simple baselines before using complex ML models?",
+    "options": [
+      "Illegal to use complex models",
+      "Ensure the complex model adds value and is not just overfitting",
+      "Simple models are always better",
+      "Make code run slower"
+    ],
+    "correctAnswer": "Ensure the complex model adds value and is not just overfitting",
+    "explanation": "Baselines provide a benchmark to justify complexity."
+  },
+  "implementation-lens": {
+    "id": "implementation-lens",
+    "type": "multiple-choice",
+    "question": "What is \"slippage\"?",
+    "options": [
+      "Computer crash",
+      "Difference between expected price and actual execution price",
+      "Delisting",
+      "Broker fee"
+    ],
+    "correctAnswer": "Difference between expected price and actual execution price",
+    "explanation": "Slippage occurs when market prices move before an order is filled."
+  },
+  "monitoring-drift": {
+    "id": "monitoring-drift",
+    "type": "multiple-choice",
+    "question": "What is \"concept drift\"?",
+    "options": [
+      "Messy code",
+      "Underlying statistical properties change, degrading a model",
+      "Traders change minds",
+      "Exchange changes fees"
+    ],
+    "correctAnswer": "Underlying statistical properties change, degrading a model",
+    "explanation": "Markets are non-stationary, causing relationships to change over time."
+  },
+  "trend-framing": {
+    "id": "trend-framing",
+    "type": "multiple-choice",
+    "question": "What defines an uptrend in classical technical analysis?",
+    "options": [
+      "Higher highs and higher lows",
+      "Lower highs and lower lows",
+      "Moving sideways",
+      "High volatility"
+    ],
+    "correctAnswer": "Higher highs and higher lows",
+    "explanation": "An uptrend is a series of successively higher peaks and troughs."
+  },
+  "support-resistance": {
+    "id": "support-resistance",
+    "type": "multiple-choice",
+    "question": "What happens when a strong resistance level is finally broken?",
+    "options": [
+      "It disappears forever",
+      "It often becomes a new support level",
+      "The asset gets delisted",
+      "Trading is halted"
+    ],
+    "correctAnswer": "It often becomes a new support level",
+    "explanation": "This is known as the principle of polarity; broken resistance turns into support."
+  },
+  "trend-lines-channels": {
+    "id": "trend-lines-channels",
+    "type": "multiple-choice",
+    "question": "How many points of contact are generally required to confirm a valid trendline?",
+    "options": [
+      "One",
+      "Two to draw it, three to confirm it",
+      "Five",
+      "Ten"
+    ],
+    "correctAnswer": "Two to draw it, three to confirm it",
+    "explanation": "Two points create a line, but a third touch confirms its validity as a trendline."
+  },
+  "trading-ranges": {
+    "id": "trading-ranges",
+    "type": "multiple-choice",
+    "question": "In a trading range, where is the optimal place to initiate a long position?",
+    "options": [
+      "In the middle of the range",
+      "Near the upper resistance boundary",
+      "Near the lower support boundary",
+      "After it breaks down"
+    ],
+    "correctAnswer": "Near the lower support boundary",
+    "explanation": "Buying near support offers the best risk/reward ratio in a range-bound market."
+  },
+  "candlestick-structure": {
+    "id": "candlestick-structure",
+    "type": "multiple-choice",
+    "question": "What does a long lower wick (shadow) on a candlestick indicate?",
+    "options": [
+      "Sellers dominated the entire period",
+      "Buyers rejected lower prices and pushed the price back up",
+      "The market is closed",
+      "Zero volatility"
+    ],
+    "correctAnswer": "Buyers rejected lower prices and pushed the price back up",
+    "explanation": "It shows that despite intraday selling pressure, buyers stepped in strongly before the close."
+  },
+  "reversal-hs": {
+    "id": "reversal-hs",
+    "type": "multiple-choice",
+    "question": "What does a Head and Shoulders pattern typically signal?",
+    "options": [
+      "A continuation of an uptrend",
+      "A reversal from an uptrend to a downtrend",
+      "A period of low volatility",
+      "A strong buy signal"
+    ],
+    "correctAnswer": "A reversal from an uptrend to a downtrend",
+    "explanation": "It indicates that buyers are losing momentum and sellers are taking control."
+  },
+  "reversal-double": {
+    "id": "reversal-double",
+    "type": "multiple-choice",
+    "question": "What is the confirmation trigger for a Double Bottom pattern?",
+    "options": [
+      "The first bottom",
+      "The second bottom",
+      "A break above the neckline (the peak between the bottoms)",
+      "A break below the second bottom"
+    ],
+    "correctAnswer": "A break above the neckline (the peak between the bottoms)",
+    "explanation": "The pattern is only confirmed when price breaks the resistance level between the two lows."
+  },
+  "reversal-rounding-spike": {
+    "id": "reversal-rounding-spike",
+    "type": "multiple-choice",
+    "question": "What characterizes a 'V-bottom' or spike reversal?",
+    "options": [
+      "A slow, gradual change in trend",
+      "A sharp, sudden reversal with high momentum, often driven by capitulation",
+      "Months of sideways consolidation",
+      "Low volume"
+    ],
+    "correctAnswer": "A sharp, sudden reversal with high momentum, often driven by capitulation",
+    "explanation": "V-bottoms occur when panic selling exhausts itself and aggressive buying immediately follows."
+  },
+  "continuation-patterns": {
+    "id": "continuation-patterns",
+    "type": "multiple-choice",
+    "question": "Which of the following is typically considered a continuation pattern?",
+    "options": [
+      "Head and Shoulders",
+      "Double Top",
+      "Bull Flag",
+      "Triple Bottom"
+    ],
+    "correctAnswer": "Bull Flag",
+    "explanation": "A bull flag represents a brief pause or consolidation before the prior uptrend resumes."
+  },
+  "gaps-reversals": {
+    "id": "gaps-reversals",
+    "type": "multiple-choice",
+    "question": "What is an 'exhaustion gap'?",
+    "options": [
+      "A gap at the beginning of a new trend",
+      "A gap in the middle of a trend",
+      "A gap occurring near the end of a trend, signaling the final push before a reversal",
+      "A gap caused by a dividend payment"
+    ],
+    "correctAnswer": "A gap occurring near the end of a trend, signaling the final push before a reversal",
+    "explanation": "It marks the final gasp of a trend before it reverses direction."
+  },
+  "retracements": {
+    "id": "retracements",
+    "type": "multiple-choice",
+    "question": "Which Fibonacci retracement level is most commonly watched by technical analysts?",
+    "options": [
+      "10%",
+      "33.3%",
+      "61.8%",
+      "99%"
+    ],
+    "correctAnswer": "61.8%",
+    "explanation": "The 61.8% level is derived from the golden ratio and is a key area for potential support/resistance."
+  },
+  "volume": {
+    "id": "volume",
+    "type": "multiple-choice",
+    "question": "If a stock breaks out of a resistance level on very low volume, what is the likely interpretation?",
+    "options": [
+      "It is a very strong breakout",
+      "The breakout is suspect and may be a 'false breakout'",
+      "Volume doesn't matter",
+      "Institutions are buying heavily"
+    ],
+    "correctAnswer": "The breakout is suspect and may be a 'false breakout'",
+    "explanation": "A valid breakout should be accompanied by high volume, indicating strong conviction."
+  },
+  "moving-averages": {
+    "id": "moving-averages",
+    "type": "multiple-choice",
+    "question": "What is a 'Golden Cross'?",
+    "options": [
+      "When price crosses above the VWAP",
+      "When a short-term moving average crosses above a long-term moving average",
+      "When a long-term moving average crosses above a short-term moving average",
+      "When volume doubles"
+    ],
+    "correctAnswer": "When a short-term moving average crosses above a long-term moving average",
+    "explanation": "It is a bullish signal indicating that short-term momentum is accelerating upward."
+  },
+  "stops-invalidation": {
+    "id": "stops-invalidation",
+    "type": "multiple-choice",
+    "question": "Where should a stop-loss order logically be placed?",
+    "options": [
+      "At a random percentage loss",
+      "At the exact entry price",
+      "At a price level that invalidates the original trade thesis",
+      "As far away as possible"
+    ],
+    "correctAnswer": "At a price level that invalidates the original trade thesis",
+    "explanation": "If the price reaches a point where your reason for entering the trade is no longer valid, you should exit."
+  },
+  "playbook-bear-market": {
+    "id": "playbook-bear-market",
+    "type": "multiple-choice",
+    "question": "How do bear market rallies typically behave compared to bull market advances?",
+    "options": [
+      "They are slower and steadier",
+      "They are often sharp, fast, and highly volatile (short squeezes)",
+      "They last for years",
+      "They have very low volume"
+    ],
+    "correctAnswer": "They are often sharp, fast, and highly volatile (short squeezes)",
+    "explanation": "Bear market rallies are notorious for their vicious speed, often fueled by short covering."
+  }
+};
+
+interface ModuleQuizProps {
+  moduleId: string;
+}
+
+export default function ModuleQuiz({ moduleId }: ModuleQuizProps) {
+  const quiz = quizzes[moduleId];
+  const [selectedAnswer, setSelectedAnswer] = useState<string | number | null>(null);
+  const [numericalAnswer, setNumericalAnswer] = useState<string>('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+
+  // Reset state when module changes
+  useEffect(() => {
+    setSelectedAnswer(null);
+    setNumericalAnswer('');
+    setIsSubmitted(false);
+    setIsCorrect(false);
+  }, [moduleId]);
+
+  if (!quiz) {
+    return null; // Don't render anything if no quiz exists for this module
+  }
+
+  const { user } = useAuth();
+
+  const handleSubmit = async () => {
+    let correct = false;
+    if (quiz.type === 'multiple-choice' && selectedAnswer !== null) {
+      correct = selectedAnswer === quiz.correctAnswer;
+      setIsCorrect(correct);
+      setIsSubmitted(true);
+    } else if (quiz.type === 'numerical' && numericalAnswer !== '') {
+      const num = parseFloat(numericalAnswer);
+      correct = num === quiz.correctAnswer;
+      setIsCorrect(correct);
+      setIsSubmitted(true);
+    }
+
+    if (user && (selectedAnswer !== null || numericalAnswer !== '')) {
+      try {
+        await supabaseData.saveMinigameResult(
+          `Quiz: ${moduleId}`,
+          correct ? 10 : 0 // Simple scoring: 10 for correct, 0 for incorrect
+        );
+      } catch (error) {
+        console.error('Error saving quiz result:', error);
+      }
+    }
+  };
+
+  return (
+    <div className="mt-16 bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-intense-indigo/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+      
+      <div className="relative z-10">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-xl bg-intense-indigo text-white flex items-center justify-center font-bold font-serif">
+            Q
+          </div>
+          <h3 className="font-bold text-2xl text-intense-indigo font-serif">Knowledge Check</h3>
+        </div>
+        
+        <p className="text-lg text-intense-indigo/80 mb-8 font-medium">
+          {quiz.question}
+        </p>
+
+        {quiz.type === 'multiple-choice' && quiz.options && (
+          <div className="space-y-3 mb-8">
+            {quiz.options.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => !isSubmitted && setSelectedAnswer(option)}
+                disabled={isSubmitted}
+                className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center justify-between cursor-pointer
+                  ${isSubmitted 
+                    ? option === quiz.correctAnswer 
+                      ? 'bg-green-50 border-green-500 text-green-800' 
+                      : option === selectedAnswer 
+                        ? 'bg-red-50 border-red-500 text-red-800'
+                        : 'bg-white border-gray-100 text-intense-indigo/40 opacity-50'
+                    : selectedAnswer === option
+                      ? 'bg-intense-indigo/5 border-intense-indigo text-intense-indigo'
+                      : 'bg-white border-gray-100 text-intense-indigo/80 hover:border-intense-indigo/30 hover:bg-gray-50'
+                  }`}
+              >
+                <span className="font-medium">{option}</span>
+                {isSubmitted && option === quiz.correctAnswer && <CheckCircle2 className="w-5 h-5 text-green-600" />}
+                {isSubmitted && option === selectedAnswer && option !== quiz.correctAnswer && <XCircle className="w-5 h-5 text-red-600" />}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {quiz.type === 'numerical' && (
+          <div className="mb-8">
+            <input
+              type="number"
+              value={numericalAnswer}
+              onChange={(e) => !isSubmitted && setNumericalAnswer(e.target.value)}
+              disabled={isSubmitted}
+              placeholder="Enter your answer..."
+              className={`w-full max-w-md p-4 rounded-xl border-2 outline-none transition-all text-lg font-medium
+                ${isSubmitted
+                  ? isCorrect
+                    ? 'bg-green-50 border-green-500 text-green-800'
+                    : 'bg-red-50 border-red-500 text-red-800'
+                  : 'bg-white border-gray-200 focus:border-intense-indigo text-intense-indigo'
+                }`}
+            />
+          </div>
+        )}
+
+        {!isSubmitted ? (
+          <button
+            onClick={handleSubmit}
+            disabled={(quiz.type === 'multiple-choice' && selectedAnswer === null) || (quiz.type === 'numerical' && numericalAnswer === '')}
+            className="bg-intense-indigo text-white px-8 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
+          >
+            Submit Answer
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        ) : (
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`p-6 rounded-2xl border-2 ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}
+            >
+              <div className="flex items-start gap-4">
+                <div className={`mt-1 ${isCorrect ? 'text-green-600' : 'text-red-600'}`}>
+                  {isCorrect ? <CheckCircle2 className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}
+                </div>
+                <div>
+                  <h4 className={`font-bold text-lg mb-2 ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
+                    {isCorrect ? 'Correct!' : 'Incorrect'}
+                  </h4>
+                  <p className={`text-sm leading-relaxed ${isCorrect ? 'text-green-700' : 'text-red-700'}`}>
+                    {quiz.explanation}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        )}
+      </div>
+    </div>
+  );
+}
