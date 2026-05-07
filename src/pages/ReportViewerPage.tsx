@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Share2, Bookmark, BookmarkCheck, Check, Lock, FileSpreadsheet } from 'lucide-react';
+import { ArrowLeft, Share2, Bookmark, BookmarkCheck, Check, Lock, FileSpreadsheet, Terminal } from 'lucide-react';
 import { allArticles } from '../data/articles';
 import CTABox from '../components/CTABox';
 import { useAuth } from '../components/AuthContext';
 import { savedArticlesService } from '../services/savedArticlesService';
+import { motion } from 'motion/react';
 
 export default function ReportViewerPage() {
   const { reportId } = useParams<{ reportId: string }>();
@@ -68,9 +69,9 @@ export default function ReportViewerPage() {
 
   return (
     <>
-      <main className="flex-grow bg-[#525659] min-h-screen pt-[112px] lg:pt-[128px] pb-20 overflow-y-auto">
-        <div className="max-w-[1000px] mx-auto px-4 py-8">
-          <div className="flex justify-between items-center mb-8 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10">
+      <main className={`flex-grow min-h-screen pt-[112px] lg:pt-[128px] pb-20 overflow-y-auto ${report.code ? 'bg-[#050505]' : 'bg-[#525659]'}`}>
+        <div className="max-w-[1200px] mx-auto px-4 py-8">
+          <div className={`flex justify-between items-center mb-8 p-4 rounded-2xl border backdrop-blur-md ${report.code ? 'bg-white/5 border-white/10' : 'bg-white/10 border-white/10'}`}>
             <button 
               onClick={() => navigate('/research')}
               className="inline-flex items-center text-white hover:underline font-medium group"
@@ -116,7 +117,81 @@ export default function ReportViewerPage() {
           </div>
 
           <div className="flex flex-col gap-8 items-center">
-            {reportImages.length > 0 ? (
+            {report.code ? (
+              <div className="w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                   {/* Code Section */}
+                   <div className="lg:col-span-8">
+                      <div className="relative bg-[#0a0a0a] rounded-2xl border border-white/10 shadow-2xl overflow-hidden font-mono text-[14px]">
+                        <div className="bg-white/5 px-6 py-4 flex items-center justify-between border-b border-white/5">
+                           <div className="flex items-center gap-2">
+                             <Terminal size={16} className="text-blue-400" />
+                             <span className="text-[11px] text-white/40 italic ml-2">VT_3_Source_Library_v3.2.0.py</span>
+                           </div>
+                           <div className="text-[10px] text-blue-400 font-bold tracking-widest uppercase">Institutional Library</div>
+                        </div>
+                        
+                        <div className="p-8 md:p-12 leading-relaxed overflow-x-auto">
+                           {report.code.split('\n').map((line, i) => (
+                              <div key={i} className="flex gap-8 group/line relative">
+                                <span className="text-white/10 select-none w-6 text-right flex-shrink-0">{i + 1}</span>
+                                <span className="text-white/90 whitespace-pre">
+                                  {line.includes('import') || line.includes('def ') || line.includes('return ') ? (
+                                    <span className="text-purple-400">{line}</span>
+                                  ) : line.includes('#') ? (
+                                    <span className="text-blue-400/60">{line}</span>
+                                  ) : (
+                                    line
+                                  )}
+                                </span>
+                                
+                                {report.codeAnnotations?.find(a => a.line === i + 1) && (
+                                   <div className={`absolute -left-12 top-0 w-[4px] h-full shadow-[0_0_15px_rgba(59,130,246,0.3)] ${report.codeAnnotations.find(a => a.line === i + 1)?.color === 'emerald' ? 'bg-emerald-500' : 'bg-blue-500'}`} />
+                                )}
+                              </div>
+                           ))}
+                        </div>
+                      </div>
+                   </div>
+
+                   {/* Annotation Logic Section */}
+                   <div className="lg:col-span-4 space-y-8">
+                      <div className="bg-white/5 border border-white/10 p-8 rounded-2xl backdrop-blur-sm">
+                         <h3 className="font-serif text-2xl font-bold italic text-white mb-6">Algorithm Protocol</h3>
+                         <div className="space-y-12">
+                            {report.codeAnnotations?.map((anno, idx) => (
+                               <motion.div 
+                                 key={idx}
+                                 initial={{ opacity: 0, x: 20 }}
+                                 animate={{ opacity: 1, x: 0 }}
+                                 transition={{ delay: idx * 0.1 }}
+                                 className="space-y-3"
+                               >
+                                 <div className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${anno.color === 'emerald' ? 'text-emerald-400' : 'text-blue-400'}`}>
+                                    <div className={`w-1.5 h-1.5 rounded-full ${anno.color === 'emerald' ? 'bg-emerald-400' : 'bg-blue-400'}`} />
+                                    Line {anno.line}
+                                 </div>
+                                 <p className="text-sm text-white/60 leading-relaxed font-sans italic">
+                                   {anno.text}
+                                 </p>
+                               </motion.div>
+                            ))}
+                         </div>
+                         
+                         <div className="mt-12 pt-8 border-t border-white/5 flex flex-col gap-4">
+                            <div className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em] italic">Systematic Implementation Guardrails</div>
+                            <button 
+                              onClick={() => navigate('/join')}
+                              className="w-full py-4 bg-white text-intense-indigo rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-50 transition-colors shadow-2xl shadow-white/5"
+                            >
+                               {isPro ? 'Download Source (.py)' : 'Unlock Full Library Access'}
+                            </button>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+              </div>
+            ) : reportImages.length > 0 ? (
               <>
                 {/* Always show the first page */}
                 <div className="bg-white shadow-[0_0_20px_rgba(0,0,0,0.4)] rounded-sm overflow-hidden w-full relative">
