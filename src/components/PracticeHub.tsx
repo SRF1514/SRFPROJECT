@@ -24,6 +24,7 @@ import {
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { practiceStatsService } from '../services/practiceStatsService';
+import { supabaseData } from '../services/supabaseData';
 import { 
   batch1A, batch1B, batch1C, batch1D, batch1E, batch1F, batch1G, 
   batch2A, batch2B, batch2C, batch2D, batch2E, batch2F, batch2G, 
@@ -74,6 +75,28 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
   const [stats, setStats] = useState(practiceStatsService.getStats());
 
   useEffect(() => {
+    const fetchDBStats = async () => {
+      const dbStats = await supabaseData.getPracticeStats();
+      if (dbStats) {
+        const mappedStats = {
+          completedItems: dbStats.completed_items,
+          mocksDone: dbStats.mocks_done,
+          avgScore: dbStats.avg_score,
+          readiness: dbStats.readiness,
+          hoursPracticed: dbStats.hours_practiced,
+          completedBatches: dbStats.completed_batches || []
+        };
+        setStats(mappedStats);
+        // Also update localStorage to stay in sync
+        localStorage.setItem('sierra_practice_stats', JSON.stringify(mappedStats));
+      }
+    };
+    if (user) {
+      fetchDBStats();
+    }
+  }, [user]);
+
+  useEffect(() => {
     practiceStatsService.saveStats(stats);
   }, [stats]);
 
@@ -95,12 +118,13 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
     setSubmitted(true);
     if (!activeQuiz) return;
     
+    const mcqQuestions = activeQuiz.filter(q => q.options && q.options.length > 0);
     const score = calculateScore();
-    const percent = Math.round((score / activeQuiz.length) * 100);
+    const percent = mcqQuestions.length > 0 ? Math.round((score / mcqQuestions.length) * 100) : 100;
     
     setStats(prev => {
       const newCompleted = prev.completedItems + activeQuiz.length;
-      const mcqCount = activeQuiz.filter(q => q.options && q.options.length > 0).length;
+      const mcqCount = mcqQuestions.length;
       const openCount = activeQuiz.length - mcqCount;
       const hoursAdded = (mcqCount * 3 + openCount * 8) / 60;
       
@@ -112,12 +136,18 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
 
       const newReadiness = Math.round((newAvgScore * 0.7) + (Math.min(newCompleted / 482, 1) * 30));
 
+      const newCompletedBatches = prev.completedBatches ? [...prev.completedBatches] : [];
+      if (!newCompletedBatches.includes(activeBatchName)) {
+        newCompletedBatches.push(activeBatchName);
+      }
+
       return {
         completedItems: newCompleted,
         mocksDone: newMocks,
         avgScore: newAvgScore,
         readiness: Math.min(newReadiness, 100),
-        hoursPracticed: Number((prev.hoursPracticed + hoursAdded).toFixed(1))
+        hoursPracticed: Number((prev.hoursPracticed + hoursAdded).toFixed(1)),
+        completedBatches: newCompletedBatches
       };
     });
     
@@ -208,7 +238,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
             )}
             <button 
               onClick={() => navigate(-1)}
-              className="w-full py-5 border-2 border-intense-indigo/10 text-intense-indigo/60 font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-gray-50 transition-all"
+              className="w-full py-5 border-2 border-intense-indigo/10 text-intense-indigo/60 font-black tracking-widest text-[10px] rounded-2xl hover:bg-gray-50 transition-all"
             >
               Back to Overview
             </button>
@@ -235,7 +265,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                 className="flex items-center gap-2 text-intense-indigo/40 hover:text-intense-indigo transition-colors mb-2"
               >
                 <ArrowLeft size={16} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Redirect to Sierra Practice Hub</span>
+                <span className="text-[10px] font-black tracking-widest">Redirect to Sierra Practice Hub</span>
               </button>
               <h2 className="text-3xl font-bold text-intense-indigo italic">{activeBatchName}</h2>
               <p className="text-intense-indigo/50 font-medium text-sm">2026 Core Curriculum • {activeQuiz.length} Questions • {getEstimatedTime(activeQuiz)}</p>
@@ -408,7 +438,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
               <div className="w-20 h-20 bg-intense-indigo text-white rounded-[2rem] flex items-center justify-center mx-auto shadow-xl">
                  <Lock size={40} />
               </div>
-              <h2 className="text-3xl font-black text-intense-indigo italic uppercase tracking-tighter">Sierra Member Access</h2>
+              <h2 className="text-3xl font-black text-intense-indigo italic tracking-tighter">Sierra Member Access</h2>
               <p className="text-gray-500 font-medium leading-relaxed">
                 Update to unlock sierra member benefits. Access our premium mocks, advanced numeric simulations, and 2026-calibrated Case Studies.
               </p>
@@ -423,102 +453,113 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
         )}
       </AnimatePresence>
       {/* Header */}
-      <section className="bg-intense-indigo py-16 px-4 sm:px-8 lg:px-[2cm] text-white overflow-hidden relative">
+      <section className="bg-intense-indigo py-10 px-4 sm:px-8 lg:px-[2cm] text-white overflow-hidden relative">
         {/* Grid Pattern Overlay */}
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:20px_20px]" />
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         
-        <div className="relative z-10 max-w-6xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-12">
-          <div className="space-y-8 max-w-3xl">
-            {onBack && (
-              <button 
-                onClick={onBack}
-                className="flex items-center gap-2 text-white/40 hover:text-white transition-colors group mb-8"
-              >
-                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Return to Content Hub</span>
-              </button>
-            )}
-            <div className="flex items-center gap-3">
-               <div className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[10px] font-black uppercase tracking-widest text-indigo-200">
-                 Sierra Premium Access
-               </div>
-               <div className="flex -space-x-2">
-                 {[1,2,3,4].map(i => <div key={i} className="w-6 h-6 rounded-full border-2 border-intense-indigo bg-gradient-to-br from-blue-400 to-indigo-600 shadow-lg" />)}
-               </div>
-               <motion.span 
-                   key={activeMembers}
-                   initial={{ opacity: 0, y: 5 }}
-                   animate={{ opacity: 1, y: 0 }}
-                   className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20 italic"
-                >
-                   {activeMembers} Members practicing today
-                </motion.span>
+        <div className="relative z-10 max-w-6xl mx-auto">
+          {onBack && (
+            <button 
+              onClick={onBack}
+              className="flex items-center gap-2 text-white/40 hover:text-white transition-colors group mb-6"
+            >
+              <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+              <span className="text-[9px] font-black tracking-widest">Return to Content Hub</span>
+            </button>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-8 space-y-3">
+                <div className="flex items-center gap-3">
+                   <div className="px-3 py-0.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[9px] font-black tracking-widest text-indigo-200">
+                     Sierra Premium Access
+                   </div>
+                   <div className="flex -space-x-1.5">
+                     {[1,2,3,4].map(i => <div key={i} className="w-5 h-5 rounded-full border-2 border-intense-indigo bg-gradient-to-br from-blue-400 to-indigo-600 shadow-lg" />)}
+                   </div>
+                   <motion.span 
+                       key={activeMembers}
+                       initial={{ opacity: 0, y: 5 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       className="text-[8px] font-black tracking-[0.3em] text-white/20 italic"
+                    >
+                       {activeMembers} Members Live
+                    </motion.span>
+                </div>
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter leading-[0.9] italic overflow-visible">
+                The Practice <br /> 
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-white/40">Powerhouse.</span>
+              </h1>
+              <p className="text-lg md:text-xl text-white/60 leading-tight font-medium italic max-w-xl">
+                Institutional-grade simulation. 482 items mapped to the 2026 Cfa Program curriculum.
+              </p>
             </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.9] italic pr-24 overflow-visible">
-              The Practice <br /> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-white/40">Powerhouse.</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-white/70 leading-relaxed font-medium italic">
-              Institutional-grade simulation. 482 items mapped to the 2026 CFA Program curriculum.
-            </p>
-          </div>
-          
-          <div className="w-full lg:w-[320px] space-y-4 bg-white/5 backdrop-blur-sm p-6 rounded-[1.5rem] border border-white/10 shadow-2xl relative overflow-hidden group/stats">
-             {!isSierra && (
-               <div className="absolute inset-0 z-20 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 space-y-4">
-                  <Lock className="text-white/40 mb-2" size={32} />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white leading-relaxed">
-                    Update to unlock <br /> sierra member benefits
-                  </p>
-                  <button 
-                    onClick={() => setShowUpgradePrompt(true)}
-                    className="px-4 py-2 bg-white text-intense-indigo rounded-xl text-[9px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
-                  >
-                    Upgrade Now
-                  </button>
-               </div>
-             )}
-             <div className="text-[10px] font-black uppercase tracking-widest text-indigo-300">Progress</div>
-             <div className="space-y-3">
-                <div className="flex justify-between items-center text-sm font-bold">
-                   <span>Curriculum Mastery</span>
-                   <span className="text-emerald-400">{stats.readiness}%</span>
-                </div>
-                <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-                   <motion.div initial={{ width: 0 }} animate={{ width: `${stats.readiness}%` }} transition={{ duration: 1.5, ease: "easeOut" }} className="h-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
-                </div>
-                <p className="text-[10px] text-white/40 leading-relaxed italic font-medium">
-                  {stats.completedItems > 0 
-                    ? `You have completed ${stats.completedItems} items. Your accuracy is currently ${stats.avgScore}%.`
-                    : "You have completed 0 tests. Start practicing to track your institutional-grade progression."}
-                </p>
-             </div>
+            
+            <div className="lg:col-span-4 self-center">
+              <div className="bg-white/5 backdrop-blur-sm p-5 rounded-[1.2rem] border border-white/10 shadow-2xl relative overflow-hidden group/stats">
+                 {!isSierra && (
+                   <div className="absolute inset-0 z-20 bg-black/40 backdrop-blur-md flex flex-col items-center justify-center text-center p-5 space-y-3">
+                      <Lock className="text-white/40 mb-1" size={24} />
+                      <p className="text-[9px] font-black uppercase tracking-widest text-white leading-relaxed">
+                        Update to unlock <br /> sierra benefits
+                      </p>
+                      <button 
+                        onClick={() => setShowUpgradePrompt(true)}
+                        className="px-3 py-1.5 bg-white text-intense-indigo rounded-lg text-[8px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
+                      >
+                        Upgrade
+                      </button>
+                   </div>
+                 )}
+                 <div className="text-[9px] font-black tracking-widest text-indigo-300 mb-3">Progress Tracking</div>
+                 <div className="space-y-3">
+                    <div className="flex justify-between items-center text-xs font-bold">
+                       <span>Curriculum Mastery</span>
+                       <span className="text-emerald-400">{stats.readiness}%</span>
+                    </div>
+                    <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                       <motion.div initial={{ width: 0 }} animate={{ width: `${stats.readiness}%` }} transition={{ duration: 1.5, ease: "easeOut" }} className="h-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <p className="text-[8px] text-white/30 leading-tight max-w-[150px] font-medium italic">
+                        {stats.completedItems > 0 
+                          ? `${stats.completedItems} items completed.`
+                          : "Begin your session to track progress."}
+                      </p>
+                      <div className="text-right">
+                         <div className="text-[7px] font-black text-white/20">Avg Acc</div>
+                         <div className="text-xs font-black text-white">{stats.avgScore}%</div>
+                      </div>
+                    </div>
+                 </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Stats/Overview */}
       <section className="py-8 border-b border-gray-100 bg-gray-50/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { label: 'Question Bank', value: '482+', icon: Database },
             { label: 'Avg. Accuracy', value: stats.completedItems > 0 ? `${stats.avgScore}%` : 'No Data', icon: BarChart },
             { label: 'Required Time', value: `${totalRequiredTime}h`, icon: HelpCircle },
             { label: 'Curriculum Year', value: '2026', icon: ShieldCheck },
           ].map((stat, i) => (
-            <div key={i} className="flex gap-3 items-center relative">
+            <div key={i} className="flex gap-2.5 items-center relative">
               {!isSierra && (i === 1 || i === 3) && (
-                <div className="absolute inset-0 z-10 bg-white/10 backdrop-blur-[2px] flex items-center justify-center rounded-lg">
-                  <Lock size={12} className="text-intense-indigo/20" />
+                <div className="absolute inset-0 z-10 bg-white/10 backdrop-blur-[1px] flex items-center justify-center rounded-lg">
+                  <Lock size={10} className="text-intense-indigo/20" />
                 </div>
               )}
-              <div className="p-2.5 bg-intense-indigo/5 text-intense-indigo rounded-lg">
-                <stat.icon size={18} />
+              <div className="p-2 bg-intense-indigo/5 text-intense-indigo rounded-lg">
+                <stat.icon size={16} />
               </div>
               <div>
-                <div className="text-[9px] font-black uppercase tracking-widest text-intense-indigo/40">{stat.label}</div>
-                <div className="text-lg font-bold text-intense-indigo">{stat.value}</div>
+                <div className="text-[8px] font-black uppercase tracking-widest text-intense-indigo/40">{stat.label}</div>
+                <div className="text-base font-bold text-intense-indigo">{stat.value}</div>
               </div>
             </div>
           ))}
@@ -526,7 +567,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
       </section>
 
       {/* Main Content Layout */}
-      <main className="max-w-6xl mx-auto py-16 px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <main className="max-w-6xl mx-auto py-8 px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Left: Explanations & Methodology */}
         <div className="lg:col-span-4 space-y-12">
@@ -648,7 +689,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch1A, 'Asset Pricing & DCF (AAPL/MSFT Focus)')}
-                  className="group p-4 bg-white border-2 border-intense-indigo/10 rounded-2xl hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-4 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Asset Pricing & DCF (AAPL/MSFT Focus)')
+                    ? 'bg-blue-50 border-blue-200 shadow-indigo-500/5'
+                    : 'bg-white border-intense-indigo/10 hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="p-1.5 rounded-lg bg-intense-indigo text-white">
@@ -661,7 +706,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   <p className="text-xs text-intense-indigo/50 font-medium mb-3">
                     {batch1A.length} Technical Questions • {getEstimatedTime(batch1A)}</p>
                   <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-intense-indigo">
-                     <span className="text-[9px] font-black uppercase tracking-widest">Start Practice Mode</span>
+                     <span className="text-[9px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Asset Pricing & DCF (AAPL/MSFT Focus)') ? 'Retake & ' : ''}Start Practice Mode</span>
                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -672,7 +717,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch1B, 'Portfolio Analytics (Beta/CAPM Simulation)')}
-                  className="group p-4 bg-white border-2 border-intense-indigo/10 rounded-2xl hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-4 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Portfolio Analytics (Beta/CAPM Simulation)')
+                    ? 'bg-blue-50 border-blue-200 shadow-indigo-500/5'
+                    : 'bg-white border-intense-indigo/10 hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="p-1.5 rounded-lg bg-intense-indigo text-white">
@@ -685,7 +734,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   <p className="text-xs text-intense-indigo/50 font-medium mb-3">
                     {batch1B.length} Technical Questions • {getEstimatedTime(batch1B)}</p>
                   <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-intense-indigo">
-                     <span className="text-[9px] font-black uppercase tracking-widest">Start Practice Mode</span>
+                     <span className="text-[9px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Portfolio Analytics (Beta/CAPM Simulation)') ? 'Retake & ' : ''}Start Practice Mode</span>
                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -696,7 +745,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch1C, 'WACC & Market Risk (Efficiency Analysis)')}
-                  className="group p-4 bg-white border-2 border-intense-indigo/10 rounded-2xl hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-4 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('WACC & Market Risk (Efficiency Analysis)')
+                    ? 'bg-blue-50 border-blue-200 shadow-indigo-500/5'
+                    : 'bg-white border-intense-indigo/10 hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="p-1.5 rounded-lg bg-intense-indigo text-white">
@@ -709,7 +762,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   <p className="text-xs text-intense-indigo/50 font-medium mb-3">
                     {batch1C.length} Multi-Choice Questions • {getEstimatedTime(batch1C)}</p>
                   <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-intense-indigo">
-                     <span className="text-[9px] font-black uppercase tracking-widest">Start Practice Mode</span>
+                     <span className="text-[9px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('WACC & Market Risk (Efficiency Analysis)') ? 'Retake & ' : ''}Start Practice Mode</span>
                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -720,7 +773,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch1D, 'Equity Valuation & Bond Pricing (TSLA/NVDA Analysis)')}
-                  className="group p-4 bg-white border-2 border-intense-indigo/10 rounded-2xl hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-4 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Equity Valuation & Bond Pricing (TSLA/NVDA Analysis)')
+                    ? 'bg-blue-50 border-blue-200 shadow-indigo-500/5'
+                    : 'bg-white border-intense-indigo/10 hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="p-1.5 rounded-lg bg-intense-indigo text-white">
@@ -733,7 +790,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   <p className="text-xs text-intense-indigo/50 font-medium mb-3">
                     {batch1D.length} Multi-Choice Questions • {getEstimatedTime(batch1D)}</p>
                   <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-intense-indigo">
-                     <span className="text-[9px] font-black uppercase tracking-widest">Start Practice Mode</span>
+                     <span className="text-[9px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Equity Valuation & Bond Pricing (TSLA/NVDA Analysis)') ? 'Retake & ' : ''}Start Practice Mode</span>
                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -744,7 +801,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch1E, 'Risk & Return Theory (Efficient Frontier Models)')}
-                  className="group p-4 bg-white border-2 border-intense-indigo/10 rounded-2xl hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-4 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Risk & Return Theory (Efficient Frontier Models)')
+                    ? 'bg-blue-50 border-blue-200 shadow-indigo-500/5'
+                    : 'bg-white border-intense-indigo/10 hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="p-1.5 rounded-lg bg-intense-indigo text-white">
@@ -757,7 +818,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   <p className="text-xs text-intense-indigo/50 font-medium mb-3">
                     {batch1E.length} Multi-Choice Questions • {getEstimatedTime(batch1E)}</p>
                   <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-intense-indigo">
-                     <span className="text-[9px] font-black uppercase tracking-widest">Start Practice Mode</span>
+                     <span className="text-[9px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Risk & Return Theory (Efficient Frontier Models)') ? 'Retake & ' : ''}Start Practice Mode</span>
                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -768,7 +829,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch1F, 'Derivatives & Hedging Strategies (Option Greeks)')}
-                  className="group p-4 bg-white border-2 border-intense-indigo/10 rounded-2xl hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-4 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Derivatives & Hedging Strategies (Option Greeks)')
+                    ? 'bg-blue-50 border-blue-200 shadow-indigo-500/5'
+                    : 'bg-white border-intense-indigo/10 hover:border-intense-indigo/40 hover:shadow-xl hover:shadow-indigo-500/10'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="p-1.5 rounded-lg bg-intense-indigo text-white">
@@ -781,7 +846,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   <p className="text-xs text-intense-indigo/50 font-medium mb-3">
                     {batch1F.length} Thinking Questions • {getEstimatedTime(batch1F)}</p>
                   <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-intense-indigo">
-                     <span className="text-[9px] font-black uppercase tracking-widest">Start Practice Mode</span>
+                     <span className="text-[9px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Derivatives & Hedging Strategies (Option Greeks)') ? 'Retake & ' : ''}Start Practice Mode</span>
                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -802,7 +867,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                     animate={{ opacity: 1, y: 0 }}
                     whileHover={{ y: -4 }}
                     onClick={() => handleStartBatch(item.batch, item.name)}
-                    className="group p-6 bg-white border-2 border-intense-indigo/10 rounded-2xl hover:border-intense-indigo/40 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all cursor-pointer relative overflow-hidden"
+                    className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                      stats.completedBatches?.includes(item.name)
+                      ? 'bg-blue-50 border-blue-200 shadow-indigo-500/5'
+                      : 'bg-white border-intense-indigo/10 hover:border-intense-indigo/40 hover:shadow-2xl hover:shadow-indigo-500/10'
+                    }`}
                   >
                     <div className="flex justify-between items-start mb-4">
                       <div className="p-2 rounded-lg bg-intense-indigo text-white">
@@ -817,7 +886,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                     </p>
                     <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-intense-indigo">
                        <span className="text-[10px] font-black uppercase tracking-widest">
-                         {item.pro && !isSierra ? "Update to unlock sierra member benefits" : "Start Practice Mode"}
+                         {item.pro && !isSierra ? "Update to unlock sierra member benefits" : (stats.completedBatches?.includes(item.name) ? "Retake & Start Practice Mode" : "Start Practice Mode")}
                        </span>
                        {item.pro && !isSierra ? <Lock size={14} className="text-amber-500" /> : <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />}
                     </div>
@@ -840,7 +909,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch9, '1,000+ Question Series: Part 1')}
-                  className="group p-6 bg-gradient-to-br from-indigo-900 to-purple-900 border-2 border-white/10 rounded-2xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('1,000+ Question Series: Part 1')
+                    ? 'bg-blue-900 border-blue-400 shadow-purple-500/20'
+                    : 'bg-gradient-to-br from-indigo-900 to-purple-900 border-white/10 hover:shadow-2xl hover:shadow-purple-500/20'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="p-2 rounded-lg bg-white/10 text-white backdrop-blur-sm">
@@ -854,7 +927,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                     {batch9.length} Generated High-Yield Items • {getEstimatedTime(batch9)}
                   </p>
                   <div className="flex items-center justify-between pt-3 border-t border-white/5 text-white">
-                     <span className="text-[10px] font-black uppercase tracking-widest">Grind Mode</span>
+                     <span className="text-[10px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('1,000+ Question Series: Part 1') ? 'Retake & ' : ''}Grind Mode</span>
                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -865,7 +938,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch11, '1,000+ Question Series: Part 3 (Mix)')}
-                  className="group p-6 bg-white border-2 border-orange-500/10 rounded-2xl hover:border-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/10 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('1,000+ Question Series: Part 3 (Mix)')
+                    ? 'bg-blue-50 border-blue-200 shadow-orange-500/10'
+                    : 'bg-white border-orange-500/10 hover:border-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/10'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="p-2 rounded-lg bg-orange-500 text-white">
@@ -879,7 +956,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                     {batch11.length} Technical Items • {getEstimatedTime(batch11)}
                   </p>
                   <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-intense-indigo">
-                     <span className="text-[10px] font-black uppercase tracking-widest">Test Your Logic</span>
+                     <span className="text-[10px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('1,000+ Question Series: Part 3 (Mix)') ? 'Retake & ' : ''}Test Your Logic</span>
                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -894,7 +971,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch1G, 'Yield & Bond Price (Sensitivity/Delta)')}
-                  className="group p-6 bg-white border-2 border-intense-indigo/10 rounded-2xl hover:border-intense-indigo/40 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Yield & Bond Price (Sensitivity/Delta)')
+                    ? 'bg-blue-50 border-blue-200 shadow-indigo-500/5'
+                    : 'bg-white border-intense-indigo/10 hover:border-intense-indigo/40 hover:shadow-2xl hover:shadow-indigo-500/10'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="p-2 rounded-lg bg-intense-indigo text-white">
@@ -907,7 +988,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   <p className="text-sm text-intense-indigo/50 font-medium mb-4">
                     Case Study Style • {getEstimatedTime(batch1G)}</p>
                   <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-intense-indigo">
-                     <span className="text-[10px] font-black uppercase tracking-widest">Open Problem Set</span>
+                     <span className="text-[10px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Yield & Bond Price (Sensitivity/Delta)') ? 'Retake & ' : ''}Open Problem Set</span>
                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -928,7 +1009,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch10, 'Advanced Corporate Finance (Open-Ended Problem Set)')}
-                  className="group p-6 bg-gradient-to-br from-indigo-500 to-indigo-700 border-2 border-white/10 rounded-2xl hover:shadow-2xl hover:shadow-indigo-500/20 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Advanced Corporate Finance (Open-Ended Problem Set)')
+                    ? 'bg-blue-600 border-blue-300 shadow-indigo-500/20'
+                    : 'bg-gradient-to-br from-indigo-500 to-indigo-700 border-white/10 hover:shadow-2xl hover:shadow-indigo-500/20'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="p-2 rounded-lg bg-white/10 text-white backdrop-blur-sm">
@@ -942,7 +1027,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                     {batch10.length} Core Calculation Tasks • {getEstimatedTime(batch10)}
                   </p>
                   <div className="flex items-center justify-between pt-3 border-t border-white/5 text-white">
-                     <span className="text-[10px] font-black uppercase tracking-widest">Master Calculations</span>
+                     <span className="text-[10px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Advanced Corporate Finance (Open-Ended Problem Set)') ? 'Retake & ' : ''}Master Calculations</span>
                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -953,7 +1038,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch12, 'Mathematical Finance & Risk Logic (Mastery Series)')}
-                  className="group p-6 bg-gradient-to-br from-emerald-500 to-emerald-700 border-2 border-white/10 rounded-2xl hover:shadow-2xl hover:shadow-emerald-500/20 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Mathematical Finance & Risk Logic (Mastery Series)')
+                    ? 'bg-blue-600 border-blue-300 shadow-emerald-500/20'
+                    : 'bg-gradient-to-br from-emerald-500 to-emerald-700 border-white/10 hover:shadow-2xl hover:shadow-emerald-500/20'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="p-2 rounded-lg bg-white/10 text-white backdrop-blur-sm">
@@ -967,7 +1056,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                     {batch12.length} Complex Calculations • {getEstimatedTime(batch12)}
                   </p>
                   <div className="flex items-center justify-between pt-3 border-t border-white/5 text-white">
-                     <span className="text-[10px] font-black uppercase tracking-widest">Verify Results</span>
+                     <span className="text-[10px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Mathematical Finance & Risk Logic (Mastery Series)') ? 'Retake & ' : ''}Verify Results</span>
                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -978,7 +1067,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch13, 'Enterprise Value & WACC (Deep-Dive Analysis)')}
-                  className="group p-6 bg-gradient-to-br from-orange-500 to-orange-700 border-2 border-white/10 rounded-2xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Enterprise Value & WACC (Deep-Dive Analysis)')
+                    ? 'bg-blue-600 border-blue-300 shadow-orange-500/20'
+                    : 'bg-gradient-to-br from-orange-500 to-orange-700 border-white/10 hover:shadow-2xl hover:shadow-orange-500/20'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="p-2 rounded-lg bg-white/10 text-white backdrop-blur-sm">
@@ -992,7 +1085,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                     {batch13.length} Logical Deep-Dives • {getEstimatedTime(batch13)}
                   </p>
                   <div className="flex items-center justify-between pt-3 border-t border-white/5 text-white">
-                     <span className="text-[10px] font-black uppercase tracking-widest">Master Calculations</span>
+                     <span className="text-[10px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Enterprise Value & WACC (Deep-Dive Analysis)') ? 'Retake & ' : ''}Master Calculations</span>
                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -1003,7 +1096,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -4 }}
                   onClick={() => handleStartBatch(batch14, 'Mergers, Acquisitions & Synergies (M&A Strategy)')}
-                  className="group p-6 bg-gradient-to-br from-indigo-500 to-indigo-700 border-2 border-white/10 rounded-2xl hover:shadow-2xl hover:shadow-indigo-500/20 transition-all cursor-pointer relative overflow-hidden"
+                  className={`group p-6 rounded-2xl border-2 transition-all cursor-pointer relative overflow-hidden ${
+                    stats.completedBatches?.includes('Mergers, Acquisitions & Synergies (M&A Strategy)')
+                    ? 'bg-blue-600 border-blue-300 shadow-indigo-500/20'
+                    : 'bg-gradient-to-br from-indigo-500 to-indigo-700 border-white/10 hover:shadow-2xl hover:shadow-indigo-500/20'
+                  }`}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="p-2 rounded-lg bg-white/10 text-white backdrop-blur-sm">
@@ -1017,7 +1114,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                     {batch14.length} Comprehensive Cases • {getEstimatedTime(batch14)}
                   </p>
                   <div className="flex items-center justify-between pt-3 border-t border-white/5 text-white">
-                     <span className="text-[10px] font-black uppercase tracking-widest">Post-Theory Integration</span>
+                     <span className="text-[10px] font-black uppercase tracking-widest">{stats.completedBatches?.includes('Mergers, Acquisitions & Synergies (M&A Strategy)') ? 'Retake & ' : ''}Post-Theory Integration</span>
                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </motion.div>
@@ -1055,9 +1152,11 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
                     className={`group p-8 border-2 rounded-[2rem] transition-all cursor-pointer relative overflow-hidden flex flex-col md:flex-row items-center gap-8 ${
                       mock.pro && !isSierra 
                       ? 'bg-gray-50 border-gray-200' 
-                      : (i === 0 || i === 2) 
-                        ? 'bg-gradient-to-br from-indigo-900 to-indigo-950 text-white border-white/5 shadow-xl' 
-                        : 'bg-white border-intense-indigo/10 text-intense-indigo shadow-sm'
+                      : stats.completedBatches?.includes(mock.name)
+                        ? 'bg-blue-50 border-blue-200 shadow-indigo-500/5'
+                        : (i === 0 || i === 2) 
+                          ? 'bg-gradient-to-br from-indigo-900 to-indigo-950 text-white border-white/5 shadow-xl' 
+                          : 'bg-white border-intense-indigo/10 text-intense-indigo shadow-sm'
                     }`}
                   >
                     <div className="flex items-center gap-6 shrink-0 relative z-10 font-bold italic">
@@ -1115,7 +1214,7 @@ const PracticeHub: React.FC<PracticeHubProps> = ({ onBack }) => {
           {/* User Placeholder */}
           <div className="p-8 bg-intense-indigo/5 rounded-[2rem] border border-intense-indigo/10 flex flex-col items-center text-center space-y-4">
             <Database className="text-emerald-500" size={40} />
-            <h3 className="text-xl font-bold text-intense-indigo italic uppercase tracking-tight">Question Bank Update Policy</h3>
+            <h3 className="text-xl font-bold text-intense-indigo italic tracking-tight">Question Bank Update Policy</h3>
             <p className="text-sm text-intense-indigo/60 max-w-md font-medium">
               We have newly updated contents including multiple choice questions and open questions to prepare for the upcoming exam. New questions and mocks will be updated soon. All items are calibrated to the latest 2026 curriculum standards.
             </p>
