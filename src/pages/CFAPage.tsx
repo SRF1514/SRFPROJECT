@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { practiceStatsService } from '../services/practiceStatsService';
+import { supabaseData } from '../services/supabaseData';
+import { VaultParticles } from '../components/VaultParticles';
 import { 
   ArrowLeft, Award, Layers, Compass, LifeBuoy, Users, Globe, Briefcase, 
   ChevronRight, Download, GraduationCap, Clock, Monitor, BookOpen, Star, 
@@ -354,6 +357,23 @@ export default function CFAPage() {
   const navigate = useNavigate();
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
+  const [hasCompletedAnything, setHasCompletedAnything] = useState(false);
+
+  useEffect(() => {
+    const checkCompletions = async () => {
+      const dbStats = await supabaseData.getPracticeStats();
+      if (dbStats && dbStats.completed_batches && dbStats.completed_batches.length > 0) {
+        setHasCompletedAnything(true);
+      } else {
+        // Fallback to localStorage
+        const localStats = practiceStatsService.getStats();
+        if (localStats.completedBatches && localStats.completedBatches.length > 0) {
+          setHasCompletedAnything(true);
+        }
+      }
+    };
+    checkCompletions();
+  }, []);
 
   // Scroll to top when section changes
   useEffect(() => {
@@ -417,43 +437,41 @@ export default function CFAPage() {
               {/* Hero Section */}
               <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-gray-100 pb-10">
                 <div className="max-w-full">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-intense-indigo/5 text-intense-indigo text-[10px] font-black uppercase tracking-[0.2em] mb-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-intense-indigo/5 text-intense-indigo text-[10px] font-black tracking-[0.2em] mb-4">
                     <Star className="w-3 h-3 fill-current" />
-                    CFA Institute Roadmap
+                    Cfa Institute Roadmap
                   </div>
                   <h1 
                     onClick={() => {
                       setSelectedSectionId(null);
                       setSelectedTopicId(null);
                     }}
-                    className="font-sans text-3xl md:text-5xl lg:text-7xl leading-[1.1] text-intense-indigo mb-4 tracking-tighter flex flex-col md:flex-row md:items-baseline gap-4 md:gap-6 cursor-pointer hover:opacity-80 transition-opacity"
+                    className="font-sans text-3xl md:text-5xl lg:text-[64px] leading-[0.95] text-intense-indigo mb-6 tracking-tighter flex flex-col md:flex-row md:items-baseline gap-4 md:gap-6 cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <span className="font-bold">CFA Content Hub</span>
-                    <span className="font-normal opacity-60 text-xl md:text-3xl lg:text-4xl">2026 Curriculum</span>
+                    <span className="font-bold italic tracking-tighter">Cfa Content Hub</span>
+                    <span className="font-normal opacity-60 text-xl md:text-3xl lg:text-4xl italic">2026 Curriculum</span>
                   </h1>
-                  <p className="text-lg md:text-xl text-intense-indigo/60 font-medium leading-relaxed max-w-2xl">
-                    Institutional-grade financial education. From the flagship CFA® Program 
+                  <p className="text-lg md:text-xl text-intense-indigo/60 font-medium leading-relaxed max-w-2xl italic">
+                    Institutional-grade financial education. From the flagship Cfa® Program 
                     to specialized certificates in ESG, Private Markets, and Climate.
                   </p>
                 </div>
                 
-                <div className="hidden lg:flex flex-col items-end gap-3 pb-2">
-                  <div className="text-right">
-                    <div className="text-[10px] font-bold text-intense-indigo/30 uppercase tracking-[0.2em]">Resource Status</div>
-                    <div className="text-4xl font-sans font-bold text-intense-indigo">Live</div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="flex -space-x-1">
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className={`w-5 h-5 rounded-full border border-white bg-intense-indigo/${10 * i} flex items-center justify-center`}>
-                          <div className="w-1.5 h-1.5 rounded-full bg-intense-indigo/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
-                        </div>
-                      ))}
+                <div className="hidden lg:flex flex-col items-end gap-4 pb-2">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedTopicId('sierra-practice-hub')}
+                    className="flex flex-col items-end group cursor-pointer"
+                  >
+                    <div className="text-right mb-1">
+                      <div className="text-[10px] font-bold text-intense-indigo/30 tracking-[0.2em] group-hover:text-intense-indigo transition-colors">Practice Hub</div>
+                      <div className="text-5xl font-sans font-bold text-intense-indigo group-hover:text-intense-indigo/70 transition-colors italic">Go Live</div>
                     </div>
-                    <div className="text-[10px] uppercase font-black text-intense-indigo/40 tracking-tighter ml-1">
-                      Updating Regularly
+                    <div className="flex items-center gap-2 text-[10px] font-black text-intense-indigo/40 tracking-tighter group-hover:text-intense-indigo transition-colors italic">
+                      Enter Numeric Question Vault <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </div>
-                  </div>
+                  </motion.button>
                 </div>
               </div>
 
@@ -464,69 +482,64 @@ export default function CFAPage() {
                 <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-white/20 to-transparent" />
                 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden rounded-[2.8rem] bg-intense-indigo border border-white/10 relative z-10">
-                  <div className="lg:col-span-7 p-8 lg:p-10 flex flex-col justify-between relative overflow-hidden h-full">
+                  <VaultParticles />
+                  <div className="lg:col-span-7 p-5 lg:p-7 flex flex-col justify-center relative overflow-hidden h-full">
                     {/* Background Glow */}
                     <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/20 rounded-full blur-[100px]" />
                     
                     <div className="relative z-10">
-                      <h2 className="text-4xl lg:text-7xl font-bold tracking-tighter text-white leading-[0.95] pr-12 overflow-visible mb-6 lg:mb-8">
+                      <h2 className="text-3xl lg:text-5xl font-bold tracking-tighter text-white leading-[0.95] pr-12 overflow-visible mb-3 lg:mb-4">
                         Sierra CFA <br /> 
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-200 to-white">Practice Hub</span>
                       </h2>
-                      <p className="text-xl text-white/60 font-medium leading-tight max-w-md">
-                        The complete numerical question set: 331 multiple-choice questions, 151 open-ended questions, and 17 mock exams, all aligned with the latest 2026 curriculum. Includes detailed step-by-step solutions and explanations for every question.
+                      <p className="text-base text-white/60 font-medium leading-tight max-w-md">
+                        The complete numerical question set: 331 multiple-choice questions, 151 open-ended questions, and 17 mock exams, all aligned with the latest 2026 curriculum.
                       </p>
-                    </div>
-                      
-                    <div className="relative z-10 grid grid-cols-3 gap-8 pt-8 lg:pt-10 mt-auto">
-                      <div>
-                        <div className="text-3xl font-black text-white">482</div>
-                        <div className="text-[10px] font-black text-white/30 uppercase tracking-widest mt-1">Active Items</div>
-                      </div>
-                      <div>
-                        <div className="text-3xl font-black text-white">17</div>
-                        <div className="text-[10px] font-black text-white/30 uppercase tracking-widest mt-1">Mock Exams</div>
-                      </div>
-                      <div>
-                        <div className="text-3xl font-black text-white">2026</div>
-                        <div className="text-[10px] font-black text-white/30 uppercase tracking-widest mt-1">Curriculum</div>
+                      <div className="mt-4">
+                        <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                           <p className="text-[10px] font-black text-white/40 tracking-widest">
+                               Cfa Level 1 - 3 • Fully Updated
+                           </p>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="lg:col-span-5 relative bg-white/5 border-l border-white/5 p-8 lg:p-10 flex flex-col group/cta h-full">
+                  <div className="lg:col-span-5 relative bg-white/5 border-l border-white/5 p-5 lg:p-7 flex flex-col group/cta h-full">
                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent pointer-events-none" />
                      
-                     <div className="relative z-10 w-full flex flex-col h-full justify-between">
-                       <div>
-                         <div className="hidden lg:block" aria-hidden="true">
-                            <h2 className="text-4xl lg:text-7xl font-bold leading-[0.95] mb-6 lg:mb-12 opacity-0 select-none pointer-events-none">
-                              Line 1 <br /> Line 2
-                            </h2>
-                         </div>
+                     <div className="relative z-10 w-full flex flex-col h-full gap-5">
+                        <div>
+                           <div className="space-y-3">
+                              <h3 className="text-xl lg:text-2xl font-bold text-white tracking-tight leading-tight">
+                                 Ace your upcoming <br className="hidden lg:block" /> exam.
+                              </h3>
 
-                         <div className="space-y-6">
-                            <h3 className="text-2xl font-bold text-white tracking-tight">
-                               Ace your upcoming <br className="hidden lg:block" /> exam.
-                            </h3>
+                              <motion.button
+                                 whileHover={{ scale: 1.05 }}
+                                 whileTap={{ scale: 0.95 }}
+                                 onClick={() => setSelectedTopicId('sierra-practice-hub')}
+                                 className="w-full py-4 bg-white text-intense-indigo rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-[0_20px_40px_-10px_rgba(255,255,255,0.2)] hover:bg-indigo-50 transition-colors flex items-center justify-center gap-3"
+                              >
+                                 Enter The Vault <ArrowRight size={18} />
+                              </motion.button>
+                           </div>
+                        </div>
 
-                            <motion.button
-                               whileHover={{ scale: 1.05 }}
-                               whileTap={{ scale: 0.95 }}
-                               onClick={() => setSelectedTopicId('sierra-practice-hub')}
-                               className="w-full py-6 bg-white text-intense-indigo rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-[0_20px_40px_-10px_rgba(255,255,255,0.2)] hover:bg-indigo-50 transition-colors flex items-center justify-center gap-3"
-                            >
-                               Enter The Vault <ArrowRight size={18} />
-                            </motion.button>
-                         </div>
-                       </div>
-
-                       <div className="pt-8 lg:pt-10 mt-auto">
-                         <div className="text-3xl font-black opacity-0 select-none pointer-events-none hidden lg:block">-</div>
-                         <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mt-1 text-center lg:text-left">
-                            CFA Level 1 - 3
-                         </p>
-                       </div>
+                        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
+                           <div>
+                              <div className="text-2xl font-black text-white">482</div>
+                              <div className="text-[9px] font-black text-white/30 tracking-widest mt-1">Active Items</div>
+                           </div>
+                           <div>
+                              <div className="text-2xl font-black text-white">17</div>
+                              <div className="text-[9px] font-black text-white/30 tracking-widest mt-1">Mock Exams</div>
+                           </div>
+                           <div>
+                              <div className="text-2xl font-black text-white">2026</div>
+                              <div className="text-[9px] font-black text-white/30 tracking-widest mt-1">Curriculum</div>
+                           </div>
+                        </div>
                      </div>
                   </div>
                 </div>
@@ -536,7 +549,7 @@ export default function CFAPage() {
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="h-px flex-grow bg-gray-100" />
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-intense-indigo/30">CFA Institute Programs</h3>
+                  <h3 className="text-[10px] font-black tracking-[0.4em] text-intense-indigo/30">Cfa Institute Programs</h3>
                   <div className="h-px flex-grow bg-gray-100" />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -643,12 +656,12 @@ export default function CFAPage() {
                         setSelectedSectionId(null);
                         setSelectedTopicId(null);
                       }}
-                      className="text-[11px] font-black uppercase tracking-[0.4em] cursor-pointer hover:text-intense-indigo/60 transition-colors"
+                      className="text-[11px] font-black tracking-[0.4em] cursor-pointer hover:text-intense-indigo/60 transition-colors"
                     >
-                      CFA HUB
+                      Cfa Hub
                     </button>
                     <span className="text-[11px] opacity-20">/</span>
-                    <span className="text-[11px] font-black uppercase tracking-[0.4em] opacity-40">{selectedSection?.title}</span>
+                    <span className="text-[11px] font-black tracking-[0.4em] opacity-40">{selectedSection?.title}</span>
                   </div>
                   <h1 className="font-sans text-3xl md:text-5xl lg:text-6xl leading-[1.1] text-intense-indigo mb-6 tracking-tighter flex flex-col md:flex-row md:items-baseline gap-4 md:gap-6">
                     <span className="font-bold">{selectedSection?.title}</span>
@@ -723,7 +736,7 @@ export default function CFAPage() {
                       <section 
                         key={topic.id} 
                         id={topic.id}
-                        className={`${colorClass} py-24 px-4 sm:px-8 lg:px-[2cm] transition-all duration-500`}
+                        className={`${colorClass} py-10 px-4 sm:px-8 lg:px-[2cm] transition-all duration-500`}
                       >
                         <div className="max-w-full">
                           <TopicRenderer 
@@ -783,8 +796,8 @@ export default function CFAPage() {
                           )}
                         </div>
                         <div className="mt-12 text-center">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-intense-indigo/30">
-                            Sierra CFA Intelligence Hub • Fully calibrated for the latest 2026 Curriculum Logic
+                          <p className="text-[10px] font-black tracking-widest text-intense-indigo/30">
+                            Sierra Cfa Intelligence Hub • Fully calibrated for the latest 2026 Curriculum Logic
                           </p>
                         </div>
                       </section>
@@ -800,4 +813,3 @@ export default function CFAPage() {
     </main>
   );
 }
-
