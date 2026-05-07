@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { marketArticles, equityResearch, allArticles, type Article } from '../data/articles';
 import CTABox from '../components/CTABox';
 import { useAuth } from '../components/AuthContext';
-import { Lock } from 'lucide-react';
+import { Lock, Target, ExternalLink, ArrowRight } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function ResearchPage() {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ export default function ResearchPage() {
   ].includes(a.id));
 
   return (
-    <main className="min-h-screen bg-[#eff2ff] pt-32 pb-20 font-serif overflow-x-hidden">
+    <main className="min-h-screen bg-[#eff2ff] pt-24 pb-20 font-serif overflow-x-hidden">
       {/* Decorative hairline grid wrapper */}
       <div className="max-w-[1300px] mx-auto px-4 md:px-6">
         
@@ -190,7 +191,7 @@ export default function ResearchPage() {
         </div>
 
         {/* EQUITY RESEARCH SECTION - DOCUMENT PREVIEWS */}
-        <div className="py-20 bg-white/30 -mx-4 md:-mx-6 px-4 md:px-6 mb-20 border-y border-intense-indigo/10">
+        <div className="py-12 bg-white/30 -mx-4 md:-mx-6 px-4 md:px-6 mb-12 border-y border-intense-indigo/10">
           <div className="max-w-[1300px] mx-auto">
             <div className="flex items-center justify-between mb-16">
               <h2 className="text-xs font-bold text-intense-indigo/30 uppercase tracking-[0.4em] font-sans">Research Reports</h2>
@@ -234,15 +235,76 @@ export default function ResearchPage() {
         </div>
 
         {/* QUANT MODELS SECTION */}
-        <div id="quant-models" className="py-20 -mx-4 md:-mx-6 px-4 md:px-6 mb-20">
+        <div id="quant-models" className="py-12 -mx-4 md:-mx-6 px-4 md:px-6 mb-12 bg-emerald-50/20 border-y border-emerald-100/50">
           <div className="max-w-[1300px] mx-auto">
             <div className="flex items-center justify-between mb-16">
-              <h2 className="text-xs font-bold text-intense-indigo/30 uppercase tracking-[0.4em] font-sans">Quant Models</h2>
-              <div className="h-px bg-intense-indigo/10 flex-grow mx-8"></div>
+              <h2 className="text-xs font-bold text-emerald-600/30 uppercase tracking-[0.4em] font-sans">Quantitative Models</h2>
+              <div className="h-px bg-emerald-600/10 flex-grow mx-8"></div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Quant models will be uploaded here later */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+              {/* Item 1: Volatility Targeting Model */}
+              <div className="flex flex-col sm:flex-row gap-8 items-start group cursor-pointer font-serif" onClick={() => navigateToReport('volatility-targeting-model')}>
+                {/* PDF Preview Card */}
+                <div className="flex-shrink-0">
+                  <div className="relative w-40 md:w-48 aspect-[1/1.414] bg-white rounded-sm shadow-xl overflow-hidden border border-gray-100 group-hover:-translate-y-2 group-hover:shadow-emerald-500/20 transition-all duration-500">
+                    <img 
+                      src="/Volatility_Targeting_model___Systematic_Portfolio_Risk_Management_page-0001.jpg" 
+                      alt="Volatility Targeting Model"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2 flex gap-1">
+                      <div className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Report Text Content */}
+                <div className="text-left">
+                  <span className="text-emerald-600 text-[11px] font-bold uppercase tracking-widest block mb-2 font-sans">Systematic Framework</span>
+                  <h3 className="font-serif text-2xl lg:text-3xl leading-[1.1] text-intense-indigo font-bold mb-4 group-hover:text-emerald-700 transition-colors">
+                    Volatility Targeting & Risk Management
+                  </h3>
+                  <p className="text-intense-indigo/60 text-sm font-sans leading-relaxed italic line-clamp-4">
+                    Our comprehensive framework for dynamic risk allocation using real-time volatility triggers and systematic rebalancing protocols.
+                  </p>
+                </div>
+              </div>
+
+              {/* Item 2: VT-3 Algorithm Core */}
+              <div className="flex flex-col sm:flex-row gap-8 items-start group cursor-pointer font-serif" onClick={() => navigateToReport('systematic-trading-algo')}>
+                {/* PDF Preview Card - Code Style */}
+                <div className="flex-shrink-0">
+                  <div className="relative w-40 md:w-48 aspect-[1/1.414] bg-[#0a0a0a] rounded-sm shadow-2xl overflow-hidden border border-white/10 group-hover:-translate-y-2 group-hover:shadow-blue-500/20 transition-all duration-500 p-4">
+                    <div className="h-full w-full bg-white/5 rounded p-3 font-mono text-[8px] text-blue-400 opacity-60 flex flex-col gap-1 overflow-hidden pointer-events-none">
+                       <p>01 # Core Risk Protocol</p>
+                       <p>02 TARGET_VOL = 0.17</p>
+                       <p>03 </p>
+                       <p>04 def compute_weights(r):</p>
+                       <p>05     vol = r.std() * 16</p>
+                       <p>06     lev = target / vol</p>
+                       <p>07     return lev.clip(2.5)</p>
+                       <p>08 </p>
+                       <p>09 # Institutional Release</p>
+                       <p>10 v3.2.0 Calibrated</p>
+                    </div>
+                    <div className="absolute top-2 right-2 flex gap-1">
+                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Report Text Content */}
+                <div className="text-left">
+                  <span className="text-blue-500 text-[11px] font-bold uppercase tracking-widest block mb-2 font-sans">Algorithmic Library</span>
+                  <h3 className="font-serif text-2xl lg:text-3xl leading-[1.1] text-intense-indigo font-bold mb-4 group-hover:text-blue-600 transition-colors">
+                    VT-3: Systematic Portfolio Core
+                  </h3>
+                  <p className="text-intense-indigo/60 text-sm font-sans leading-relaxed italic line-clamp-4">
+                    Production-grade library for multi-asset risk parity and volatility targeting. Optimized for zero-lookahead institutional portfolios.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
